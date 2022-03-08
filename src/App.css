@@ -3,3 +3,7 @@
 body {
   font-family: Inter, sans-serif;
 }
+
+.ant-btn > span {
+  display: flex !important;
+}

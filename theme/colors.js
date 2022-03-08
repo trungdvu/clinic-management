@@ -36,7 +36,7 @@ const colors = {
   hr: {
     DEFAULT: '#ced0d4',
   },
-  border: {
+  brd: {
     DEFAULT: '#e5e5e5',
   },
 };

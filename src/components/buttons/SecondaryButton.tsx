@@ -2,7 +2,7 @@ import React from 'react';
 import classNames from 'classnames';
 import { Button, ButtonProps } from 'antd';
 
-export const PrimaryButton: React.FC<ButtonProps> = ({
+export const SecondaryButton: React.FC<ButtonProps> = ({
   children,
   className,
   style,
@@ -12,9 +12,9 @@ export const PrimaryButton: React.FC<ButtonProps> = ({
   const classes = React.useMemo(
     () =>
       classNames(
-        'text-sm font-medium flex items-center border-2 bg-button-pri border-button-pri hover:bg-button-pri-hv hover:border-button-pri-hv',
+        'text-sm border-2 flex items-center font-medium bg-transparent text-button-pri border-button-pri hover:bg-button-sec-hv hover:text-primary-2',
         {
-          'border-none bg-button-pri opacity-50 hover:cursor-not-allowed hover:bg-button-pri':
+          'border-opacity-30 text-button-pri hover:bg-transparent hover:text-button-pri hover:cursor-not-allowed':
             loading,
         },
         className,
