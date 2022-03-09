@@ -1,9 +1,13 @@
 @import '~antd/dist/antd.css';
 
 body {
-  font-family: Inter, sans-serif;
+  @apply font-sans bg-base-pri;
 }
 
 .ant-btn > span {
-  display: flex !important;
+  @apply flex;
+}
+
+.ant-layout {
+  @apply bg-transparent;
 }
