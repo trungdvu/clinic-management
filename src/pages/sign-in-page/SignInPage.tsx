@@ -3,7 +3,7 @@ import { useTitle } from 'hooks';
 import { connect } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import _ from 'lodash';
-import { Input, Form } from 'antd';
+import { Input, Form, Divider } from 'antd';
 import { SignInPayload } from 'interfaces';
 import { RootDispatch, RootState } from 'store';
 import {
@@ -53,16 +53,16 @@ const SignInPageContainer: React.FC<SignInPageContainerProps> = ({
   };
 
   return (
-    <div className="flex flex-col items-center justify-between max-w-5xl min-h-screen mx-auto">
+    <div className="flex flex-col items-center justify-between min-h-screen mx-auto">
       <SignUpModel visible={isSignInModalVisible} onCancel={onSignUpModelCancel} />
 
-      <section className="flex gap-20 mt-32 w-max">
-        <div className="mt-10">
-          <Heading className="m-0 text-5xl leading-none">GreatClinic</Heading>
-          <Text className="text-lg">Our business, your comforts.</Text>
+      <section className="flex justify-between max-w-screen-lg mt-32">
+        <div className="mt-10 mr-44">
+          <Heading className="m-0 leading-none text-7xl">GreatClinic</Heading>
+          <Text className="text-2xl">Our business, your comforts.</Text>
         </div>
 
-        <div className="flex flex-col items-center gap-4 p-4 bg-white rounded-md shadow-lg">
+        <div className="flex flex-col items-center gap-4 p-5 bg-white rounded-md shadow-lg">
           <Form
             name="login"
             autoComplete="off"
@@ -73,19 +73,19 @@ const SignInPageContainer: React.FC<SignInPageContainerProps> = ({
             <Item
               name="username"
               rules={[{ required: true, message: 'Please enter your email address.' }]}
-              className="mb-2"
+              className="mb-3"
             >
               <Input
                 placeholder="Email address or username"
-                className="py-3 text-sm font-medium rounded-md w-72"
+                className="py-3 text-sm font-medium rounded-md w-80"
               />
             </Item>
             <Item
               name="password"
               rules={[{ required: true, message: 'Password is required.' }]}
-              className="mb-4"
+              className="mb-5"
             >
-              <Input placeholder="Password" className="py-3 text-sm font-medium rounded-md w-72" />
+              <Input placeholder="Password" className="py-3 text-sm font-medium rounded-md w-80" />
             </Item>
             <Item className="mb-0">
               <PrimaryButton htmlType="submit" className="w-full py-5" loading={loading.doSignIn}>
@@ -97,6 +97,8 @@ const SignInPageContainer: React.FC<SignInPageContainerProps> = ({
           <HyperLinkButton size="small" className="w-min" onClick={onForgottenPasswordClick}>
             Forgotten password?
           </HyperLinkButton>
+
+          <Divider className="p-0 m-0 border-brd" />
 
           <SecondaryButton className="py-5 w-min" onClick={onCreateNewAccountClick}>
             Create New Account
