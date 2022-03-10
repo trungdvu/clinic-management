@@ -1,5 +1,7 @@
 import { createModel } from '@rematch/core';
+import { AUTH_API } from 'consts';
 import { SignInPayload, SignUpPayload, User } from 'interfaces';
+import { HttpService } from 'services';
 import { authLocalStorage } from 'shared';
 import { RootModel } from '.';
 
@@ -18,6 +20,8 @@ export const authModel = createModel<RootModel>()({
 
   effects: (dispatch) => ({
     async doSignIn(payload: SignInPayload, state): Promise<any> {
+      // const { data } = await HttpService.post(AUTH_API.USER, payload);
+
       return new Promise(() =>
         setTimeout((resolve) => {
           dispatch.authModel.setCurrentUser({ username: 'trungdvu' });
