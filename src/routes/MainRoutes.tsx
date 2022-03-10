@@ -2,7 +2,7 @@ import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { PAGE_ROUTES } from 'consts';
 import { MainLayout, Redirect } from 'components';
-import { DashboardPage, NotFoundPage, SignInPage, SignUpPage } from 'pages';
+import { DashboardPage, NotFoundPage, SignInPage } from 'pages';
 
 export const MainRoutes: React.FC = () => {
   return (
@@ -19,10 +19,6 @@ export const MainRoutes: React.FC = () => {
       <Route
         path={PAGE_ROUTES.SIGN_IN.PATH}
         element={<SignInPage title={PAGE_ROUTES.SIGN_IN.TITLE} />}
-      />
-      <Route
-        path={PAGE_ROUTES.SIGN_UP.PATH}
-        element={<SignUpPage title={PAGE_ROUTES.SIGN_UP.TITLE} />}
       />
     </Routes>
   );

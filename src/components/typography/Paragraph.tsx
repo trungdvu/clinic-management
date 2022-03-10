@@ -22,7 +22,7 @@ export const Paragraph: React.FC<ParagraphProps> = ({ children, className, type,
   }, [type]);
 
   return (
-    <AntParagraph className={classNames('font-sans', textColor, className)} {...props}>
+    <AntParagraph className={classNames('font-sans text-inherit', textColor, className)} {...props}>
       {children}
     </AntParagraph>
   );

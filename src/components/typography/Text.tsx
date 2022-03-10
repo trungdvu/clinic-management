@@ -22,7 +22,7 @@ export const Text: React.FC<TextProps> = ({ children, className, type, ...props 
   }, [type]);
 
   return (
-    <AntText className={classNames('font-sans', textColor, className)} {...props}>
+    <AntText className={classNames('font-sans text-inherit', textColor, className)} {...props}>
       {children}
     </AntText>
   );

@@ -1,3 +1,3 @@
 export * from './Heading';
 export * from './Text';
-export * from './Paragrahp';
+export * from './Paragraph';

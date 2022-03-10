@@ -12,7 +12,7 @@ export const SecondaryButton: React.FC<ButtonProps> = ({
   const classes = React.useMemo(
     () =>
       classNames(
-        'text-sm border-2 flex items-center font-medium bg-transparent text-button-pri border-button-pri hover:bg-button-sec-hv hover:text-primary-2',
+        'text-sm border-2 flex items-center duration-100 justify-center font-medium bg-transparent text-button-pri border-button-pri hover:bg-button-sec-hv hover:text-primary-2',
         {
           'border-opacity-30 text-button-pri hover:bg-transparent hover:text-button-pri hover:cursor-not-allowed':
             loading,
