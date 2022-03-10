@@ -7,13 +7,21 @@ import { Input, Form } from 'antd';
 import { PAGE_ROUTES } from 'consts';
 import { SignInPayload } from 'interfaces';
 import { RootDispatch, RootState } from 'store';
-import { Heading, HyperLinkButton, PrimaryButton, SecondaryButton, Text } from 'components';
+import {
+  Heading,
+  HyperLinkButton,
+  NonAuthFooter,
+  PrimaryButton,
+  SecondaryButton,
+  Text,
+} from 'components';
 
 const { Item } = Form;
 
 const SignInPageContainer: React.FC<SignInPageContainerProps> = ({
   title,
   currentUser,
+  loading,
   doSignIn,
 }) => {
   const navigate = useNavigate();
@@ -40,7 +48,7 @@ const SignInPageContainer: React.FC<SignInPageContainerProps> = ({
       <section className="flex gap-20 mt-32 w-max">
         <div className="mt-10">
           <Heading className="m-0 text-5xl leading-none">GoodClinic</Heading>
-          <Text>GoodClinic supports better services.</Text>
+          <Text className="text-lg">GoodClinic supports better services.</Text>
         </div>
 
         <div className="flex flex-col items-center gap-4 p-4 bg-white rounded-md shadow-md">
@@ -69,7 +77,7 @@ const SignInPageContainer: React.FC<SignInPageContainerProps> = ({
               <Input placeholder="Password" className="py-3 text-sm font-medium rounded-md w-72" />
             </Item>
             <Item className="mb-0">
-              <PrimaryButton htmlType="submit" className="w-full py-5">
+              <PrimaryButton htmlType="submit" className="w-full py-5" loading={loading.doSignIn}>
                 Sign In
               </PrimaryButton>
             </Item>
@@ -84,12 +92,15 @@ const SignInPageContainer: React.FC<SignInPageContainerProps> = ({
           </SecondaryButton>
         </div>
       </section>
+
+      <NonAuthFooter />
     </div>
   );
 };
 
 const mapState = (state: RootState) => ({
   currentUser: state.authModel.currentUser,
+  loading: state.loading.effects.authModel,
 });
 
 const mapDispatch = (dispatch: RootDispatch) => ({
