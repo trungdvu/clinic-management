@@ -1,10 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useTitle } from 'hooks';
 import { connect } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import _ from 'lodash';
 import { Input, Form } from 'antd';
-import { PAGE_ROUTES } from 'consts';
 import { SignInPayload } from 'interfaces';
 import { RootDispatch, RootState } from 'store';
 import {
@@ -15,6 +14,7 @@ import {
   SecondaryButton,
   Text,
 } from 'components';
+import { SignUpModel } from './views';
 
 const { Item } = Form;
 
@@ -24,6 +24,8 @@ const SignInPageContainer: React.FC<SignInPageContainerProps> = ({
   loading,
   doSignIn,
 }) => {
+  const [isSignInModalVisible, setIsSignInModalVisible] = useState(false);
+
   const navigate = useNavigate();
 
   useTitle(title);
@@ -35,7 +37,6 @@ const SignInPageContainer: React.FC<SignInPageContainerProps> = ({
   }, [currentUser, navigate]);
 
   const onFinish = (values: SignInPayload) => {
-    console.log(values);
     doSignIn(values);
   };
 
@@ -43,12 +44,22 @@ const SignInPageContainer: React.FC<SignInPageContainerProps> = ({
     console.log('Open forgotten password model');
   };
 
+  const onCreateNewAccountClick = () => {
+    setIsSignInModalVisible(true);
+  };
+
+  const onSignUpModelCancel = () => {
+    setIsSignInModalVisible(false);
+  };
+
   return (
     <div className="flex flex-col items-center justify-between max-w-5xl min-h-screen mx-auto">
+      <SignUpModel visible={isSignInModalVisible} onCancel={onSignUpModelCancel} />
+
       <section className="flex gap-20 mt-32 w-max">
         <div className="mt-10">
-          <Heading className="m-0 text-5xl leading-none">GoodClinic</Heading>
-          <Text className="text-lg">GoodClinic supports better services.</Text>
+          <Heading className="m-0 text-5xl leading-none">GreatClinic</Heading>
+          <Text className="text-lg">Our business, your comforts.</Text>
         </div>
 
         <div className="flex flex-col items-center gap-4 p-4 bg-white rounded-md shadow-md">
@@ -87,8 +98,8 @@ const SignInPageContainer: React.FC<SignInPageContainerProps> = ({
             Forgotten password?
           </HyperLinkButton>
 
-          <SecondaryButton className="py-5 w-min">
-            <Link to={`/${PAGE_ROUTES.SIGN_UP.PATH}`}> Create New Account</Link>
+          <SecondaryButton className="py-5 w-min" onClick={onCreateNewAccountClick}>
+            Create New Account
           </SecondaryButton>
         </div>
       </section>

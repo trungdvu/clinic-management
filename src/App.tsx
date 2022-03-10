@@ -13,7 +13,7 @@ const AppContainer: React.FC<AppProps> = ({ currentUser }) => {
   const { isInRoute } = useRouterLocation();
 
   useEffect(() => {
-    if (_.isEmpty(currentUser) && !isInRoute(PAGE_ROUTES.SIGN_UP.PATH)) {
+    if (_.isEmpty(currentUser)) {
       navigate(PAGE_ROUTES.SIGN_IN.PATH);
     }
   }, [currentUser, isInRoute, navigate]);

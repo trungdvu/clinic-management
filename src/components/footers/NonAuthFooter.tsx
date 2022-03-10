@@ -9,7 +9,7 @@ export const NonAuthFooter = React.memo(() => {
         Help center
       </Link>
 
-      <Text>GoodClinic @ {new Date().getFullYear()}</Text>
+      <Text>GreatClinic @ {new Date().getFullYear()}</Text>
 
       <Link to={'#'} className="hover:underline text-primary-2">
         Prices
