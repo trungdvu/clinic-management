@@ -19,6 +19,7 @@ export const authModel = createModel<RootModel>()({
     async doSignIn(payload: SignInPayload, state): Promise<any> {
       return new Promise(() =>
         setTimeout(() => {
+          dispatch.authModel.setCurrentUser({ username: 'trungdvu' });
           console.log('Sign in');
         }, 3000),
       );
