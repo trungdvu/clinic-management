@@ -1,5 +1,6 @@
 import { createModel } from '@rematch/core';
 import { SignInPayload, SignUpPayload, User } from 'interfaces';
+import { authLocalStorage } from 'shared';
 import { RootModel } from '.';
 
 interface AuthModelState {
@@ -20,6 +21,7 @@ export const authModel = createModel<RootModel>()({
       return new Promise(() =>
         setTimeout((resolve) => {
           dispatch.authModel.setCurrentUser({ username: 'trungdvu' });
+          authLocalStorage.setAccessToken('#token');
           resolve('');
         }, 1000),
       );
@@ -36,6 +38,8 @@ export const authModel = createModel<RootModel>()({
     async doSignOut(): Promise<any> {
       return new Promise((resolve) =>
         setTimeout(() => {
+          authLocalStorage.setAccessToken('');
+          dispatch.authModel.setCurrentUser({});
           resolve('');
         }, 1000),
       );

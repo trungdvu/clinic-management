@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import _ from 'lodash';
@@ -6,17 +6,24 @@ import { MainRoutes } from 'routes';
 import { RootDispatch, RootState } from 'store';
 import { useRouterLocation } from 'hooks';
 import { PAGE_ROUTES } from 'consts';
+import { authLocalStorage } from 'shared';
 import './App.css';
 
 const AppContainer: React.FC<AppProps> = ({ currentUser }) => {
   const navigate = useNavigate();
   const { isInRoute } = useRouterLocation();
 
+  const loadLocalStorages = useCallback(() => {
+    authLocalStorage.load();
+  }, []);
+
   useEffect(() => {
-    if (_.isEmpty(currentUser)) {
+    loadLocalStorages();
+    if (_.isEmpty(authLocalStorage.accessToken)) {
+      // TODO: get user via token
       navigate(PAGE_ROUTES.SIGN_IN.PATH);
     }
-  }, [currentUser, isInRoute, navigate]);
+  }, [currentUser, isInRoute, loadLocalStorages, navigate]);
 
   return (
     <>
