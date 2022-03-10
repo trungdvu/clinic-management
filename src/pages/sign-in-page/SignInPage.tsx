@@ -62,7 +62,7 @@ const SignInPageContainer: React.FC<SignInPageContainerProps> = ({
           <Text className="text-lg">Our business, your comforts.</Text>
         </div>
 
-        <div className="flex flex-col items-center gap-4 p-4 bg-white rounded-md shadow-md">
+        <div className="flex flex-col items-center gap-4 p-4 bg-white rounded-md shadow-lg">
           <Form
             name="login"
             autoComplete="off"

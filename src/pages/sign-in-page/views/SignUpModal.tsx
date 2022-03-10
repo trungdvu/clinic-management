@@ -1,10 +1,10 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import classNames from 'classnames';
+import moment from 'moment';
 import { Modal, ModalProps, Form, Input, DatePicker } from 'antd';
 import { RootDispatch, RootState } from 'store';
 import { ModalHeader, PrimaryButton, Text } from 'components';
-import moment from 'moment';
 
 const { Item } = Form;
 
@@ -19,14 +19,13 @@ const SignUpModalContainer: React.FC<SignUpModalContainerProps> = ({
       ...values,
       dayOfBirth: moment(values.dayOfBirth).format().toString(),
     };
-    console.log(payload);
     doSignUp(payload);
   };
 
   return (
     <Modal
       footer={null}
-      title={<ModalHeader title="Sign Up" subTitle="It's quick and easy" />}
+      title={<ModalHeader title="Sign Up" subTitle="It's quick and easy." />}
       className={classNames('w-max p-0 max-w-lg', className)}
       {...props}
     >
