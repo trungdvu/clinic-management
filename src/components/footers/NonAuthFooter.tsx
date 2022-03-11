@@ -11,7 +11,7 @@ export const NonAuthFooter = React.memo(() => {
           Help Center
         </Link>
 
-        <Text className="text-xs">Great Clinic @ {new Date().getFullYear()}</Text>
+        <Text className="text-xs text-primary-2">Great Clinic @ {new Date().getFullYear()}</Text>
 
         <a
           href="https://github.com/trungdvu/clinic-management"
