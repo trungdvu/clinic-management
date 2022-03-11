@@ -14,7 +14,7 @@ import {
   SecondaryButton,
   Text,
 } from 'components';
-import { SignUpModel } from './views';
+import { SignUpModel } from './SignUpModal';
 
 const { Item } = Form;
 
