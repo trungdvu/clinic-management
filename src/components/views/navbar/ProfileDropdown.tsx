@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Menu, Dropdown, Image } from 'antd';
+import { Menu, Dropdown, Image, Divider } from 'antd';
 import {
   CaretDownOutlined,
   CommentOutlined,
@@ -31,8 +31,10 @@ export const ProfileDropdown = ({ currentUser, onSignOutClick }: ProfileDropdown
         </Link>
       </Menu.Item>
 
+      <Divider className="p-0 m-0 border-brd" />
+
       <Menu.Item key={'3'} className="py-3 rounded-b-md">
-        <button className="flex items-center gap-2" onClick={onSignOutClick}>
+        <button className="flex items-center gap-2 text-button-pri" onClick={onSignOutClick}>
           <LogoutOutlined />
           Sign out
         </button>

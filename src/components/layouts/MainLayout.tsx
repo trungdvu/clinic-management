@@ -71,12 +71,16 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ title, ...props }) => {
   return (
     <Layout {...props}>
       <Navbar />
-      <Layout className="in-h-[calc(100vh-64px)] mt-5">
+
+      <Layout className="min-h-[calc(100vh-84px)] mt-5">
         <Affix offsetTop={0}>
-          <Sider width={268} className="mr-5 overflow-auto bg-transparent">
+          <Sider
+            width={250}
+            className="pr-3 mr-3 overflow-auto bg-transparent border-r-2 select-none border-brd"
+          >
             <Menu
               defaultSelectedKeys={[`${pathname}`]}
-              className="h-[calc(100vh-64px)] rounded-sm bg-transparent border-r-0"
+              className="h-[calc(100vh-84px)] rounded-sm bg-transparent border-r-0"
             >
               {renderMenuItems()}
               <Menu.Item

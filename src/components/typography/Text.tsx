@@ -17,12 +17,12 @@ export const Text: React.FC<TextProps> = ({ children, className, type, ...props 
       case 'danger':
         return 'text-info-err';
       default:
-        return 'text-primary';
+        return '';
     }
   }, [type]);
 
   return (
-    <AntText className={classNames('font-sans', textColor, className)} {...props}>
+    <AntText className={classNames('font-sans text-inherit', textColor, className)} {...props}>
       {children}
     </AntText>
   );
