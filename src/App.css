@@ -11,3 +11,22 @@ body {
 .ant-layout {
   @apply bg-transparent;
 }
+
+.ant-form-item {
+  @apply m-0;
+}
+
+.ant-modal-header,
+.ant-modal-footer,
+.ant-modal-content {
+  @apply rounded-lg;
+}
+
+.ant-menu-item-selected a,
+.ant-menu-item-selected a:hover {
+  @apply bg-transparent text-primary;
+}
+
+.ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
+  @apply bg-transparent;
+}

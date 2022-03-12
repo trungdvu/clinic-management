@@ -12,7 +12,7 @@ export const PrimaryButton: React.FC<ButtonProps> = ({
   const classes = React.useMemo(
     () =>
       classNames(
-        'text-sm font-medium flex items-center border-2 bg-button-pri border-button-pri hover:bg-button-pri-hv hover:border-button-pri-hv',
+        'text-sm justify-center text-primary-2 duration-100 font-medium flex items-center border-2 bg-button-pri border-button-pri hover:bg-button-pri-hv hover:border-button-pri-hv',
         {
           'border-none bg-button-pri opacity-50 hover:cursor-not-allowed hover:bg-button-pri':
             loading,

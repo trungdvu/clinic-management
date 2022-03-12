@@ -17,7 +17,7 @@ export const Text: React.FC<TextProps> = ({ children, className, type, ...props 
       case 'danger':
         return 'text-info-err';
       default:
-        return 'text-primary';
+        return '';
     }
   }, [type]);
 

@@ -6,7 +6,7 @@ const colors = {
   secondary: {
     DEFAULT: '#f7f3f3',
   },
-  ter: {
+  tertiary: {
     DEFAULT: '#737373',
   },
   base: {

@@ -8,7 +8,7 @@ export const IconButton = ({ className, ...props }: IconButtonProps) => {
   const classes = React.useMemo(
     () =>
       classNames(
-        'text-primary hover:text-primary-2 hover:bg-button-pri border-brd hover:border-button-pri',
+        'text-primary hover:text-primary-2 hover:bg-button-pri border-brd hover:border-button-pri duration-100',
         className,
       ),
     [className],
