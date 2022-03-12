@@ -21,3 +21,12 @@ body {
 .ant-modal-content {
   @apply rounded-lg;
 }
+
+.ant-menu-item-selected a,
+.ant-menu-item-selected a:hover {
+  @apply bg-transparent text-primary;
+}
+
+.ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
+  @apply bg-transparent;
+}

@@ -14,7 +14,7 @@ import {
   SecondaryButton,
   Text,
 } from 'components';
-import { SignUpModel } from './views';
+import { SignUpModel } from './SignUpModal';
 
 const { Item } = Form;
 
@@ -58,7 +58,7 @@ const SignInPageContainer: React.FC<SignInPageContainerProps> = ({
 
       <section className="flex justify-between max-w-screen-lg mt-32">
         <div className="mt-10 mr-44">
-          <Heading className="m-0 leading-none text-7xl">GreatClinic</Heading>
+          <Heading className="m-0 leading-none text-7xl">Great Clinic</Heading>
           <Text className="text-2xl">Our business, your comforts.</Text>
         </div>
 
