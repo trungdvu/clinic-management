@@ -8,4 +8,4 @@ export * from './invoices-page/InvoicesPage';
 export * from './bookings-page/BookingsPage';
 export * from './support-page/SupportPage';
 export * from './help-center-page/HelpCenterPage';
-export * from './profile-page/Profile';
+export * from './profile-page/ProfilePage';

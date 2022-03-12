@@ -15,8 +15,11 @@ import {
   StatisticsPage,
   SupportPage,
 } from 'pages';
+import { useScrollToTop } from 'hooks';
 
 export const MainRoutes: React.FC = () => {
+  useScrollToTop();
+
   return (
     <Routes>
       <Route path="/" element={<MainLayout />}>

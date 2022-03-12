@@ -80,7 +80,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ title, ...props }) => {
           >
             <Menu
               defaultSelectedKeys={[`${pathname}`]}
-              className="h-[calc(100vh-84px)] rounded-sm bg-transparent border-r-0"
+              className="h-screen bg-transparent border-r-0 rounded-sm"
             >
               {renderMenuItems()}
               <Menu.Item
@@ -101,7 +101,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({ title, ...props }) => {
 
         {/* Page will be render through <Outlet /> */}
         <Layout>
-          <Content>
+          <Content className="pr-5">
             <Outlet />
           </Content>
         </Layout>
