@@ -10,10 +10,10 @@ Env requires: [Node.js](https://nodejs.org/en/) LTS v16 installed
   git clone https://github.com/trungdvu/clinic-management.git
 ```
 
-2. Go to the repo
+2. Go to UI repo
 
 ```
-  cd clinic-management
+  cd clinic-management/service-portal
 ```
 
 3. Install dependencies
@@ -44,4 +44,4 @@ Some useful visual studio code extensions that you might want to use in this rep
 
 - [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
 - [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
-- [ Tailwind CSS IntelliSense](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss)
+- [Tailwind CSS IntelliSense](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss)
