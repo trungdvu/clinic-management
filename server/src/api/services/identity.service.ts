@@ -91,8 +91,8 @@ export class IdentityService {
           argumentName: "Phone Number",
         },
       ];
-      const guardResult = Checker.isNullOrUndefinedBulk(checkerCollections);
-      if (!guardResult.succeed) {
+      const checkerResult = Checker.isNullOrUndefinedBulk(checkerCollections);
+      if (!checkerResult.succeed) {
         throw new BadRequestError(guardResult.message);
       }
 
