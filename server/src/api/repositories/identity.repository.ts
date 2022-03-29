@@ -18,7 +18,6 @@ export class IdentityRepository {
 
   async create(signUpDto: SignUpDto) {
     try {
-      console.log("sign up dto: ", signUpDto);
       return await Identity.create(signUpDto);
     } catch (error) {
       throw new Error(error);
@@ -31,9 +30,8 @@ export class IdentityRepository {
   ): Promise<typeof Identity> {
     try {
       const userFound = await this.findById(id);
-      await userFound.update(identity);
 
-      return userFound;
+      return await userFound.update(identity);
     } catch (error) {
       throw new Error(error);
     }

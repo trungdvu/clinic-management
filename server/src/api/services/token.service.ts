@@ -4,7 +4,6 @@ import { tokenConfig } from "../../config";
 export default class TokenService {
   static createToken(value: any) {
     try {
-      console.log("token config", tokenConfig);
       return jwt.sign(value, tokenConfig.secretKey, {
         algorithm: "HS256",
         expiresIn: tokenConfig.expiresIn,

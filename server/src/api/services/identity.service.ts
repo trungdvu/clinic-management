@@ -27,9 +27,10 @@ export class IdentityService {
         throw new BadRequestError("Password cannot be empty");
       }
 
-      const user = await this.identityRepository.findByEmail(email);
+      const userModel = await this.identityRepository.findByEmail(email);
+      const profileData = userModel.dataValues;
 
-      if (!user) {
+      if (!userModel) {
         throw new BadRequestError("User Not Found!!!");
       }
 
@@ -40,11 +41,12 @@ export class IdentityService {
       const signInResponse: SignInResponse = {
         accessToken: tokenGenerated,
         profile: {
-          ...user,
+          ...profileData,
         },
       };
 
-      const userUpdated = await this.identityRepository.update(user.id, user);
+      await this.identityRepository.update(userModel.id, userModel);
+
       return signInResponse;
     } catch (error) {
       throw new InternalServerError(error.message as string);

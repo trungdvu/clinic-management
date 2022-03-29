@@ -1,10 +1,10 @@
 import IdentityRouter from "./identity.router";
+import PatientRouter from "./patient.router";
 import { Router } from "express";
 
 const router = Router();
 
-console.log("Identity router: ", IdentityRouter);
-
-router.use("/identity", IdentityRouter);
+router.use("/identities", IdentityRouter);
+router.use("/patients", PatientRouter);
 
 export default router;

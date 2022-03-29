@@ -1,14 +1,13 @@
 import { Request, Response } from "express";
 import { SignInDto, SignInResponse } from "../dtos";
-import { SignUpDto } from "../dtos/sign-up.dto";
+import { SignUpDto } from "../dtos";
 import { IdentityService } from "../services";
-import bcrypt from "bcrypt";
 import { BodyResponse, ErrorHandler } from "../../shared";
 import { IdentityRepository } from "../repositories";
 
 const identityService = new IdentityService(new IdentityRepository());
 
-export const signIn = async (req: Request, res: Response) => {
+export const signIn = async (req: Request, res: Response): Promise<void> => {
   try {
     const signInDto: SignInDto = req.body;
     const response: SignInResponse = await identityService.signIn(signInDto);
@@ -25,7 +24,7 @@ export const signIn = async (req: Request, res: Response) => {
   }
 };
 
-export const signUp = async (req: Request, res: Response) => {
+export const signUp = async (req: Request, res: Response): Promise<void> => {
   try {
     const signUpDto: SignUpDto = req.body;
 

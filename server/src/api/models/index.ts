@@ -6,6 +6,8 @@ import { DataTypes, Sequelize } from "sequelize";
 const basename = path.basename(__filename);
 let db = {
   Identity: null,
+  Patient: null,
+  MedicalBill: null,
 };
 
 fs.readdirSync(__dirname)
@@ -28,6 +30,8 @@ Object.keys(db).forEach((modelName) => {
 
 export const models = {
   Identity: db.Identity,
+  Patient: db.Patient,
+  MedicalBill: db.MedicalBill,
   sequelize: sequelize,
   Sequelize: Sequelize,
 };
