@@ -93,7 +93,7 @@ export class IdentityService {
       ];
       const checkerResult = Checker.isNullOrUndefinedBulk(checkerCollections);
       if (!checkerResult.succeed) {
-        throw new BadRequestError(guardResult.message);
+        throw new BadRequestError(checkerResult.message);
       }
 
       if (password !== passwordConfirm) {
