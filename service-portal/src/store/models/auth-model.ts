@@ -7,46 +7,59 @@ import { RootModel } from '.';
 
 interface AuthModelState {
   currentUser: User;
+  errorMessages: string[];
 }
 
 export const authModel = createModel<RootModel>()({
   state: {
-    currentUser: {},
+    currentUser: undefined!,
+    errorMessages: [],
   } as AuthModelState,
 
   reducers: {
     setCurrentUser: (state, payload) => ({ ...state, currentUser: payload }),
+    setErrorMessages: (state, payload) => ({ ...state, errorMessages: payload }),
   },
 
   effects: (dispatch) => ({
     async doSignIn(payload: SignInPayload, state): Promise<any> {
-      // const { data } = await HttpService.post(AUTH_API.USER, payload);
-
-      return new Promise(() =>
-        setTimeout((resolve) => {
-          dispatch.authModel.setCurrentUser({ username: 'trungdvu' });
-          authLocalStorage.setAccessToken('#token');
-          resolve('');
-        }, 1000),
-      );
+      dispatch.authModel.setErrorMessages([]);
+      const response = await HttpService.post(AUTH_API.SIGN_IN, payload);
+      if (response.status === 200) {
+        const {
+          data: { accessToken, profile },
+        } = response.data;
+        authLocalStorage.setAccessToken(accessToken);
+        authLocalStorage.setUser(profile);
+        dispatch.authModel.setCurrentUser(profile);
+        return true;
+      } else {
+        const errorMessages = ['The email or password is not correct'];
+        dispatch.authModel.setErrorMessages(errorMessages);
+      }
+      return false;
     },
 
     async doSignUp(payload: SignUpPayload, state): Promise<any> {
-      return new Promise((resolve) =>
-        setTimeout(() => {
-          resolve('');
-        }, 1000),
-      );
+      dispatch.authModel.setErrorMessages([]);
+      const response = await HttpService.post(AUTH_API.SIGN_UP, payload);
+      if (response.status === 200) {
+        const result = await dispatch.authModel.doSignIn({
+          email: payload.email,
+          password: payload.password,
+        });
+        return result;
+      } else {
+        const errorMessages = ['Email has already existed, please trey another one'];
+        dispatch.authModel.setErrorMessages(errorMessages);
+      }
+      return false;
     },
 
     async doSignOut(): Promise<any> {
-      return new Promise((resolve) =>
-        setTimeout(() => {
-          authLocalStorage.setAccessToken('');
-          dispatch.authModel.setCurrentUser({});
-          resolve('');
-        }, 1000),
-      );
+      authLocalStorage.setUser(undefined);
+      authLocalStorage.setAccessToken('');
+      dispatch.authModel.setCurrentUser(undefined);
     },
   }),
 });

@@ -1,37 +1,37 @@
 export const PAGE_ROUTES = {
   DASHBOARD: {
     PATH: '/dashboard',
-    TITLE: 'Great Clinic - Dashboard',
+    TITLE: 'XClinic - Dashboard',
     TITLE_MENU: 'Dashboard',
   },
   SIGN_IN: {
     PATH: '/sign-in',
-    TITLE: 'Great Clinic - Sign In',
+    TITLE: 'XClinic - Sign In',
     TITLE_MENU: 'Sign In',
   },
-  BOOKINGS: {
+  MEDICAL_BILLS: {
     PATH: '/bookings',
-    TITLE: 'Great Clinic - Bookings',
-    TITLE_MENU: 'Bookings',
+    TITLE: 'XClinic - Medical bills',
+    TITLE_MENU: 'Medical bills',
   },
   PATIENTS: {
     PATH: '/patients',
-    TITLE: 'Great Clinic - Patients',
+    TITLE: 'XClinic - Patients',
     TITLE_MENU: 'Patients',
   },
   INVOICES: {
     PATH: '/invoices',
-    TITLE: 'Great Clinic - Invoices',
+    TITLE: 'XClinic - Invoices',
     TITLE_MENU: 'Invoices',
   },
   ACCOUNT: {
     PATH: '/account',
-    TITLE: 'Great Clinic - Account',
+    TITLE: 'XClinic - Account',
     TITLE_MENU: 'Account',
   },
   SUPPORT: {
     PATH: '/support',
-    TITLE: 'Great Clinic - Support',
+    TITLE: 'XClinic - Support',
     TITLE_MENU: 'Support',
   },
   PROFILE: {
@@ -41,12 +41,12 @@ export const PAGE_ROUTES = {
   },
   STATISTICS: {
     PATH: '/statistics',
-    TITLE: 'Great Clinic - Statistics',
+    TITLE: 'XClinic - Statistics',
     TITLE_MENU: 'Statistics',
   },
   HELP_CENTER: {
     PATH: '/help-center',
-    TITLE: 'Great Clinic - Help Center',
+    TITLE: 'XClinic - Help Center',
     TITLE_MENU: 'Help Center',
   },
 };

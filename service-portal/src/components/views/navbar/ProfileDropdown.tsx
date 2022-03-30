@@ -12,12 +12,12 @@ import { PAGE_ROUTES } from 'consts';
 import { Text } from '../../typography';
 import { LoadingSignOutModal } from '../../loadings';
 
-type ProfileDropdownProps = {
+interface Props {
   currentUser: User;
   onSignOutClick: () => void;
-};
+}
 
-export const ProfileDropdown = ({ currentUser, onSignOutClick }: ProfileDropdownProps) => {
+export const ProfileDropdown = ({ currentUser, onSignOutClick }: Props) => {
   const [isLoadingSignOutModalVisible, setIsLoadingSignOutModalVisible] = useState(false);
 
   const _onSignOutClick = () => {
@@ -32,22 +32,29 @@ export const ProfileDropdown = ({ currentUser, onSignOutClick }: ProfileDropdown
   const menu = (
     <Menu className="w-56 py-0 rounded-md">
       <Menu.Item key={'0'} className="py-3 rounded-t-md">
-        <Link to={PAGE_ROUTES.PROFILE.PATH} className="flex items-center gap-2">
+        <Link to={PAGE_ROUTES.PROFILE.PATH} className="w-full flex items-center gap-2">
           <UserOutlined className="text-tertiary" />
-          <Text>John Nguyen</Text>
+          <Text>
+            {currentUser?.firstName} {currentUser?.lastName}
+          </Text>
         </Link>
       </Menu.Item>
 
       <Menu.Item key={'2'} className="py-3">
-        <Link to={PAGE_ROUTES.HELP_CENTER.PATH} className="flex items-center gap-2">
+        <Link to={PAGE_ROUTES.HELP_CENTER.PATH} className="w-full flex items-center gap-2">
           <CommentOutlined /> Help Center
         </Link>
       </Menu.Item>
 
-      <Divider className="p-0 m-0 border-brd" />
+      <Menu.Item key={'-1'} className="m-0 p-0">
+        <Divider className="p-0 m-0 border-brd" />
+      </Menu.Item>
 
       <Menu.Item key={'3'} className="py-3 rounded-b-md">
-        <button className="flex items-center gap-2 text-button-pri" onClick={_onSignOutClick}>
+        <button
+          className="w-full flex items-center gap-2 text-button-pri"
+          onClick={_onSignOutClick}
+        >
           <LogoutOutlined />
           Sign out
         </button>

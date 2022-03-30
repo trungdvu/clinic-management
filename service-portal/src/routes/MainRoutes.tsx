@@ -1,7 +1,6 @@
-import React from 'react';
-import { Route, Routes } from 'react-router-dom';
+import { AuthenticatedLayout, Redirect } from 'components';
 import { PAGE_ROUTES } from 'consts';
-import { MainLayout, Redirect } from 'components';
+import { useScrollToTop } from 'hooks';
 import {
   AccountPage,
   BookingsPage,
@@ -15,22 +14,23 @@ import {
   StatisticsPage,
   SupportPage,
 } from 'pages';
-import { useScrollToTop } from 'hooks';
+import React from 'react';
+import { Route, Routes } from 'react-router-dom';
 
 export const MainRoutes: React.FC = () => {
   useScrollToTop();
 
   return (
     <Routes>
-      <Route path="/" element={<MainLayout />}>
+      <Route path="/" element={<AuthenticatedLayout />}>
         <Route index element={<Redirect to={PAGE_ROUTES.DASHBOARD.PATH} />} />
         <Route
           path={PAGE_ROUTES.DASHBOARD.PATH}
           element={<DashboardPage title={PAGE_ROUTES.DASHBOARD.TITLE} />}
         />
         <Route
-          path={PAGE_ROUTES.BOOKINGS.PATH}
-          element={<BookingsPage title={PAGE_ROUTES.BOOKINGS.TITLE} />}
+          path={PAGE_ROUTES.MEDICAL_BILLS.PATH}
+          element={<BookingsPage title={PAGE_ROUTES.MEDICAL_BILLS.TITLE} />}
         />
         <Route
           path={PAGE_ROUTES.PATIENTS.PATH}

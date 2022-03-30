@@ -1,11 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { useTitle } from 'hooks';
-import { connect } from 'react-redux';
-import { useNavigate } from 'react-router-dom';
-import _ from 'lodash';
-import { Input, Form, Divider } from 'antd';
-import { SignInPayload } from 'interfaces';
-import { RootDispatch, RootState } from 'store';
+import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
+import { Divider, Form, Input } from 'antd';
 import {
   Heading,
   HyperLinkButton,
@@ -14,16 +8,27 @@ import {
   SecondaryButton,
   Text,
 } from 'components';
+import { useTitle } from 'hooks';
+import { SignInPayload } from 'interfaces';
+import _ from 'lodash';
+import { useEffect, useState } from 'react';
+import { connect } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { RootDispatch, RootState } from 'store';
 import { SignUpModel } from './SignUpModal';
 
-const { Item } = Form;
+interface Props extends PropsFromStores {
+  title?: string;
+}
 
-const SignInPageContainer: React.FC<SignInPageContainerProps> = ({
+function SignInPageContainer({
   title,
   currentUser,
+  errorMessages,
   loading,
   doSignIn,
-}) => {
+  setErrorMessages,
+}: Props) {
   const [isSignInModalVisible, setIsSignInModalVisible] = useState(false);
 
   const navigate = useNavigate();
@@ -36,25 +41,31 @@ const SignInPageContainer: React.FC<SignInPageContainerProps> = ({
     }
   }, [currentUser, navigate]);
 
-  const onFinish = (values: SignInPayload) => {
+  function onFinish(values: SignInPayload): void {
     doSignIn(values);
-  };
+  }
 
-  const onForgottenPasswordClick = () => {
+  function onClickForgottenPassword(): void {
     console.log('Open forgotten password model');
-  };
+  }
 
-  const onCreateNewAccountClick = () => {
+  function onClickCreateAccount(): void {
     setIsSignInModalVisible(true);
-  };
+  }
 
-  const onSignUpModelCancel = () => {
+  function onCancelSignUpModal(): void {
     setIsSignInModalVisible(false);
-  };
+  }
+
+  function onChangeForm(): void {
+    if (!_.isEmpty(errorMessages)) {
+      setErrorMessages([]);
+    }
+  }
 
   return (
     <div className="flex flex-col items-center justify-between min-h-screen mx-auto">
-      <SignUpModel visible={isSignInModalVisible} onCancel={onSignUpModelCancel} />
+      <SignUpModel visible={isSignInModalVisible} onCancel={onCancelSignUpModal} />
 
       <section className="flex justify-between max-w-screen-lg mt-32">
         <div className="mt-10 mr-44">
@@ -69,38 +80,52 @@ const SignInPageContainer: React.FC<SignInPageContainerProps> = ({
             layout="vertical"
             className="m-0"
             onFinish={onFinish}
+            onChange={onChangeForm}
           >
-            <Item
-              name="username"
-              rules={[{ required: true, message: 'Please enter your email address.' }]}
+            <Form.Item
+              name="email"
+              rules={[{ required: true, message: 'Please enter your email address' }]}
               className="mb-3"
             >
               <Input
                 placeholder="Email address or username"
                 className="py-3 text-sm font-medium rounded-md w-80"
               />
-            </Item>
-            <Item
+            </Form.Item>
+            <Form.Item
               name="password"
-              rules={[{ required: true, message: 'Password is required.' }]}
+              rules={[{ required: true, message: 'Password is required' }]}
               className="mb-5"
             >
-              <Input placeholder="Password" className="py-3 text-sm font-medium rounded-md w-80" />
-            </Item>
-            <Item className="mb-0">
-              <PrimaryButton htmlType="submit" className="w-full py-5" loading={loading.doSignIn}>
+              <Input.Password
+                placeholder="Password"
+                iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+                className="py-3 text-sm font-medium rounded-md w-80"
+              />
+            </Form.Item>
+            <Form.Item className="mb-0">
+              {_.map(errorMessages, (message, index) => (
+                <Text key={index} type="danger" className="w-full text-xs">
+                  *{message}
+                </Text>
+              ))}
+              <PrimaryButton
+                htmlType="submit"
+                className="w-full mt-5  py-5"
+                loading={loading.doSignIn}
+              >
                 Sign In
               </PrimaryButton>
-            </Item>
+            </Form.Item>
           </Form>
 
-          <HyperLinkButton size="small" className="w-min" onClick={onForgottenPasswordClick}>
+          <HyperLinkButton size="small" className="w-min" onClick={onClickForgottenPassword}>
             Forgotten password?
           </HyperLinkButton>
 
           <Divider className="p-0 m-0 border-brd" />
 
-          <SecondaryButton className="py-5 w-min" onClick={onCreateNewAccountClick}>
+          <SecondaryButton className="py-5 w-min" onClick={onClickCreateAccount}>
             Create New Account
           </SecondaryButton>
         </div>
@@ -109,20 +134,19 @@ const SignInPageContainer: React.FC<SignInPageContainerProps> = ({
       <NonAuthFooter />
     </div>
   );
-};
+}
 
 const mapState = (state: RootState) => ({
   currentUser: state.authModel.currentUser,
+  errorMessages: state.authModel.errorMessages,
   loading: state.loading.effects.authModel,
 });
 
 const mapDispatch = (dispatch: RootDispatch) => ({
   doSignIn: dispatch.authModel.doSignIn,
+  setErrorMessages: dispatch.authModel.setErrorMessages,
 });
 
-type SignInPageContainerProps = ReturnType<typeof mapState> &
-  ReturnType<typeof mapDispatch> & {
-    title?: string;
-  };
+type PropsFromStores = ReturnType<typeof mapState> & ReturnType<typeof mapDispatch>;
 
 export const SignInPage = connect(mapState, mapDispatch)(SignInPageContainer);

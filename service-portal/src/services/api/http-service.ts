@@ -1,6 +1,6 @@
-import axios, { AxiosRequestConfig, AxiosError } from 'axios';
+import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 import { env } from 'configs';
-import { ResponseModel, ErrorCode } from 'interfaces';
+import { ErrorCode, ResponseModel } from 'interfaces';
 import { authLocalStorage } from 'shared';
 
 type Method =
@@ -33,7 +33,7 @@ export class HttpService {
 
   private static handleHttpResponseError(error: AxiosError): ResponseModel {
     if (error.response) {
-      const { data, status, config } = error.response;
+      const { data, status, config } = error.response || {};
       const { method, url } = config;
       const errorCode = data.errorCode || ErrorCode.Unknown;
       const response: ResponseModel = {
@@ -43,11 +43,11 @@ export class HttpService {
           message: data.message,
         },
       };
-      console.error(`ERROR ${errorCode} ${method} ${url}: ${data}`);
+      console.error(`ERROR ${errorCode} ${method} ${url}: ${data.message}`);
       return response;
     } else {
       const response: ResponseModel = {
-        status: error.request.status,
+        status: error.request?.status || undefined,
         errorCode: +(error.code || '') || ErrorCode.Unknown,
         data: {
           message: 'Unknown error',

@@ -5,7 +5,9 @@ import { Image } from 'antd';
 import { Heading } from '../../typography';
 import { ProfileDropdown } from './ProfileDropdown';
 
-const NavbarContainer = ({ currentUser, doSignOut }: NavbarContainerProps) => {
+interface Props extends PropsFromStores {}
+
+const NavbarContainer = ({ currentUser, doSignOut }: Props) => {
   const onSignOutClick = () => {
     doSignOut();
   };
@@ -29,6 +31,6 @@ const mapDispatch = (dispatch: RootDispatch) => ({
   doSignOut: dispatch.authModel.doSignOut,
 });
 
-type NavbarContainerProps = ReturnType<typeof mapState> & ReturnType<typeof mapDispatch>;
+type PropsFromStores = ReturnType<typeof mapState> & ReturnType<typeof mapDispatch>;
 
 export const Navbar = connect(mapState, mapDispatch)(NavbarContainer);

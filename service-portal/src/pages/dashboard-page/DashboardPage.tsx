@@ -1,15 +1,16 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { Row, Empty } from 'antd';
 import { WomanOutlined } from '@ant-design/icons';
+import { Empty, Row } from 'antd';
 import { BackToTop, Text } from 'components';
 import { useTitle } from 'hooks';
+import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { RootDispatch, RootState } from 'store';
 
-interface DashboardPageProps {
+interface Props {
   title?: string;
 }
 
-export const DashboardPage: React.FC<DashboardPageProps> = ({ title }) => {
+const DashboardPageContainer = ({ title }: Props): JSX.Element => {
   useTitle(title);
 
   return (
@@ -20,28 +21,28 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ title }) => {
           <div className="flex items-center justify-center gap-20 px-10 py-5 bg-white rounded-md shadow-sm">
             <div className="flex flex-col items-center">
               <Text className="font-light text-center text-tertiary whitespace-nowrap">
-                PENDING BOOKINGS
+                PENDING MEDICAL BILLS
               </Text>
               <Text className="py-2 text-4xl font-bold">12</Text>
             </div>
             <div className="flex flex-col items-center">
               <Text className="font-light text-center whitespace-nowrap text-tertiary">
-                ACTIVE BOOKINGS
+                ACTIVE MEDICAL BILLS
               </Text>
-              <Text className="py-2 text-4xl font-bold ">121312</Text>
+              <Text className="py-2 text-4xl font-bold ">106</Text>
             </div>
             <div className="flex flex-col items-center">
               <Text className="font-light text-center whitespace-nowrap text-tertiary">
-                COMPLETED BOOKINGS
+                COMPLETED MEDICAL BILLS
               </Text>
-              <Text className="py-2 text-4xl font-bold">736</Text>
+              <Text className="py-2 text-4xl font-bold">16</Text>
             </div>
           </div>
         </div>
         <div className="w-full gap-1 mt-10">
-          <Text className="text-xs font-medium text-tertiary">BOOKINGS THAT I'M IN CHARGE</Text>
+          <Text className="text-xs font-medium text-tertiary">TODAY'S PATIENTS</Text>
           <div className="px-5 py-5 bg-white rounded-md shadow-sm">
-            <Text className="text-tertiary">All my patients.</Text>
+            <Text className="text-tertiary">All my patients today.</Text>
             <div className="flex flex-col min-h-[720px] gap-2 mt-2">
               {/* Content goes here */}
 
@@ -196,3 +197,9 @@ export const DashboardPage: React.FC<DashboardPageProps> = ({ title }) => {
     </div>
   );
 };
+
+const mapState = (state: RootState) => ({});
+
+const mapDispatch = (dispatch: RootDispatch) => ({});
+
+export const DashboardPage = connect(mapState, mapDispatch)(DashboardPageContainer);

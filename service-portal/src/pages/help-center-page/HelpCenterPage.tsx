@@ -1,11 +1,11 @@
 import React from 'react';
 import { useTitle } from 'hooks';
 
-interface HelpCenterPageProps {
+interface Props {
   title?: string;
 }
 
-export const HelpCenterPage: React.FC<HelpCenterPageProps> = ({ title }) => {
+export const HelpCenterPage = ({ title }: Props) => {
   useTitle(title);
 
   return <div>This is help center page</div>;
