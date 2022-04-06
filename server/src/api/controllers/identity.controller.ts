@@ -2,40 +2,39 @@ import { Request, Response } from "express";
 import { SignInDto, SignInResponse } from "../dtos";
 import { SignUpDto } from "../dtos";
 import { IdentityService } from "../services";
-import { BodyResponse, ErrorHandler } from "../../shared";
-import { IdentityRepository } from "../repositories";
+import { BodyResponse, ErrorResponse } from "../../shared";
 
-const identityService = new IdentityService(new IdentityRepository());
+export class IdentityController {
+  static async signIn(req: Request, res: Response): Promise<void> {
+    try {
+      const signInDto: SignInDto = req.body;
+      const response: SignInResponse = await IdentityService.signIn(signInDto);
 
-export const signIn = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const signInDto: SignInDto = req.body;
-    const response: SignInResponse = await identityService.signIn(signInDto);
+      const bodyResponse: BodyResponse<SignInResponse> = {
+        message: "Execute Successfully",
+        data: response,
+        statusCode: 200,
+      };
 
-    const bodyResponse: BodyResponse<SignInResponse> = {
-      message: "Execute Successfully",
-      data: response,
-      statusCode: 200,
-    };
-
-    res.status(200).json(bodyResponse);
-  } catch (error) {
-    ErrorHandler(error, res);
+      res.status(200).json(bodyResponse);
+    } catch (error) {
+      ErrorResponse(error, res);
+    }
   }
-};
 
-export const signUp = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const signUpDto: SignUpDto = req.body;
+  static async signUp(req: Request, res: Response): Promise<void> {
+    try {
+      const signUpDto: SignUpDto = req.body;
 
-    const response = await identityService.signUp(signUpDto);
+      const response = await IdentityService.signUp(signUpDto);
 
-    const bodyResponse: BodyResponse<void> = {
-      message: "Execute Successfully",
-      statusCode: 200,
-    };
-    res.status(200).json(bodyResponse);
-  } catch (error) {
-    ErrorHandler(error, res);
+      const bodyResponse: BodyResponse<void> = {
+        message: "Execute Successfully",
+        statusCode: 200,
+      };
+      res.status(200).json(bodyResponse);
+    } catch (error) {
+      ErrorResponse(error, res);
+    }
   }
-};
+}

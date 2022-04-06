@@ -1,60 +1,64 @@
-// import { Op } from "sequelize";
-// import { CreateMedicalBillDto, UpdateMedicalBillDto } from "../dtos";
-// import { models } from "../models";
+import { Op } from "sequelize";
+import { CreateMedicalBillDto, UpdateMedicalBillDto } from "../dtos";
+import { models } from "../models";
+import { FindMedicalBillsQueryParams } from "../dtos";
+import { InternalServerError } from "../../shared";
 
-// const { MedicalBill } = models;
+const { MedicalBill } = models;
 
-// export class PatientRepository {
-//   async findManyByName(name: string): Promise<typeof MedicalBill[]> {
-//     return await MedicalBill.findAll({
-//       where: {
-//         fullName: { [Op.like]: `%${name}%` },
-//       },
-//     });
-//   }
+export class MedicalBillRepository {
+  static async findMany(
+    query: FindMedicalBillsQueryParams
+  ): Promise<typeof MedicalBill[]> {
+    try {
+      return await MedicalBill.findAll();
+    } catch (error) {
+      throw new InternalServerError(error);
+    }
+  }
 
-//   async findMany(): Promise<typeof MedicalBill[]> {
-//     return await MedicalBill.findAll();
-//   }
+  static async findById(id: string): Promise<typeof MedicalBill> {
+    try {
+      return await MedicalBill.findByPk(id);
+    } catch (error) {
+      throw new InternalServerError(error);
+    }
+  }
 
-//   async findById(id: string): Promise<typeof MedicalBill> {
-//     return await MedicalBill.findByPk(id);
-//   }
+  static async create(dto: CreateMedicalBillDto): Promise<void> {
+    try {
+      return await MedicalBill.create(dto);
+    } catch (error) {
+      throw new InternalServerError(error);
+    }
+  }
 
-//   async create(dto: CreateMedicalBillDto): Promise<void> {
-//     try {
-//       return await MedicalBill.create(dto);
-//     } catch (error) {
-//       throw new Error(error);
-//     }
-//   }
+  static async update(
+    id: string,
+    dto: UpdateMedicalBillDto
+  ): Promise<typeof MedicalBill> {
+    try {
+      const medicalBillFounded = await this.findById(id);
 
-//   async update(
-//     id: string,
-//     dto: UpdateMedicalBillDto
-//   ): Promise<typeof MedicalBill> {
-//     try {
-//       const userFound = await this.findById(id);
+      return await medicalBillFounded.update(dto, {
+        where: {
+          id,
+        },
+      });
+    } catch (error) {
+      throw new InternalServerError(error);
+    }
+  }
 
-//       return await userFound.update(dto, {
-//         where: {
-//           id,
-//         },
-//       });
-//     } catch (error) {
-//       throw new Error(error);
-//     }
-//   }
-
-//   async delete(id: string): Promise<typeof MedicalBill> {
-//     try {
-//       return await MedicalBill.destroy({
-//         where: {
-//           id,
-//         },
-//       });
-//     } catch (error) {
-//       throw new Error(error);
-//     }
-//   }
-// }
+  static async delete(id: string): Promise<typeof MedicalBill> {
+    try {
+      return await MedicalBill.destroy({
+        where: {
+          id,
+        },
+      });
+    } catch (error) {
+      throw new InternalServerError(error);
+    }
+  }
+}

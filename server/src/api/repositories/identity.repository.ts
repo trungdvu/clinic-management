@@ -1,30 +1,43 @@
+import { InternalServerError } from "../../shared";
 import { SignUpDto } from "../dtos";
 import { models } from "../models";
 
 const { Identity } = models;
 
 export class IdentityRepository {
-  async findMany(): Promise<typeof Identity[]> {
-    return await Identity.findAll();
-  }
-
-  async findById(id: string): Promise<typeof Identity> {
-    return await Identity.findByPk(id);
-  }
-
-  async findByEmail(email: string): Promise<typeof Identity> {
-    return await Identity.findOne({ where: { email } });
-  }
-
-  async create(signUpDto: SignUpDto) {
+  static async findMany(): Promise<typeof Identity[]> {
     try {
-      return await Identity.create(signUpDto);
+      return await Identity.findAll();
     } catch (error) {
-      throw new Error(error);
+      throw new InternalServerError(error);
     }
   }
 
-  async update(
+  static async findById(id: string): Promise<typeof Identity> {
+    try {
+      return await Identity.findByPk(id);
+    } catch (error) {
+      throw new InternalServerError(error);
+    }
+  }
+
+  static async findByEmail(email: string): Promise<typeof Identity> {
+    try {
+      return await Identity.findOne({ where: { email } });
+    } catch (error) {
+      throw new InternalServerError(error);
+    }
+  }
+
+  static async create(signUpDto: SignUpDto) {
+    try {
+      return await Identity.create(signUpDto);
+    } catch (error) {
+      throw new InternalServerError(error);
+    }
+  }
+
+  static async update(
     id: string,
     identity: typeof Identity
   ): Promise<typeof Identity> {
@@ -33,7 +46,7 @@ export class IdentityRepository {
 
       return await userFound.update(identity);
     } catch (error) {
-      throw new Error(error);
+      throw new InternalServerError(error);
     }
   }
 }

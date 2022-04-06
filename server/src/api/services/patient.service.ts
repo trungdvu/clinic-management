@@ -7,29 +7,22 @@ import {
 } from "../../shared";
 import {
   CreatePatientDto,
-  FindAllPatientsQuery,
+  FindPatientsQuery,
   PatientResponse,
   UpdatePatientDto,
 } from "../dtos";
 import { PatientRepository } from "../repositories";
 
 export class PatientService {
-  constructor(private readonly patientRepository: PatientRepository) {}
-
-  async findMany(query: FindAllPatientsQuery): Promise<PatientResponse[]> {
+  static async findMany(query: FindPatientsQuery): Promise<PatientResponse[]> {
     try {
-      const { text } = query;
-      if (text) {
-        return await this.patientRepository.findManyByName(text);
-      }
-
-      return await this.patientRepository.findMany();
+      return await PatientRepository.findMany(query);
     } catch (error) {
       throw new InternalServerError(error.message as string);
     }
   }
 
-  async create(dto: CreatePatientDto): Promise<any> {
+  static async create(dto: CreatePatientDto): Promise<any> {
     try {
       const { fullName, phoneNumber, gender, dayOfBirth, address } = dto;
       const collections: CheckerCollections = [
@@ -61,23 +54,23 @@ export class PatientService {
         address: address ?? "",
       };
 
-      return await this.patientRepository.create(defaultProps);
+      return await PatientRepository.create(defaultProps);
     } catch (error) {
       throw new InternalServerError(error.message as string);
     }
   }
 
-  async update(id: string, dto: UpdatePatientDto): Promise<any> {
+  static async update(id: string, dto: UpdatePatientDto): Promise<string> {
     try {
-      return await this.patientRepository.update(id, dto);
+      return await PatientRepository.update(id, dto);
     } catch (error) {
       throw new InternalServerError(error.message as string);
     }
   }
 
-  async delete(id: string): Promise<any> {
+  static async delete(id: string): Promise<string> {
     try {
-      return await this.patientRepository.delete(id);
+      return await PatientRepository.delete(id);
     } catch (error) {
       throw new InternalServerError(error.message as string);
     }

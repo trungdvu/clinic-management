@@ -21,5 +21,13 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
+  Patient.associations = (models) => {
+    Patient.belongsTo(models.MedicalBill, {
+      foreignKey: "patientId",
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
+    });
+  };
+
   return Patient;
 };

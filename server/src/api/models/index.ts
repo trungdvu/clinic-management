@@ -8,6 +8,7 @@ let db = {
   Identity: null,
   Patient: null,
   MedicalBill: null,
+  DiseaseType: null,
 };
 
 fs.readdirSync(__dirname)
@@ -32,6 +33,7 @@ export const models = {
   Identity: db.Identity,
   Patient: db.Patient,
   MedicalBill: db.MedicalBill,
+  DiseaseType: db.DiseaseType,
   sequelize: sequelize,
   Sequelize: Sequelize,
 };

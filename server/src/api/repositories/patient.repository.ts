@@ -1,32 +1,45 @@
 import { Op } from "sequelize";
-import {
-  CreatePatientDto,
-  FindAllPatientsQuery,
-  SignUpDto,
-  UpdatePatientDto,
-} from "../dtos";
+import { InternalServerError } from "../../shared";
+import { CreatePatientDto, FindPatientsQuery, UpdatePatientDto } from "../dtos";
 import { models } from "../models";
 
 const { Patient } = models;
 
 export class PatientRepository {
-  async findManyByName(name: string): Promise<typeof Patient[]> {
-    return await Patient.findAll({
-      where: {
-        fullName: { [Op.like]: `%${name}%` },
-      },
-    });
+  static async findManyByName(name: string): Promise<typeof Patient[]> {
+    try {
+      return await Patient.findAll({
+        where: {
+          fullName: { [Op.like]: `%${name}%` },
+        },
+      });
+    } catch (error) {
+      throw new InternalServerError(error);
+    }
   }
 
-  async findMany(): Promise<typeof Patient[]> {
-    return await Patient.findAll();
+  static async findMany(query: FindPatientsQuery): Promise<typeof Patient[]> {
+    try {
+      const { text } = query;
+      return await Patient.findAll({
+        where: {
+          fullName: { [Op.like]: `%${text}%` },
+        },
+      });
+    } catch (error) {
+      throw new InternalServerError(error);
+    }
   }
 
-  async findById(id: string): Promise<typeof Patient> {
-    return await Patient.findByPk(id);
+  static async findById(id: string): Promise<typeof Patient> {
+    try {
+      return await Patient.findByPk(id);
+    } catch (error) {
+      throw new InternalServerError(error);
+    }
   }
 
-  async create(dto: CreatePatientDto): Promise<void> {
+  static async create(dto: CreatePatientDto): Promise<void> {
     try {
       return await Patient.create(dto);
     } catch (error) {
@@ -34,7 +47,10 @@ export class PatientRepository {
     }
   }
 
-  async update(id: string, dto: UpdatePatientDto): Promise<typeof Patient> {
+  static async update(
+    id: string,
+    dto: UpdatePatientDto
+  ): Promise<typeof Patient> {
     try {
       const userFound = await this.findById(id);
 
@@ -44,11 +60,11 @@ export class PatientRepository {
         },
       });
     } catch (error) {
-      throw new Error(error);
+      throw new InternalServerError(error);
     }
   }
 
-  async delete(id: string): Promise<typeof Patient> {
+  static async delete(id: string): Promise<typeof Patient> {
     try {
       return await Patient.destroy({
         where: {
@@ -56,7 +72,7 @@ export class PatientRepository {
         },
       });
     } catch (error) {
-      throw new Error(error);
+      throw new InternalServerError(error);
     }
   }
 }

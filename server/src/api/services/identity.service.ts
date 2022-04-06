@@ -2,20 +2,23 @@ import {
   BadRequestError,
   Checker,
   CheckerCollection,
+  ErrorHandler,
   InternalServerError,
+  NotFoundError,
 } from "../../shared";
-import { SignInDto, SignInResponse, SignUpDto } from "../dtos";
+import { SignInDto, SignInResponse, SignUpDto, UserResponse } from "../dtos";
 import { IdentityRepository } from "../repositories";
-import TokenService from "./token.service";
 import { hash } from "bcrypt";
 import { GENERATE_SALT } from "../constants";
+import { AccessToken } from "../dtos/token/access-token";
+import { comparePassword } from "../utils";
+import { TokenService } from "./token.service";
+import { JwtPayload } from "jsonwebtoken";
 
 export class IdentityService {
-  constructor(private readonly identityRepository: IdentityRepository) {}
-
-  async signIn(signInDto: SignInDto): Promise<SignInResponse> {
+  static async signIn(dto: SignInDto): Promise<SignInResponse> {
     try {
-      const { email, password } = signInDto;
+      const { email, password } = dto;
 
       const emailCheckResult = Checker.isEmptyStringOrUndefined(email);
       if (!emailCheckResult.succeed) {
@@ -27,33 +30,47 @@ export class IdentityService {
         throw new BadRequestError("Password cannot be empty");
       }
 
-      const userModel = await this.identityRepository.findByEmail(email);
-      const profileData = userModel.dataValues;
-
+      const userModel = await IdentityRepository.findByEmail(email);
       if (!userModel) {
         throw new BadRequestError("User Not Found!!!");
       }
 
+      const profileData = userModel.dataValues;
+      console.log("profile data: ", profileData.password, password);
+
+      const isPasswordMatched = await comparePassword(
+        password,
+        profileData.password
+      );
+      if (!isPasswordMatched) {
+        throw new BadRequestError("Incorrect Password!!");
+      }
+
       const tokenGenerated = await TokenService.createToken({
+        userId: profileData.id,
         email,
-      });
+      } as AccessToken);
 
       const signInResponse: SignInResponse = {
         accessToken: tokenGenerated,
         profile: {
-          ...profileData,
-        },
+          id: profileData.id,
+          firstName: profileData.firstName,
+          lastName: profileData.lastName,
+          username: profileData.username,
+          phoneNumber: profileData.phoneNumber,
+        } as UserResponse,
       };
 
-      await this.identityRepository.update(userModel.id, userModel);
+      await IdentityRepository.update(profileData.id, userModel);
 
       return signInResponse;
     } catch (error) {
-      throw new InternalServerError(error.message as string);
+      ErrorHandler(error);
     }
   }
 
-  async signUp(signUpDto: SignUpDto): Promise<void> {
+  static async signUp(dto: SignUpDto): Promise<void> {
     try {
       const {
         email,
@@ -63,7 +80,7 @@ export class IdentityService {
         username,
         lastName,
         phoneNumber,
-      } = signUpDto;
+      } = dto;
 
       const checkerCollections: CheckerCollection[] = [
         {
@@ -100,25 +117,40 @@ export class IdentityService {
         throw new BadRequestError("Password not match!!!");
       }
 
-      const user = await this.identityRepository.findByEmail(signUpDto.email);
+      const user = await IdentityRepository.findByEmail(email);
       if (user) {
-        throw new BadRequestError("Email has been taken!!!");
+        throw new NotFoundError("Email has been taken!!!");
       }
 
       const passwordHashed = await hash(password, GENERATE_SALT);
 
       const signUpInfo: SignUpDto = {
-        ...signUpDto,
+        ...dto,
         password: passwordHashed,
         username:
+          username ??
           firstName.toLocaleLowerCase() + "_" + lastName.toLocaleLowerCase(),
         phoneNumber: phoneNumber ?? "",
       };
 
-      const res = await this.identityRepository.create(signUpInfo);
-      return res;
+      const result = await IdentityRepository.create(signUpInfo);
+      return result;
     } catch (error) {
-      throw new InternalServerError(error.message as string);
+      ErrorHandler(error);
+    }
+  }
+
+  static async isValidToken(token: string): Promise<boolean> {
+    try {
+      const { email } = await TokenService.decode(token);
+      const user = await IdentityRepository.findByEmail(email);
+      if (user) {
+        return true;
+      }
+
+      return false;
+    } catch (error) {
+      return false;
     }
   }
 }

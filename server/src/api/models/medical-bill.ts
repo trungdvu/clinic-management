@@ -9,21 +9,25 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: DataTypes.UUIDV4,
         primaryKey: true,
       },
-      fullName: DataTypes.STRING,
-      gender: DataTypes.STRING,
-      dayOfBirth: DataTypes.STRING,
-      address: DataTypes.STRING,
-      phone: DataTypes.STRING,
+      diseaseTypeId: DataTypes.UUID,
+      symptomDescription: DataTypes.STRING,
+      prediction: DataTypes.STRING,
+      patientId: DataTypes.UUID,
     },
     {
       freezeTableName: true,
-      tableName: "medical-bills",
+      tableName: "medicalBills",
     }
   );
 
-  MedicalBill.associations = function (models) {
+  MedicalBill.associations = (models) => {
     MedicalBill.belongsTo(models.Patient, {
-      foreignKey: "patient_id",
+      foreignKey: "patientId",
+      onDelete: "CASCADE",
+      onUpdate: "CASCADE",
+    });
+    MedicalBill.belongsTo(models.DiseaseType, {
+      foreignKey: "diseaseTypeId",
       onDelete: "CASCADE",
       onUpdate: "CASCADE",
     });
