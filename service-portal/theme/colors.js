@@ -26,7 +26,7 @@ const colors = {
     },
   },
   link: {
-    DEFAULT: '#737373',
+    DEFAULT: '#1890FF',
   },
   info: {
     err: '#f02849',

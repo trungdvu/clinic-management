@@ -10,7 +10,7 @@ export const ModalHeader = React.memo(({ title, subTitle }: ModalHeaderProps) =>
   return (
     <>
       <div>
-        <Heading level={2} className="mb-0">
+        <Heading level={3} className="mb-0">
           {title}
         </Heading>
         <Text className="text-tertiary">{subTitle}</Text>

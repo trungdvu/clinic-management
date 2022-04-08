@@ -1,7 +1,7 @@
 @import '~antd/dist/antd.css';
 
 body {
-  @apply font-sans bg-base-pri;
+  @apply font-sans bg-white;
 }
 
 .ant-btn > span {

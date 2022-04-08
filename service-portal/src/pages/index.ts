@@ -5,7 +5,7 @@ export * from './account-page/AccountPage';
 export * from './patients-page/PatientsPage';
 export * from './statistics-page/StatisticsPage';
 export * from './invoices-page/InvoicesPage';
-export * from './bookings-page/BookingsPage';
+export * from './medical-bills-page/MedicalBillsPage';
 export * from './support-page/SupportPage';
 export * from './help-center-page/HelpCenterPage';
 export * from './profile-page/ProfilePage';

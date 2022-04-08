@@ -5,24 +5,17 @@ import { TextProps } from 'antd/lib/typography/Text';
 
 const { Text: AntText } = Typography;
 
-export const Text: React.FC<TextProps> = ({ children, className, type, ...props }) => {
-  const textColor = React.useMemo(() => {
-    switch (type) {
-      case 'success':
-        return 'text-info-suc';
-      case 'secondary':
-        return 'text-sec';
-      case 'warning':
-        return 'text-info-war';
-      case 'danger':
-        return 'text-info-err';
-      default:
-        return '';
-    }
-  }, [type]);
+export const Text: React.FC<TextProps> = ({ children, className, type = 'primary', ...props }) => {
+  const colors: any = {
+    success: 'text-info-suc',
+    secondary: 'text-sec',
+    warning: 'text-info-war',
+    danger: 'text-info-err',
+    primary: 'text-primary',
+  };
 
   return (
-    <AntText className={classNames('font-sans', textColor, className)} {...props}>
+    <AntText className={classNames('font-sans', colors[type], className)} {...props}>
       {children}
     </AntText>
   );
