@@ -72,7 +72,7 @@ export const authModel = createModel<RootModel>()({
 
     async doSignOut(): Promise<boolean> {
       try {
-        await sleep(500);
+        await sleep(1000);
         authLocalStorage.setUser(undefined);
         authLocalStorage.setAccessToken('');
         dispatch.authModel.setCurrentUser(undefined);

@@ -30,3 +30,7 @@ body {
 .ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {
   @apply bg-transparent;
 }
+
+.ant-tabs-tab-btn {
+  font-size: medium !important;
+}

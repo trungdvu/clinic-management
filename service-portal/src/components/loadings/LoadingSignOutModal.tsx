@@ -1,6 +1,6 @@
 import { Modal, ModalProps, Spin } from 'antd';
 import _ from 'lodash';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { RootState } from 'store';
 import { ModalHeader } from '../headers';
@@ -12,15 +12,13 @@ const TIME_TO_CLOSE = 60 * 1000;
 interface Props extends PropsFromStore, ModalProps {}
 
 function LoadingSignOutModalContainer({ loading, onCancel, ...props }: Props): JSX.Element {
-  let timer = useRef<any>().current;
   const [closable, setClosable] = useState<boolean>(false);
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    timer = setTimeout(() => setClosable(true), TIME_TO_CLOSE);
+    const timer = setTimeout(() => setClosable(true), TIME_TO_CLOSE);
 
     return () => {
-      if (!_.isEmpty(timer)) {
+      if (timer) {
         clearTimeout(timer);
       }
     };

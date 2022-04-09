@@ -12,11 +12,10 @@ export const Text: React.FC<TextProps> = memo(
       secondary: 'text-sec',
       warning: 'text-info-war',
       danger: 'text-info-err',
-      primary: 'text-primary',
     };
 
     return (
-      <AntText className={classNames('font-sans', colors[type], className)} {...props}>
+      <AntText className={classNames('font-sans text-inherit', colors[type], className)} {...props}>
         {children}
       </AntText>
     );

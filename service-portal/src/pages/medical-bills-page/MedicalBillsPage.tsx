@@ -6,7 +6,6 @@ import { useTitle } from 'hooks';
 import _ from 'lodash';
 import moment from 'moment';
 import { Status } from './Status';
-import './MedicalBillsPage.css';
 import { NewMedicalBillModal } from './NewMedicalBillModal';
 import { useState } from 'react';
 
@@ -46,7 +45,7 @@ export const BookingsPage = ({ title }: Props) => {
           <DatePicker.RangePicker
             allowClear={false}
             format={'d MMMM'}
-            suffixIcon={<DownOutlined className="text-link" />}
+            suffixIcon={<DownOutlined className="text-tertiary" />}
             className="border-none ml-5 mb-5 bg-link bg-opacity-5"
           />
           <Row gutter={24} className="px-5 py-3 text-tertiary font-medium">
