@@ -1,60 +1,97 @@
 import { ManOutlined, MehOutlined, WomanOutlined } from '@ant-design/icons';
-import { DatePicker, Form, Input, InputNumber, Modal, ModalProps, Select } from 'antd';
+import {
+  DatePicker,
+  Form,
+  Input,
+  InputNumber,
+  Modal,
+  ModalProps,
+  notification,
+  Select,
+} from 'antd';
 import classNames from 'classnames';
 import { ModalHeader, PrimaryButton, SecondaryButton, Text } from 'components';
+import { CreatePatientPayload } from 'interfaces';
+import moment from 'moment';
 import { connect } from 'react-redux';
 import { RootDispatch, RootState } from 'store';
 
 const { Option } = Select;
-
 const { TextArea } = Input;
+const { useForm, Item } = Form;
 
 interface Props extends PropsFromStore, ModalProps {}
 
-function CreatePatientModalContainer({ className, ...props }: Props): JSX.Element {
-  function onFinish(values: any): void {
-    console.log('🚀 ~ values', values);
+function CreatePatientModalContainer({
+  className,
+  loading,
+  doCreatePatient,
+  onCancel,
+  ...props
+}: Props): JSX.Element {
+  const [form] = useForm();
+
+  async function onFinish(values: any): Promise<void> {
+    const payload: CreatePatientPayload = {
+      ...values,
+      dayOfBirth: moment(values.dayOfBirth).toISOString(),
+    };
+    const result = await doCreatePatient(payload);
+
+    if (result) {
+      notification.success({ message: "You've created a patient successfully." });
+      form.resetFields();
+    } else {
+      notification.error({ message: 'Ops! Something went wrong.' });
+    }
+  }
+
+  function _onCancel(e: React.MouseEvent<HTMLElement, MouseEvent>): void {
+    form.resetFields();
+    if (onCancel) {
+      onCancel(e);
+    }
   }
 
   return (
     <Modal
       footer={null}
-      title={<ModalHeader title="Create a new medical bill" />}
-      className={classNames('p-0 w-[768px] min-h-[720px]', className)}
+      title={<ModalHeader title="Create a new patient" />}
+      className={classNames('p-0 w-[768px]')}
+      onCancel={_onCancel}
       {...props}
     >
       <Form
-        name="newMedicalBill"
+        form={form}
+        name="createPatient"
         autoComplete="off"
         layout="vertical"
         className="flex flex-col items-center gap-4"
         onFinish={onFinish}
       >
-        <Form.Item
+        <Item
           requiredMark="optional"
           label="PATIENT FULL NAME"
-          name="fullname"
-          rules={[{ required: true, message: "Patient's name is required" }]}
+          name="fullName"
+          rules={[{ required: true }]}
           className="w-full"
         >
-          <Input placeholder="E.g. Daivd Beckham, Aubrey Drake Graham" className="h-[40px]" />
-        </Form.Item>
+          <Input
+            type="text"
+            placeholder="E.g. Daivd Beckham, Aubrey Drake Graham"
+            className="h-[40px]"
+          />
+        </Item>
 
         <div className="flex items-center justify-start gap-5 w-full">
-          <Form.Item
+          <Item
             requiredMark="optional"
             label="GENDER"
             name="gender"
-            rules={[{ required: true, message: 'Please select a gender' }]}
+            rules={[{ required: true }]}
             className="w-1/2"
           >
-            <Select
-              size="large"
-              placeholder="No default"
-              className="w-full text-sm"
-              onChange={() => {}}
-              onSearch={() => {}}
-            >
+            <Select size="large" placeholder="No default" className="w-full text-sm">
               <Option value="Male">
                 <div className="flex items-center">
                   <ManOutlined className="text-tertiary text-lg pb-1 mr-1" />
@@ -67,31 +104,35 @@ function CreatePatientModalContainer({ className, ...props }: Props): JSX.Elemen
                   <Text>Female</Text>
                 </div>
               </Option>
-              <Option value="NotToPrefer">
+              <Option value="Not to prefer">
                 <div className="flex items-center">
                   <MehOutlined className="text-tertiary text-lg pb-1 mr-1" />
                   <Text>Not to prefer</Text>
                 </div>
               </Option>
             </Select>
-          </Form.Item>
+          </Item>
 
-          <Form.Item
+          <Item
             requiredMark="optional"
             label="DATE OF BIRTH"
             name="dateOfBirth"
-            rules={[{ required: true, message: '' }]}
+            rules={[{ required: true }]}
             className="w-1/2 text-tertiary text-sm"
           >
-            <DatePicker className="py-2 w-full font-normal" placeholder="No default" />
-          </Form.Item>
+            <DatePicker
+              placeholder="No default"
+              format="DD MMM YYYY"
+              className="py-2 w-full font-normal"
+            />
+          </Item>
         </div>
 
-        <Form.Item
+        <Item
           requiredMark="optional"
           label="PHONE NUMBER"
           name="phoneNumber"
-          rules={[{ required: true, message: 'Phone number is invalid' }]}
+          rules={[{ required: true }]}
           className="w-full"
         >
           <InputNumber
@@ -100,32 +141,34 @@ function CreatePatientModalContainer({ className, ...props }: Props): JSX.Elemen
             controls={false}
             className="text-sm w-full"
           />
-        </Form.Item>
+        </Item>
 
-        <Form.Item label="ADDRESS" name="address" className="w-full">
+        <Item label="ADDRESS" name="address" className="w-full">
           <TextArea rows={4} placeholder="Optional" className="w-full text-sm" />
-        </Form.Item>
-
-        {/* {_.map(errorMessages, (message, index) => (
-          <Text key={index} type="danger" className="w-full mt-2 text-xs">
-            *{message}
-          </Text>
-        ))} */}
+        </Item>
 
         <div className="flex items-center w-full mt-2 gap-4">
-          <Form.Item>
-            <PrimaryButton htmlType="submit">Create</PrimaryButton>
-          </Form.Item>
-          <SecondaryButton>Cancel</SecondaryButton>
+          <Item>
+            <PrimaryButton htmlType="submit" loading={loading.doCreatePatient}>
+              Create
+            </PrimaryButton>
+          </Item>
+          <SecondaryButton disabled={loading.doCreatePatient} onClick={_onCancel}>
+            Cancel
+          </SecondaryButton>
         </div>
       </Form>
     </Modal>
   );
 }
 
-const mapState = (state: RootState) => ({});
+const mapState = (state: RootState) => ({
+  loading: state.loading.effects.patientModel,
+});
 
-const mapDispatch = (dispatch: RootDispatch) => ({});
+const mapDispatch = (dispatch: RootDispatch) => ({
+  doCreatePatient: dispatch.patientModel.doCreatePatient,
+});
 
 type PropsFromStore = ReturnType<typeof mapState> & ReturnType<typeof mapDispatch>;
 

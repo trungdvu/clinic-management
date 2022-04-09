@@ -6,16 +6,22 @@ import React, { memo } from 'react';
 const { Text: AntText } = Typography;
 
 export const Text: React.FC<TextProps> = memo(
-  ({ children, className, type = 'primary', ...props }): JSX.Element => {
-    const colors: any = {
-      success: 'text-info-suc',
-      secondary: 'text-sec',
-      warning: 'text-info-war',
-      danger: 'text-info-err',
-    };
-
+  ({ children, className, type, ...props }): JSX.Element => {
     return (
-      <AntText className={classNames('font-sans text-inherit', colors[type], className)} {...props}>
+      <AntText
+        className={classNames(
+          'font-sans ',
+          {
+            'text-inherit': !type,
+            'text-info-err': type === 'danger',
+            'text-info-suc': type === 'success',
+            'text-tertiary': type === 'secondary',
+            'text-info-war': type === 'warning',
+          },
+          className,
+        )}
+        {...props}
+      >
         {children}
       </AntText>
     );

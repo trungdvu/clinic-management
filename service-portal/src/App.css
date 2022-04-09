@@ -32,5 +32,10 @@ body {
 }
 
 .ant-tabs-tab-btn {
-  font-size: medium !important;
+  font-size: medium;
+}
+
+.ant-form-item-explain,
+.ant-form-item-explain-connected {
+  display: none;
 }
