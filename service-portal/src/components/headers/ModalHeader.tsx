@@ -1,12 +1,12 @@
 import { Heading, Text } from '../typography';
-import React from 'react';
+import { memo } from 'react';
 
-interface ModalHeaderProps {
+interface Props {
   title?: string;
   subTitle?: string;
 }
 
-export const ModalHeader = React.memo(({ title, subTitle }: ModalHeaderProps) => {
+export const ModalHeader = memo(({ title, subTitle }: Props): JSX.Element => {
   return (
     <>
       <div>

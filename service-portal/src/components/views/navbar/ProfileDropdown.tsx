@@ -1,33 +1,33 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Menu, Dropdown, Image, Divider } from 'antd';
 import {
   CaretDownOutlined,
   CommentOutlined,
   LogoutOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import { User } from 'interfaces';
+import { Divider, Dropdown, Image, Menu } from 'antd';
 import { PAGE_ROUTES } from 'consts';
-import { Text } from '../../typography';
+import { User } from 'interfaces';
+import { memo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { LoadingSignOutModal } from '../../loadings';
+import { Text } from '../../typography';
 
 interface Props {
   currentUser: User;
   onSignOutClick: () => void;
 }
 
-export const ProfileDropdown = ({ currentUser, onSignOutClick }: Props) => {
+export const ProfileDropdown = memo(({ currentUser, onSignOutClick }: Props): JSX.Element => {
   const [isLoadingSignOutModalVisible, setIsLoadingSignOutModalVisible] = useState(false);
 
-  const _onSignOutClick = () => {
+  function _onClickSignOut(): void {
     setIsLoadingSignOutModalVisible(true);
     onSignOutClick();
-  };
+  }
 
-  const onLoadingSignOutModalCancel = () => {
+  function onCancelLoadingSignOutModal(): void {
     setIsLoadingSignOutModalVisible(false);
-  };
+  }
 
   const menu = (
     <Menu className="w-56 py-0 rounded-md">
@@ -35,7 +35,7 @@ export const ProfileDropdown = ({ currentUser, onSignOutClick }: Props) => {
         <Link to={PAGE_ROUTES.PROFILE.PATH} className="w-full flex items-center gap-2">
           <UserOutlined className="text-tertiary" />
           <Text>
-            {currentUser?.firstName} {currentUser?.lastName}
+            {currentUser.firstName} {currentUser.lastName}
           </Text>
         </Link>
       </Menu.Item>
@@ -53,7 +53,7 @@ export const ProfileDropdown = ({ currentUser, onSignOutClick }: Props) => {
       <Menu.Item key={'3'} className="py-3 rounded-b-md">
         <button
           className="w-full flex items-center gap-2 text-button-pri"
-          onClick={_onSignOutClick}
+          onClick={_onClickSignOut}
         >
           <LogoutOutlined />
           Sign out
@@ -66,7 +66,7 @@ export const ProfileDropdown = ({ currentUser, onSignOutClick }: Props) => {
     <>
       <LoadingSignOutModal
         visible={isLoadingSignOutModalVisible}
-        onCancel={onLoadingSignOutModalCancel}
+        onCancel={onCancelLoadingSignOutModal}
       />
 
       <Dropdown overlay={menu} placement="bottomRight" className="rounded-lg">
@@ -83,4 +83,4 @@ export const ProfileDropdown = ({ currentUser, onSignOutClick }: Props) => {
       </Dropdown>
     </>
   );
-};
+});

@@ -1,16 +1,24 @@
-import React from 'react';
+import React, { memo, useMemo } from 'react';
 import classNames from 'classnames';
 import { Button, ButtonProps } from 'antd';
 
-export const HyperLinkButton: React.FC<ButtonProps> = ({ children, className, ...props }) => {
-  const classes = React.useMemo(
-    () => classNames('font-medium flex items-center justify-center duration-100', className),
-    [className],
-  );
+export const HyperLinkButton: React.FC<ButtonProps> = memo(
+  ({ children, className, ...props }): JSX.Element => {
+    const classes = useMemo(
+      () =>
+        classNames(
+          'flex items-center justify-center',
+          'font-medium',
+          'transition duration-100',
+          className,
+        ),
+      [className],
+    );
 
-  return (
-    <Button type="link" className={classes} {...props}>
-      {children}
-    </Button>
-  );
-};
+    return (
+      <Button type="link" className={classes} {...props}>
+        {children}
+      </Button>
+    );
+  },
+);

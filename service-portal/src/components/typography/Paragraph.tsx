@@ -1,29 +1,27 @@
-import React from 'react';
-import classNames from 'classnames';
 import { Typography } from 'antd';
 import { ParagraphProps } from 'antd/lib/typography/Paragraph';
+import classNames from 'classnames';
+import React, { memo } from 'react';
 
 const { Paragraph: AntParagraph } = Typography;
 
-export const Paragraph: React.FC<ParagraphProps> = ({ children, className, type, ...props }) => {
-  const textColor = React.useMemo(() => {
-    switch (type) {
-      case 'success':
-        return 'text-info-suc';
-      case 'secondary':
-        return 'text-sec';
-      case 'warning':
-        return 'text-info-war';
-      case 'danger':
-        return 'text-info-err';
-      default:
-        return 'text-primary';
-    }
-  }, [type]);
+export const Paragraph: React.FC<ParagraphProps> = memo(
+  ({ children, className, type = 'primary', ...props }): JSX.Element => {
+    const colors: any = {
+      success: 'text-info-suc',
+      secondary: 'text-sec',
+      warning: 'text-info-war',
+      danger: 'text-info-err',
+      primary: 'text-primary',
+    };
 
-  return (
-    <AntParagraph className={classNames('font-sans text-inherit', textColor, className)} {...props}>
-      {children}
-    </AntParagraph>
-  );
-};
+    return (
+      <AntParagraph
+        className={classNames('font-sans text-inherit', colors[type], className)}
+        {...props}
+      >
+        {children}
+      </AntParagraph>
+    );
+  },
+);

@@ -1,13 +1,14 @@
 import classNames from 'classnames';
 import { Text } from 'components';
 import { MEDICAL_BILLS_STATUSES } from 'consts/medical-bills-consts';
+import { memo } from 'react';
 
 interface Props {
   status: keyof typeof MEDICAL_BILLS_STATUSES;
   className?: string;
 }
 
-export const Status = ({ status, className }: Props) => {
+export const Status = memo(({ status, className }: Props): JSX.Element => {
   return (
     <Text
       type="success"
@@ -24,4 +25,4 @@ export const Status = ({ status, className }: Props) => {
       {MEDICAL_BILLS_STATUSES[status]}
     </Text>
   );
-};
+});

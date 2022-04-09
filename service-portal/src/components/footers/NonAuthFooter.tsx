@@ -1,9 +1,9 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
 import { PAGE_ROUTES } from 'consts';
+import { memo } from 'react';
+import { Link } from 'react-router-dom';
 import { Text } from '../typography';
 
-export const NonAuthFooter = React.memo(() => {
+export const NonAuthFooter = memo((): JSX.Element => {
   return (
     <div className="w-screen mt-20 bg-base-sec text-primary-2">
       <div className="flex justify-between max-w-5xl px-5 py-5 mx-auto">

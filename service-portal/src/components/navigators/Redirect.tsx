@@ -1,11 +1,11 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-type TRedirectProps = {
+type Props = {
   to: string;
 };
 
-export const Redirect = (props: TRedirectProps) => {
+export const Redirect = (props: Props) => {
   const navigate = useNavigate();
 
   React.useEffect(() => {

@@ -1,7 +1,7 @@
+import { Modal, ModalProps, Spin } from 'antd';
+import _ from 'lodash';
 import { useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
-import _ from 'lodash';
-import { Modal, ModalProps, Spin } from 'antd';
 import { RootState } from 'store';
 import { ModalHeader } from '../headers';
 import { Text } from '../typography';
@@ -9,10 +9,11 @@ import { Text } from '../typography';
 // if it is too long to sign out, then the modal is closeable
 const TIME_TO_CLOSE = 60 * 1000;
 
-const LoadingSignOutModalContainer = ({ loading, onCancel, ...props }: Props) => {
-  let timer = useRef<any>().current;
+interface Props extends PropsFromStore, ModalProps {}
 
-  const [closable, setClosable] = useState(false);
+function LoadingSignOutModalContainer({ loading, onCancel, ...props }: Props): JSX.Element {
+  let timer = useRef<any>().current;
+  const [closable, setClosable] = useState<boolean>(false);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -25,12 +26,11 @@ const LoadingSignOutModalContainer = ({ loading, onCancel, ...props }: Props) =>
     };
   }, []);
 
-  const _onCancel = (e: React.MouseEvent<HTMLElement, MouseEvent>): void | undefined => {
+  function _onCancel(e: React.MouseEvent<HTMLElement, MouseEvent>): void {
     if (closable && onCancel) {
       onCancel(e);
     }
-    return undefined;
-  };
+  }
 
   return (
     <Modal
@@ -49,12 +49,12 @@ const LoadingSignOutModalContainer = ({ loading, onCancel, ...props }: Props) =>
       )}
     </Modal>
   );
-};
+}
 
 const mapState = (state: RootState) => ({
   loading: state.loading.effects.authModel,
 });
 
-type Props = ReturnType<typeof mapState> & ModalProps;
+type PropsFromStore = ReturnType<typeof mapState>;
 
 export const LoadingSignOutModal = connect(mapState)(LoadingSignOutModalContainer);
