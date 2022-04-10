@@ -7,13 +7,13 @@ import apiRouters from "./api/routers";
 
 const app: Application = express();
 
-const port = 3000;
+const port = 8080;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(
   cors({
-    origin: ["http://localhost:3001"],
+    origin: ["http://localhost:3000"],
     methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
     credentials: true,
   })

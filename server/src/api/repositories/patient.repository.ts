@@ -23,7 +23,7 @@ export class PatientRepository {
       const { text } = query;
       return await Patient.findAll({
         where: {
-          fullName: { [Op.like]: `%${text}%` },
+          fullName: { [Op.like]: `%${text || ""}%` },
         },
       });
     } catch (error) {
