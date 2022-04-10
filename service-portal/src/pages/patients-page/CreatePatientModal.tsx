@@ -13,6 +13,7 @@ import classNames from 'classnames';
 import { ModalHeader, PrimaryButton, SecondaryButton, Text } from 'components';
 import { CreatePatientPayload } from 'interfaces';
 import moment from 'moment';
+import { useCallback } from 'react';
 import { connect } from 'react-redux';
 import { RootDispatch, RootState } from 'store';
 
@@ -20,7 +21,10 @@ const { Option } = Select;
 const { TextArea } = Input;
 const { useForm, Item } = Form;
 
-interface Props extends PropsFromStore, ModalProps {}
+interface Props extends PropsFromStore, ModalProps {
+  onCancel?: () => void;
+  onOk?: () => void;
+}
 
 function CreatePatientModalContainer({
   className,
@@ -31,27 +35,36 @@ function CreatePatientModalContainer({
 }: Props): JSX.Element {
   const [form] = useForm();
 
-  async function onFinish(values: any): Promise<void> {
-    const payload: CreatePatientPayload = {
-      ...values,
-      dayOfBirth: moment(values.dayOfBirth).toISOString(),
-    };
-    const result = await doCreatePatient(payload);
+  const onFinish = useCallback(
+    async (values: any) => {
+      const payload: CreatePatientPayload = {
+        ...values,
+        dayOfBirth: moment(values.dayOfBirth).toISOString(),
+      };
+      const result = await doCreatePatient(payload);
 
-    if (result) {
-      notification.success({ message: "You've created a patient successfully." });
+      if (result) {
+        notification.success({ message: "You've created a patient successfully." });
+        form.resetFields();
+        if (onCancel) {
+          onCancel();
+        }
+      } else {
+        notification.error({ message: 'Ops! Something went wrong.' });
+      }
+    },
+    [doCreatePatient, form, onCancel],
+  );
+
+  const _onCancel = useCallback(
+    (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
       form.resetFields();
-    } else {
-      notification.error({ message: 'Ops! Something went wrong.' });
-    }
-  }
-
-  function _onCancel(e: React.MouseEvent<HTMLElement, MouseEvent>): void {
-    form.resetFields();
-    if (onCancel) {
-      onCancel(e);
-    }
-  }
+      if (onCancel) {
+        onCancel();
+      }
+    },
+    [form, onCancel],
+  );
 
   return (
     <Modal
