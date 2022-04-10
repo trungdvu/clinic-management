@@ -6,3 +6,4 @@ export * from './footers';
 export * from './headers';
 export * from './views';
 export * from './loadings';
+export * from './selects';

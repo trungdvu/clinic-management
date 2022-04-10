@@ -5,9 +5,9 @@ import { Heading, IconButton, PrimaryButton, Text } from 'components';
 import { useTitle } from 'hooks';
 import _ from 'lodash';
 import moment from 'moment';
-import { Status } from './Status';
+import { useCallback, useState } from 'react';
 import { NewMedicalBillModal } from './NewMedicalBillModal';
-import { useState } from 'react';
+import { Status } from './Status';
 
 interface Props {
   title?: string;
@@ -16,19 +16,20 @@ interface Props {
 export const BookingsPage = ({ title }: Props) => {
   const [isCreateMedicalBillVisible, setIsCreateMedicalBillVisible] = useState<boolean>(false);
 
-  function onClickNewMedicalBill(): void {
-    setIsCreateMedicalBillVisible(true);
-  }
-
-  function onCancelNewMedicalBill(): void {
-    setIsCreateMedicalBillVisible(false);
-  }
-
   useTitle(title);
+
+  const onClickNewMedicalBill = useCallback(() => {
+    setIsCreateMedicalBillVisible(true);
+  }, []);
+
+  const onCancelNewMedicalBill = useCallback(() => {
+    setIsCreateMedicalBillVisible(false);
+  }, []);
 
   return (
     <div>
       <NewMedicalBillModal visible={isCreateMedicalBillVisible} onCancel={onCancelNewMedicalBill} />
+
       <div className="flex justify-between">
         <Heading level={3}>Medical bills</Heading>
         <div className="flex items-center gap-5">
@@ -40,6 +41,7 @@ export const BookingsPage = ({ title }: Props) => {
           </PrimaryButton>
         </div>
       </div>
+
       <Tabs type="card" defaultActiveKey="1" className="pb-10">
         <Tabs.TabPane key={1} tab="All medical bills">
           <DatePicker.RangePicker
