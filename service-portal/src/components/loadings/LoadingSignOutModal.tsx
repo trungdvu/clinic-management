@@ -1,5 +1,4 @@
 import { Modal, ModalProps, Spin } from 'antd';
-import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { RootState } from 'store';
@@ -15,6 +14,7 @@ function LoadingSignOutModalContainer({ loading, onCancel, ...props }: Props): J
   const [closable, setClosable] = useState<boolean>(false);
 
   useEffect(() => {
+    setClosable(false);
     const timer = setTimeout(() => setClosable(true), TIME_TO_CLOSE);
 
     return () => {

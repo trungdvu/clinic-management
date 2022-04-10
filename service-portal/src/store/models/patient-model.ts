@@ -40,7 +40,7 @@ export const patientModel = createModel<RootModel>()({
 
     async doGetPatients(payload?: string): Promise<Patient[] | false> {
       try {
-        const endpoint = `${PATIENT_API.PATIENTS}?text=${payload}`;
+        const endpoint = `${PATIENT_API.PATIENTS}?text=${payload || ''}`;
         const response = await HttpService.get(endpoint);
 
         if (response.status === 200) {

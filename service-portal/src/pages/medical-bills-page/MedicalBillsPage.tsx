@@ -6,14 +6,16 @@ import { useTitle } from 'hooks';
 import _ from 'lodash';
 import moment from 'moment';
 import { useCallback, useState } from 'react';
+import { connect } from 'react-redux';
+import { RootDispatch, RootState } from 'store';
 import { NewMedicalBillModal } from './NewMedicalBillModal';
 import { Status } from './Status';
 
-interface Props {
+interface Props extends PropsFromStore {
   title?: string;
 }
 
-export const BookingsPage = ({ title }: Props) => {
+const MedicalBillPageContainer = ({ title }: Props) => {
   const [isCreateMedicalBillVisible, setIsCreateMedicalBillVisible] = useState<boolean>(false);
 
   useTitle(title);
@@ -106,3 +108,11 @@ export const BookingsPage = ({ title }: Props) => {
     </div>
   );
 };
+
+const mapState = (state: RootState) => ({});
+
+const mapDispatch = (dispatch: RootDispatch) => ({});
+
+type PropsFromStore = ReturnType<typeof mapState> & ReturnType<typeof mapDispatch>;
+
+export const MedicalBillPage = connect(mapState, mapDispatch)(MedicalBillPageContainer);

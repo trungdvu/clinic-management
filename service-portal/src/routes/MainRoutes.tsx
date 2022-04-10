@@ -3,10 +3,11 @@ import { PAGE_ROUTES } from 'consts';
 import { useScrollToTop } from 'hooks';
 import {
   AccountPage,
-  BookingsPage,
+  AccountRecoverPage,
   DashboardPage,
   HelpCenterPage,
   InvoicesPage,
+  MedicalBillPage,
   NotFoundPage,
   PatientsPage,
   ProfilePage,
@@ -30,7 +31,7 @@ export const MainRoutes: React.FC = () => {
         />
         <Route
           path={PAGE_ROUTES.MEDICAL_BILLS.PATH}
-          element={<BookingsPage title={PAGE_ROUTES.MEDICAL_BILLS.TITLE} />}
+          element={<MedicalBillPage title={PAGE_ROUTES.MEDICAL_BILLS.TITLE} />}
         />
         <Route
           path={PAGE_ROUTES.PATIENTS.PATH}
@@ -68,6 +69,11 @@ export const MainRoutes: React.FC = () => {
       <Route
         path={PAGE_ROUTES.SIGN_IN.PATH}
         element={<SignInPage title={PAGE_ROUTES.SIGN_IN.TITLE} />}
+      />
+
+      <Route
+        path={PAGE_ROUTES.ACCOUNT_RECOVER.PATH}
+        element={<AccountRecoverPage title={PAGE_ROUTES.ACCOUNT_RECOVER.TITLE} />}
       />
     </Routes>
   );

@@ -33,6 +33,7 @@ export const authModel = createModel<RootModel>()({
           const { accessToken, profile } = response.data.data;
           authLocalStorage.setAccessToken(accessToken);
           authLocalStorage.setUser(profile);
+          authLocalStorage.setPreviousEmail(payload.email);
           dispatch.authModel.setCurrentUser(profile);
           return true;
         } else {
