@@ -17,7 +17,7 @@ function NavbarContainer({ currentUser, doSignOut }: Props): JSX.Element {
     <div className="flex items-center justify-between w-full h-16 px-5 bg-white shadow-md">
       <Link to={'/'} className="flex items-center">
         <Image src={require('assets/images/logo.png')} preview={false} className="w-20 h-20" />
-        <Heading className="mb-0 select-none">XClinic</Heading>
+        <Heading className="mb-0 select-none">ClinicX</Heading>
       </Link>
       <ProfileDropdown currentUser={currentUser!} onSignOutClick={onClickSignOut} />
     </div>

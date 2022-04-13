@@ -9,3 +9,4 @@ export * from './medical-bills-page/MedicalBillsPage';
 export * from './support-page/SupportPage';
 export * from './help-center-page/HelpCenterPage';
 export * from './profile-page/ProfilePage';
+export * from './account-recover-page/AccountRecoverPage';

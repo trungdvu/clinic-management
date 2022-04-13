@@ -23,7 +23,9 @@ export const patientModel = createModel<RootModel>()({
   effects: (dispatch) => ({
     async doCreatePatient(payload: CreatePatientPayload): Promise<boolean> {
       try {
-        const response = await HttpService.post(PATIENT_API.PATIENTS, payload);
+        const endpoint = PATIENT_API.PATIENTS;
+        const response = await HttpService.post(endpoint, payload);
+
         if (response.status === 200) {
           dispatch.patientModel.doGetPatients();
           return true;
@@ -36,9 +38,11 @@ export const patientModel = createModel<RootModel>()({
       }
     },
 
-    async doGetPatients(): Promise<Patient[] | false> {
+    async doGetPatients(payload?: string): Promise<Patient[] | false> {
       try {
-        const response = await HttpService.get(PATIENT_API.PATIENTS);
+        const endpoint = `${PATIENT_API.PATIENTS}?text=${payload || ''}`;
+        const response = await HttpService.get(endpoint);
+
         if (response.status === 200) {
           const patients = response.data.data;
           dispatch.patientModel.setPatients(patients);

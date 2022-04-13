@@ -5,6 +5,7 @@ class AuthLocalStorage extends LocalStorageService {
   private static instance: AuthLocalStorage;
 
   accessToken: string = '';
+  previousEmail: string = '';
   user?: User;
 
   public static sharedInstance(): AuthLocalStorage {
@@ -22,6 +23,11 @@ class AuthLocalStorage extends LocalStorageService {
 
   setUser(user?: User) {
     this.user = user;
+    this.save();
+  }
+
+  setPreviousEmail(email: string) {
+    this.previousEmail = email;
     this.save();
   }
 

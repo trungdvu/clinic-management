@@ -49,4 +49,8 @@ export const PAGE_ROUTES = {
     TITLE: 'XClinic - Help Center',
     TITLE_MENU: 'Help Center',
   },
+  ACCOUNT_RECOVER: {
+    PATH: '/login/recover',
+    TITLE: 'Forgotten Password',
+  },
 };

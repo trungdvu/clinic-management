@@ -8,16 +8,20 @@ import {
   SecondaryButton,
   Text,
 } from 'components';
+import { PAGE_ROUTES } from 'consts';
 import { useTitle } from 'hooks';
 import { SignInPayload } from 'interfaces';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import { authLocalStorage } from 'shared';
 import { RootDispatch, RootState } from 'store';
 import { SignUpModel } from './SignUpModal';
 
-interface Props extends PropsFromStores {
+const { useForm, Item } = Form;
+
+interface Props extends PropsFromStore {
   title?: string;
 }
 
@@ -31,9 +35,18 @@ function SignInPageContainer({
 }: Props) {
   const [isSignInModalVisible, setIsSignInModalVisible] = useState(false);
 
+  const [form] = useForm();
+
   const navigate = useNavigate();
 
   useTitle(title);
+
+  useEffect(() => {
+    authLocalStorage.load();
+    form.setFieldsValue({
+      email: authLocalStorage.previousEmail,
+    });
+  }, [form]);
 
   useEffect(() => {
     if (!_.isEmpty(currentUser)) {
@@ -46,7 +59,7 @@ function SignInPageContainer({
   }
 
   function onClickForgottenPassword(): void {
-    console.log('Open forgotten password model');
+    navigate(PAGE_ROUTES.ACCOUNT_RECOVER.PATH);
   }
 
   function onClickCreateAccount(): void {
@@ -69,12 +82,13 @@ function SignInPageContainer({
 
       <section className="flex justify-between max-w-screen-lg mt-32">
         <div className="mt-10 mr-44">
-          <Heading className="m-0 leading-none text-7xl">XClinic</Heading>
+          <Heading className="m-0 leading-none text-7xl">ClinicX</Heading>
           <Text className="text-2xl">Our business, your comforts.</Text>
         </div>
 
         <div className="flex flex-col items-center gap-4 p-5 bg-white rounded-md shadow-lg">
           <Form
+            form={form}
             name="login"
             autoComplete="off"
             layout="vertical"
@@ -82,7 +96,7 @@ function SignInPageContainer({
             onFinish={onFinish}
             onChange={onChangeForm}
           >
-            <Form.Item
+            <Item
               name="email"
               rules={[{ required: true, message: 'Please enter your email address' }]}
               className="mb-3"
@@ -91,32 +105,33 @@ function SignInPageContainer({
                 placeholder="Email address or username"
                 className="py-3 text-sm font-medium rounded-md w-80"
               />
-            </Form.Item>
-            <Form.Item
+            </Item>
+
+            <Item
               name="password"
               rules={[{ required: true, message: 'Password is required' }]}
-              className="mb-5"
+              className="mb-1"
             >
               <Input.Password
                 placeholder="Password"
                 iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
                 className="py-3 text-sm font-medium rounded-md w-80"
               />
-            </Form.Item>
-            <Form.Item className="mb-0">
-              {_.map(errorMessages, (message, index) => (
-                <Text key={index} type="danger" className="w-full text-xs">
-                  *{message}
-                </Text>
-              ))}
-              <PrimaryButton
-                htmlType="submit"
-                className="w-full mt-5  py-5"
-                loading={loading.doSignIn}
-              >
+            </Item>
+
+            <Item className="mb-0">
+              <div className="min-h-[22px] flex flex-col mb-1">
+                {_.map(errorMessages, (message, index) => (
+                  <Text key={index} type="danger" className="w-full">
+                    *{message}
+                  </Text>
+                ))}
+              </div>
+
+              <PrimaryButton htmlType="submit" className="w-full py-5" loading={loading.doSignIn}>
                 Sign In
               </PrimaryButton>
-            </Form.Item>
+            </Item>
           </Form>
 
           <HyperLinkButton size="small" className="w-min" onClick={onClickForgottenPassword}>
@@ -147,6 +162,6 @@ const mapDispatch = (dispatch: RootDispatch) => ({
   setErrorMessages: dispatch.authModel.setErrorMessages,
 });
 
-type PropsFromStores = ReturnType<typeof mapState> & ReturnType<typeof mapDispatch>;
+type PropsFromStore = ReturnType<typeof mapState> & ReturnType<typeof mapDispatch>;
 
 export const SignInPage = connect(mapState, mapDispatch)(SignInPageContainer);

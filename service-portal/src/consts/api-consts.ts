@@ -7,5 +7,8 @@ export const AUTH_API = {
 
 export const PATIENT_API = {
   PATIENTS: `/${VERSION}/patients`,
-  PATIENT: (id: string) => `/${VERSION}/patients/${id}`,
+};
+
+export const MEDICAL_BILL_API = {
+  MEDICAL_BILLS: `/${VERSION}/medical-bills`,
 };
