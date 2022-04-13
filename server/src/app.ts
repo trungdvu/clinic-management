@@ -2,8 +2,8 @@
 import express, { Application } from "express";
 import logger from "morgan";
 import cors from "cors";
-import { models } from "./api/models";
-import apiRouters from "./api/routers";
+import { models } from "./models";
+import apiRouters from "./routers";
 
 const app: Application = express();
 

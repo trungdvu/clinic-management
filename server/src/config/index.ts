@@ -18,3 +18,4 @@ const sequelize = new Sequelize(
 export { sequelize, Sequelize };
 
 export * from "./token.config";
+export * from "./api.config";

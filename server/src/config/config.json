@@ -3,18 +3,21 @@
     "username": "postgres",
     "password": "1234",
     "database": "clinic-management",
-    "host": "localhost"
+    "host": "127.0.0.1",
+    "dialect": "postgres"
   },
   "test": {
     "username": "postgres",
     "password": 1234,
     "database": "clinic-management",
-    "host": "localhost"
+    "host": "127.0.0.1",
+    "dialect": "postgres"
   },
   "production": {
     "username": "root",
     "password": 1234,
     "database": "clinic-management",
-    "host": "127.0.0.1"
+    "host": "127.0.0.1",
+    "dialect": "postgres"
   }
 }
