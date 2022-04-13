@@ -4,13 +4,13 @@
 
 Env requires: [Node.js](https://nodejs.org/en/) LTS v16 installed
 
-Clone the project
+**Clone the project**
 
 ```
   git clone https://github.com/trungdvu/clinic-management.git
 ```
 
-* **How to run Frontend:**
+## How to run Frontend:
 
 1. Go to UI repo
 
@@ -30,7 +30,7 @@ Clone the project
   npm start
 ```
 
-* **How to run Backend:**
+## How to run Backend:
 
 1. Go to server repo:
 
