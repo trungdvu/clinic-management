@@ -1,5 +1,5 @@
 import { Modal, ModalProps, Spin } from 'antd';
-import { useEffect, useState } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { RootState } from 'store';
 import { ModalHeader } from '../headers';
@@ -12,20 +12,21 @@ interface Props extends PropsFromStore, ModalProps {}
 
 function LoadingSignOutModalContainer({ loading, onCancel, ...props }: Props): JSX.Element {
   const [closable, setClosable] = useState<boolean>(false);
+  const timer = useRef<any>();
 
   useEffect(() => {
     setClosable(false);
-    const timer = setTimeout(() => setClosable(true), TIME_TO_CLOSE);
+    timer.current = setTimeout(() => setClosable(true), TIME_TO_CLOSE);
 
     return () => {
-      if (timer) {
-        clearTimeout(timer);
+      if (timer.current) {
+        clearTimeout(timer.current);
       }
     };
   }, []);
 
   function _onCancel(e: React.MouseEvent<HTMLElement, MouseEvent>): void {
-    if (closable && onCancel) {
+    if (timer.current && closable && onCancel) {
       onCancel(e);
     }
   }
@@ -55,4 +56,4 @@ const mapState = (state: RootState) => ({
 
 type PropsFromStore = ReturnType<typeof mapState>;
 
-export const LoadingSignOutModal = connect(mapState)(LoadingSignOutModalContainer);
+export const LoadingSignOutModal = connect(mapState)(memo(LoadingSignOutModalContainer));

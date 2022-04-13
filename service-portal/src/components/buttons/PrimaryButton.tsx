@@ -13,6 +13,7 @@ export const PrimaryButton: React.FC<ButtonProps> = memo(
           'bg-button-pri',
           'hover:bg-button-pri-hv hover:border-button-pri-hv',
           'active:bg-button-pri active:border-button-pri',
+          'focus:bg-button-pri focus:border-button-pri',
           {
             'bg-button-pri opacity-50 hover:cursor-not-allowed hover:bg-button-pri': loading,
           },

@@ -13,7 +13,7 @@ import classNames from 'classnames';
 import { ModalHeader, PrimaryButton, SecondaryButton, Text } from 'components';
 import { CreatePatientPayload } from 'interfaces';
 import moment from 'moment';
-import { useCallback } from 'react';
+import { memo, useCallback } from 'react';
 import { connect } from 'react-redux';
 import { RootDispatch, RootState } from 'store';
 
@@ -160,7 +160,7 @@ function CreatePatientModalContainer({
           <TextArea rows={4} placeholder="Optional" className="w-full text-sm" />
         </Item>
 
-        <div className="flex items-center w-full mt-2 gap-4">
+        <div className="flex items-center w-full mt-10 gap-4">
           <Item>
             <PrimaryButton htmlType="submit" loading={loading.doCreatePatient}>
               Create
@@ -185,4 +185,4 @@ const mapDispatch = (dispatch: RootDispatch) => ({
 
 type PropsFromStore = ReturnType<typeof mapState> & ReturnType<typeof mapDispatch>;
 
-export const CreatePatientModal = connect(mapState, mapDispatch)(CreatePatientModalContainer);
+export const CreatePatientModal = connect(mapState, mapDispatch)(memo(CreatePatientModalContainer));

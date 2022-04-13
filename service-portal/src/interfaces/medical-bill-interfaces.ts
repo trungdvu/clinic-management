@@ -11,4 +11,5 @@ export interface MedicalBill {
   prediction: string;
   symptomDescription: string;
   patientId: string;
+  drugs: any[];
 }

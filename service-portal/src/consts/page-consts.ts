@@ -1,56 +1,61 @@
 export const PAGE_ROUTES = {
   DASHBOARD: {
     PATH: '/dashboard',
-    TITLE: 'XClinic - Dashboard',
+    TITLE: 'Dashboard - ClinicX',
     TITLE_MENU: 'Dashboard',
   },
   SIGN_IN: {
     PATH: '/sign-in',
-    TITLE: 'XClinic - Sign In',
+    TITLE: 'Sign In - ClinicX',
     TITLE_MENU: 'Sign In',
   },
   MEDICAL_BILLS: {
     PATH: '/bookings',
-    TITLE: 'XClinic - Medical bills',
+    TITLE: 'Medical Bills - ClinicX',
     TITLE_MENU: 'Medical bills',
   },
   PATIENTS: {
     PATH: '/patients',
-    TITLE: 'XClinic - Patients',
+    TITLE: 'Patients - ClinicX',
     TITLE_MENU: 'Patients',
+    DETAILS: {
+      PATH: '/patients/:id',
+      ID: (id: string) => `/patients/${id}`,
+      TITLE: 'ClinicX - Patient Details',
+    },
   },
   INVOICES: {
     PATH: '/invoices',
-    TITLE: 'XClinic - Invoices',
+    TITLE: 'Invoices - ClinicX',
     TITLE_MENU: 'Invoices',
   },
   ACCOUNT: {
     PATH: '/account',
-    TITLE: 'XClinic - Account',
+    TITLE: 'Account - ClinicX',
     TITLE_MENU: 'Account',
   },
   SUPPORT: {
     PATH: '/support',
-    TITLE: 'XClinic - Support',
+    TITLE: 'Support - ClinicX',
     TITLE_MENU: 'Support',
   },
   PROFILE: {
     PATH: '/profile',
-    TITLE: 'My Profile',
+    TITLE: 'My Profile - ClinicX',
     TITLE_MENU: 'My Profile',
   },
   STATISTICS: {
     PATH: '/statistics',
-    TITLE: 'XClinic - Statistics',
+    TITLE: 'Statistics - ClinicX',
     TITLE_MENU: 'Statistics',
   },
   HELP_CENTER: {
     PATH: '/help-center',
-    TITLE: 'XClinic - Help Center',
+    TITLE: 'Help Center - ClinicX',
     TITLE_MENU: 'Help Center',
   },
   ACCOUNT_RECOVER: {
     PATH: '/login/recover',
-    TITLE: 'Forgotten Password',
+    TITLE: 'Forgotten Password - ClinicX',
   },
 };

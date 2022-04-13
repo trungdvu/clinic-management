@@ -7,3 +7,4 @@ export * from './headers';
 export * from './views';
 export * from './loadings';
 export * from './selects';
+export * from './modals';
