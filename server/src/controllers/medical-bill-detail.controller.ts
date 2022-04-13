@@ -11,7 +11,7 @@ import { MedicalBillService, MedicalBillDetailService } from "../services";
 import { BodyResponse, ErrorResponse } from "../shared";
 
 export class MedicalBillDetailController {
-  static async findMany(req: Request, res: Response): Promise<void> {
+  static async findAll(req: Request, res: Response): Promise<void> {
     try {
       const query: FindMedicalBillsQueryParams = req.query;
       const medicalBillSummaryResponses = await MedicalBillService.findMany(
