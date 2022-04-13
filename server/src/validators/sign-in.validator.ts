@@ -14,7 +14,6 @@ export const signInValidationSchema: ObjectSchema<SignInValidationSchema> = joi
   .keys({
     email: joi.string().trim().required().email().messages({
       "string.email": "Email must be a valid email address",
-      "string.trim": "Email may not contain any spaces at the beginning or end", // seems to be unnecessary
       "string.empty": "Email is required",
     }),
 
@@ -25,8 +24,6 @@ export const signInValidationSchema: ObjectSchema<SignInValidationSchema> = joi
       .regex(strongPasswordRegex)
       .messages({
         "string.email": "Password must be a valid email address",
-        "string.trim":
-          "Password may not contain any spaces at the beginning or end", // seems to be unnecessary
         "string.pattern.base": "Wrong Password Format",
       }),
   });
@@ -36,10 +33,7 @@ export const signInRequestValidatorMiddleware = (
   res: Response,
   next: NextFunction
 ): void => {
-  console.log("req.body ne:", req.body);
-
   const { error } = signInValidationSchema.validate(req.body);
-  console.log("error ne:", error);
 
   if (error) {
     const bodyResponse: BodyResponse<void> = {

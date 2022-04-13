@@ -45,8 +45,6 @@ export class MedicalBillDetailRepository {
     try {
       const medicalBillDetailFounded = await this.findById(id);
 
-      console.log("medicalBillDetailFounded", medicalBillDetailFounded, dto);
-
       await medicalBillDetailFounded.update(dto, {
         where: {
           id,

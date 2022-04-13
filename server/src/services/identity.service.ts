@@ -35,7 +35,6 @@ export class IdentityService {
       }
 
       const profileData = userModel.dataValues;
-      console.log("profile data: ", profileData.password, password);
 
       const isPasswordMatched = await comparePassword(
         password,
