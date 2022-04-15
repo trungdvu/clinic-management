@@ -1,13 +1,12 @@
-import { Op } from "sequelize";
 import {
-  DrugResponse,
   DrugInformation,
+  DrugResponse,
   UpdateMedicalBillDetailDto,
 } from "../dtos";
-import { models } from "../js-models";
+import { MedicalBillDetail as M } from "../models";
 import { InternalServerError } from "../shared";
 
-const { MedicalBillDetail } = models;
+const MedicalBillDetail: any = M;
 
 export class MedicalBillDetailRepository {
   static async findMany(medicalBillId: string): Promise<DrugResponse[]> {

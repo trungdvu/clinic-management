@@ -1,5 +1,5 @@
-import { NextFunction, Request, Response } from "express";
 import joi, { ObjectSchema } from "@hapi/joi";
+import { NextFunction, Request, Response } from "express";
 import { BodyResponse } from "../shared";
 
 interface SignUpValidationSchema {

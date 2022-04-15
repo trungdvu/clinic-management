@@ -8,7 +8,8 @@
     "db:migrate": "cd src/ && npx sequelize-cli db:migrate",
     "start": "node dist/app.js",
     "dev": "nodemon src/app.ts",
-    "build": "tsc -p ."
+    "build": "tsc -p .",
+    "lint": "eslint \"src/**/*.{js,jsx}\" --quiet"
   },
   "keywords": [],
   "author": "Tri Nguyen",

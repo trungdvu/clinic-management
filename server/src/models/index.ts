@@ -1,16 +1,14 @@
-import { Sequelize } from "sequelize-typescript";
 import { Dialect } from "sequelize";
+import { Sequelize } from "sequelize-typescript";
 import { developmentConfig } from "../config";
-import fs from "fs";
-import path from "path";
-import { Identity } from "./identity.model";
+import { DiseaseType } from "./disease-type.model";
 import { Drug } from "./drug.model";
-import { MedicalBill } from "./medical-bill.model";
+import { Identity } from "./identity.model";
 import { MedicalBillDetail } from "./medical-bill-detail.model";
+import { MedicalBill } from "./medical-bill.model";
+import { Patient } from "./patient.model";
 import { Unit } from "./unit.model";
 import { Usage } from "./usage.model";
-import { Patient } from "./patient.model";
-import { DiseaseType } from "./disease-type.model";
 
 // const basename = path.basename(__filename);
 // const models = fs
@@ -46,11 +44,11 @@ export const sequelize = new Sequelize({
   ],
 });
 
-export * from "./identity.model";
+export * from "./disease-type.model";
 export * from "./drug.model";
+export * from "./identity.model";
 export * from "./medical-bill-detail.model";
 export * from "./medical-bill.model";
 export * from "./patient.model";
 export * from "./unit.model";
 export * from "./usage.model";
-export * from "./disease-type.model";

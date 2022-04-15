@@ -1,6 +1,6 @@
-import { InternalServerError } from "../shared";
 import { SignUpDto } from "../dtos";
 import { Identity } from "../models";
+import { InternalServerError } from "../shared";
 
 export class IdentityRepository {
   static async findMany(): Promise<Identity[]> {

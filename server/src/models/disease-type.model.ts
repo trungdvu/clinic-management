@@ -1,4 +1,3 @@
-import { MedicalBill } from "./medical-bill.model";
 import {
   Column,
   DataType,
@@ -7,6 +6,7 @@ import {
   PrimaryKey,
   Table,
 } from "sequelize-typescript";
+import { MedicalBill } from "./medical-bill.model";
 
 export interface DiseaseTypeAttributes {
   id: string;

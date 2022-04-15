@@ -1,19 +1,18 @@
+import { hash } from "bcrypt";
+import { GENERATE_SALT } from "../constants";
+import { SignInDto, SignInResponse, SignUpDto, UserResponse } from "../dtos";
+import { AccessToken } from "../dtos/token/access-token";
+import { Identity } from "../models";
+import { IdentityRepository } from "../repositories";
 import {
   BadRequestError,
   Checker,
   CheckerCollection,
   ErrorHandler,
-  InternalServerError,
   NotFoundError,
 } from "../shared";
-import { SignInDto, SignInResponse, SignUpDto, UserResponse } from "../dtos";
-import { IdentityRepository } from "../repositories";
-import { hash } from "bcrypt";
-import { GENERATE_SALT } from "../constants";
-import { AccessToken } from "../dtos/token/access-token";
 import { comparePassword } from "../utils";
 import { TokenService } from "./token.service";
-import { Identity } from "../models";
 
 export class IdentityService {
   static async signIn(dto: SignInDto): Promise<SignInResponse> {

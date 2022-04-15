@@ -1,8 +1,11 @@
-import { CreateMedicalBillDto, UpdateMedicalBillDto } from "../dtos";
+import {
+  CreateMedicalBillDto,
+  FindMedicalBillsQueryParams,
+  UpdateMedicalBillDto,
+} from "../dtos";
 import { MedicalBill } from "../models";
-import { FindMedicalBillsQueryParams } from "../dtos";
-import { InternalServerError } from "../shared";
 import { Patient } from "../models/patient.model";
+import { InternalServerError } from "../shared";
 
 export class MedicalBillRepository {
   static async findMany(

@@ -7,11 +7,10 @@ import {
   PrimaryKey,
   Table,
 } from "sequelize-typescript";
-import { DiseaseType } from "./disease-type.model";
 import { Drug } from "./drug.model";
+import { MedicalBill } from "./medical-bill.model";
 import { Unit } from "./unit.model";
 import { Usage } from "./usage.model";
-import { MedicalBill } from "./medical-bill.model";
 
 export interface MedicalBillDetailAttributes {
   id: string;

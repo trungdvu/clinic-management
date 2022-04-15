@@ -1,11 +1,4 @@
 import {
-  BadRequestError,
-  Checker,
-  CheckerCollections,
-  ErrorHandler,
-  InternalServerError,
-} from "../shared";
-import {
   CreateMedicalBillDto,
   DrugResponse,
   FindMedicalBillsQueryParams,
@@ -13,11 +6,17 @@ import {
   MedicalBillSummaryResponse,
   UpdateMedicalBillDto,
 } from "../dtos";
+import { MedicalBill } from "../models";
 import {
   MedicalBillDetailRepository,
   MedicalBillRepository,
 } from "../repositories";
-import { MedicalBill } from "../models";
+import {
+  BadRequestError,
+  Checker,
+  CheckerCollections,
+  ErrorHandler,
+} from "../shared";
 
 export class MedicalBillService {
   static async findMany(

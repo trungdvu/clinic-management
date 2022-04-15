@@ -1,6 +1,6 @@
-import { Response, Request, NextFunction } from "express";
-import { BodyResponse } from "../shared";
+import { NextFunction, Request, Response } from "express";
 import { IdentityService } from "../services";
+import { BodyResponse } from "../shared";
 
 const getBearerToken = (req: Request) => {
   const authorizationHeader = req.headers["authorization"];

@@ -1,16 +1,16 @@
 import {
+  CreateMedicalBillDetailDto,
+  DrugResponse,
+  UpdateMedicalBillDetailDto,
+} from "../dtos";
+import { MedicalBillDetailRepository } from "../repositories";
+import {
   BadRequestError,
   Checker,
   CheckerCollections,
   ErrorHandler,
   InternalServerError,
 } from "../shared";
-import {
-  CreateMedicalBillDetailDto,
-  DrugResponse,
-  UpdateMedicalBillDetailDto,
-} from "../dtos";
-import { MedicalBillDetailRepository } from "../repositories";
 
 export class MedicalBillDetailService {
   static async findMany(medicalBillId: string): Promise<DrugResponse[]> {

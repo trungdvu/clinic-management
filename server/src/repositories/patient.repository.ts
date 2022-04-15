@@ -1,7 +1,6 @@
-import { Op } from "sequelize";
-import { InternalServerError } from "../shared";
 import { CreatePatientDto, FindPatientsQuery, UpdatePatientDto } from "../dtos";
 import { Patient } from "../models";
+import { InternalServerError } from "../shared";
 
 export class PatientRepository {
   static async findMany(query: FindPatientsQuery): Promise<Patient[]> {

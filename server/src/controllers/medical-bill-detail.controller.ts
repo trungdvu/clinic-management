@@ -6,8 +6,7 @@ import {
   MedicalBillSummaryResponse,
   UpdateMedicalBillDetailDto,
 } from "../dtos";
-
-import { MedicalBillService, MedicalBillDetailService } from "../services";
+import { MedicalBillDetailService, MedicalBillService } from "../services";
 import { BodyResponse, ErrorResponse } from "../shared";
 
 export class MedicalBillDetailController {

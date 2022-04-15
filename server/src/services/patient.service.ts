@@ -1,18 +1,17 @@
 import {
-  BadRequestError,
-  Checker,
-  CheckerCollection,
-  CheckerCollections,
-  InternalServerError,
-} from "../shared";
-import {
   CreatePatientDto,
   FindPatientsQuery,
   PatientResponse,
   UpdatePatientDto,
 } from "../dtos";
-import { PatientRepository } from "../repositories";
 import { Patient } from "../models";
+import { PatientRepository } from "../repositories";
+import {
+  BadRequestError,
+  Checker,
+  CheckerCollections,
+  InternalServerError,
+} from "../shared";
 
 export class PatientService {
   static async findMany(query: FindPatientsQuery): Promise<PatientResponse[]> {

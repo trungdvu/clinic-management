@@ -1,4 +1,3 @@
-import { MedicalBillDetail } from "./medical-bill-detail.model";
 import {
   Column,
   DataType,
@@ -7,6 +6,7 @@ import {
   PrimaryKey,
   Table,
 } from "sequelize-typescript";
+import { MedicalBillDetail } from "./medical-bill-detail.model";
 
 export interface UnitAttributes {
   id: string;

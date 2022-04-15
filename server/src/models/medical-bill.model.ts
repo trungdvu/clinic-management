@@ -3,15 +3,14 @@ import {
   Column,
   DataType,
   ForeignKey,
-  HasMany,
   HasOne,
   Model,
   PrimaryKey,
   Table,
 } from "sequelize-typescript";
 import { DiseaseType } from "./disease-type.model";
-import { Patient } from "./patient.model";
 import { MedicalBillDetail } from "./medical-bill-detail.model";
+import { Patient } from "./patient.model";
 
 enum MedicalBillStatus {
   Pending = "pending",

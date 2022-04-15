@@ -1,6 +1,5 @@
-import { Op } from "sequelize";
-import { InternalServerError } from "../shared";
 import { Drug } from "../models";
+import { InternalServerError } from "../shared";
 
 export class DrugRepository {
   static async findById(id: string): Promise<Drug> {
