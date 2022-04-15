@@ -14,9 +14,6 @@ export class MedicalBillRepository {
     try {
       const { patientId } = query;
       return await MedicalBill.findAll({
-        where: {
-          patientId,
-        },
         include: {
           model: Patient,
           attributes: ["fullName"],
