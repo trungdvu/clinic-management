@@ -1,5 +1,5 @@
-import { NextFunction, Request, Response } from "express";
 import joi, { ObjectSchema } from "@hapi/joi";
+import { NextFunction, Request, Response } from "express";
 import { BodyResponse } from "../shared";
 
 interface SignInValidationSchema {
@@ -24,7 +24,7 @@ export const signInValidationSchema: ObjectSchema<SignInValidationSchema> = joi
       .regex(strongPasswordRegex)
       .messages({
         "string.email": "Password must be a valid email address",
-        "string.pattern.base": "Wrong Password Format",
+        "string.pattern.base": "Incorrect password",
       }),
   });
 

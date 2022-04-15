@@ -1,6 +1,7 @@
-import { developmentConfig } from "./development.config";
-import { Sequelize } from "sequelize";
 import dotenv from "dotenv";
+import { Sequelize } from "sequelize";
+import { developmentConfig } from "./development.config";
+
 dotenv.config();
 
 const config = developmentConfig;
@@ -15,7 +16,7 @@ const sequelize = new Sequelize(
   }
 );
 
-export { sequelize, Sequelize };
-
-export * from "./token.config";
 export * from "./api.config";
+export * from "./development.config";
+export * from "./token.config";
+export { sequelize, Sequelize };

@@ -1,70 +1,61 @@
 import { createModel } from '@rematch/core';
-import { AUTH_API } from 'consts';
+import { API } from 'consts';
 import { SignInPayload, SignUpPayload, User } from 'interfaces';
 import { HttpService } from 'services';
-import { authLocalStorage } from 'shared';
+import { authLocalStorage, ErrorModel } from 'shared';
 import { sleep } from 'utils/async-utils';
 import { RootModel } from '.';
 
 interface AuthModelState {
   currentUser?: User;
-  errorMessages: string[];
 }
 
 export const authModel = createModel<RootModel>()({
   state: {
     currentUser: undefined,
-    errorMessages: [],
   } as AuthModelState,
 
   reducers: {
     setCurrentUser: (state, payload?: User) => ({ ...state, currentUser: payload }),
-    setErrorMessages: (state, payload: string[]) => ({ ...state, errorMessages: payload }),
   },
 
   effects: (dispatch) => ({
-    async doSignIn(payload: SignInPayload, state): Promise<boolean> {
+    async doSignIn(payload: SignInPayload, state): Promise<boolean | ErrorModel> {
       try {
-        dispatch.authModel.setErrorMessages([]);
+        const endpoint = API.SIGN_IN;
+        const response = await HttpService.post(endpoint, payload);
+        const { data, errorCode, status } = response;
 
-        const response = await HttpService.post(AUTH_API.SIGN_IN, payload);
-
-        if (response.status === 200) {
-          const { accessToken, profile } = response.data.data;
+        if (status === 200) {
+          const { accessToken, profile } = data.data;
           authLocalStorage.setAccessToken(accessToken);
           authLocalStorage.setUser(profile);
           authLocalStorage.setPreviousEmail(payload.email);
           dispatch.authModel.setCurrentUser(profile);
           return true;
-        } else {
-          const errorMessages = ['The email or password is not correct'];
-          dispatch.authModel.setErrorMessages(errorMessages);
-          return false;
         }
+        return new ErrorModel(data, errorCode, status);
       } catch (error) {
         console.error('doSignIn', error);
         return false;
       }
     },
 
-    async doSignUp(payload: SignUpPayload, state): Promise<boolean> {
+    async doSignUp(payload: SignUpPayload, state): Promise<boolean | ErrorModel> {
       try {
-        dispatch.authModel.setErrorMessages([]);
+        const endpoint = API.SIGN_UP;
+        const response = await HttpService.post(endpoint, payload);
+        const { data, errorCode, status } = response;
 
-        const response = await HttpService.post(AUTH_API.SIGN_UP, payload);
-
-        if (response.status === 200) {
+        if (status === 200) {
           const signInPayload: SignInPayload = {
             email: payload.email,
             password: payload.password,
           };
           const result = await dispatch.authModel.doSignIn(signInPayload);
           return result;
-        } else {
-          const errorMessages = ['Email has already existed, please trey another one'];
-          dispatch.authModel.setErrorMessages(errorMessages);
-          return false;
         }
+        return new ErrorModel(data, errorCode, status);
       } catch (error) {
         console.error('doSignUp', error);
         return false;

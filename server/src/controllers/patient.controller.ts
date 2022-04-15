@@ -62,7 +62,7 @@ export class PatientController {
   static async delete(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
-      const response: string = await PatientService.delete(id);
+      await PatientService.delete(id);
 
       const bodyResponse: BodyResponse<void> = {
         message: "Execute Successfully",

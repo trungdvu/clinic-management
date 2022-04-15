@@ -4,11 +4,6 @@ export interface ResponseModel {
   errorCode?: number;
 }
 
-export interface ErrorModel {
-  errorCode: number | string;
-  data?: any;
-}
-
 export enum ErrorCode {
   NoNetWork = -1,
   Unknown = -999,

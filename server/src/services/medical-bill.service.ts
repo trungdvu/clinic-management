@@ -1,11 +1,4 @@
 import {
-  BadRequestError,
-  Checker,
-  CheckerCollections,
-  ErrorHandler,
-  InternalServerError,
-} from "../shared";
-import {
   CreateMedicalBillDto,
   DrugResponse,
   FindMedicalBillsQueryParams,
@@ -13,17 +6,26 @@ import {
   MedicalBillSummaryResponse,
   UpdateMedicalBillDto,
 } from "../dtos";
+import { MedicalBill } from "../models";
 import {
   MedicalBillDetailRepository,
   MedicalBillRepository,
 } from "../repositories";
+import {
+  BadRequestError,
+  Checker,
+  CheckerCollections,
+  ErrorHandler,
+} from "../shared";
 
 export class MedicalBillService {
   static async findMany(
     query: FindMedicalBillsQueryParams
   ): Promise<MedicalBillSummaryResponse[]> {
     try {
-      const medicalBillRecords = await MedicalBillRepository.findMany(query);
+      const medicalBillRecords: MedicalBill[] = await MedicalBillRepository.findMany(
+        query
+      );
 
       return medicalBillRecords.map((record) => {
         return {
@@ -31,7 +33,9 @@ export class MedicalBillService {
           diseaseTypeId: record.diseaseTypeId,
           prediction: record.prediction,
           symptomDescription: record.symptomDescription,
-          patientId: record.patientId,
+          status: record.status,
+          patientFullName: record.patient.fullName,
+          createdAt: record.createdAt,
         } as MedicalBillSummaryResponse;
       });
     } catch (error) {
@@ -99,7 +103,7 @@ export class MedicalBillService {
     }
   }
 
-  static async delete(id: string): Promise<string> {
+  static async delete(id: string): Promise<number> {
     try {
       return await MedicalBillRepository.delete(id);
     } catch (error) {

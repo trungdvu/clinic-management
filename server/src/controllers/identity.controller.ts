@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
-import { SignInDto, SignInResponse } from "../dtos";
-import { SignUpDto } from "../dtos";
+import { SignInDto, SignInResponse, SignUpDto } from "../dtos";
 import { IdentityService } from "../services";
 import { BodyResponse, ErrorResponse } from "../shared";
 

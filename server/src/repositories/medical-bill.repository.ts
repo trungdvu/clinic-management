@@ -1,28 +1,30 @@
-import { Op } from "sequelize";
 import {
   CreateMedicalBillDto,
-  MedicalBillResponse,
+  FindMedicalBillsQueryParams,
   UpdateMedicalBillDto,
 } from "../dtos";
-import { models } from "../models";
-import { FindMedicalBillsQueryParams } from "../dtos";
+import { MedicalBill } from "../models";
+import { Patient } from "../models/patient.model";
 import { InternalServerError } from "../shared";
-
-const { MedicalBill } = models;
 
 export class MedicalBillRepository {
   static async findMany(
     query: FindMedicalBillsQueryParams
-  ): Promise<MedicalBillResponse[]> {
+  ): Promise<MedicalBill[]> {
     try {
       const { patientId } = query;
-      return await MedicalBill.findAll();
+      return await MedicalBill.findAll({
+        include: {
+          model: Patient,
+          attributes: ["fullName"],
+        },
+      });
     } catch (error) {
       throw new InternalServerError(error.message);
     }
   }
 
-  static async findById(id: string): Promise<typeof MedicalBill> {
+  static async findById(id: string): Promise<MedicalBill> {
     try {
       return await MedicalBill.findByPk(id);
     } catch (error) {
@@ -30,7 +32,7 @@ export class MedicalBillRepository {
     }
   }
 
-  static async create(dto: CreateMedicalBillDto): Promise<void> {
+  static async create(dto: CreateMedicalBillDto): Promise<MedicalBill> {
     try {
       return await MedicalBill.create(dto);
     } catch (error) {
@@ -38,14 +40,9 @@ export class MedicalBillRepository {
     }
   }
 
-  static async update(
-    id: string,
-    dto: UpdateMedicalBillDto
-  ): Promise<typeof MedicalBill> {
+  static async update(id: string, dto: UpdateMedicalBillDto): Promise<any> {
     try {
-      const medicalBillFounded = await this.findById(id);
-
-      return await medicalBillFounded.update(dto, {
+      return await MedicalBill.update(dto, {
         where: {
           id,
         },
@@ -55,7 +52,7 @@ export class MedicalBillRepository {
     }
   }
 
-  static async delete(id: string): Promise<typeof MedicalBill> {
+  static async delete(id: string): Promise<number> {
     try {
       return await MedicalBill.destroy({
         where: {

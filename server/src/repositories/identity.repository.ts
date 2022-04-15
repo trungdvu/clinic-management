@@ -1,11 +1,9 @@
-import { InternalServerError } from "../shared";
 import { SignUpDto } from "../dtos";
-import { models } from "../models";
-
-const { Identity } = models;
+import { Identity } from "../models";
+import { InternalServerError } from "../shared";
 
 export class IdentityRepository {
-  static async findMany(): Promise<typeof Identity[]> {
+  static async findMany(): Promise<Identity[]> {
     try {
       return await Identity.findAll();
     } catch (error) {
@@ -13,7 +11,7 @@ export class IdentityRepository {
     }
   }
 
-  static async findById(id: string): Promise<typeof Identity> {
+  static async findById(id: string): Promise<Identity> {
     try {
       return await Identity.findByPk(id);
     } catch (error) {
@@ -21,7 +19,7 @@ export class IdentityRepository {
     }
   }
 
-  static async findByEmail(email: string): Promise<typeof Identity> {
+  static async findByEmail(email: string): Promise<Identity> {
     try {
       return await Identity.findOne({ where: { email } });
     } catch (error) {
@@ -29,7 +27,7 @@ export class IdentityRepository {
     }
   }
 
-  static async create(signUpDto: SignUpDto) {
+  static async create(signUpDto: SignUpDto): Promise<Identity> {
     try {
       return await Identity.create(signUpDto);
     } catch (error) {
@@ -37,14 +35,13 @@ export class IdentityRepository {
     }
   }
 
-  static async update(
-    id: string,
-    identity: typeof Identity
-  ): Promise<typeof Identity> {
+  static async update(id: string, identity: Identity): Promise<any> {
     try {
-      const userFound = await this.findById(id);
-
-      return await userFound.update(identity);
+      return await Identity.update(identity, {
+        where: {
+          id,
+        },
+      });
     } catch (error) {
       throw new InternalServerError(error.message);
     }

@@ -1,0 +1,1 @@
+npx sequelize-cli model:generate --name Patient --attributes fullName:string,gender:string,dateOfBirth:string,address:string,phoneNumber:string,creatorId:string

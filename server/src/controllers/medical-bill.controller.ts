@@ -6,7 +6,6 @@ import {
   MedicalBillSummaryResponse,
   UpdateMedicalBillDto,
 } from "../dtos";
-
 import { MedicalBillService } from "../services";
 import { BodyResponse, ErrorResponse } from "../shared";
 

@@ -8,7 +8,8 @@
     "db:migrate": "cd src/ && npx sequelize-cli db:migrate",
     "start": "node dist/app.js",
     "dev": "nodemon src/app.ts",
-    "build": "tsc -p ."
+    "build": "tsc -p .",
+    "lint": "eslint \"src/**/*.{js,jsx}\" --quiet"
   },
   "keywords": [],
   "author": "Tri Nguyen",
@@ -41,11 +42,12 @@
     "node": "^16.13.2",
     "nodemon": "^2.0.15",
     "pg": "^8.7.3",
-    "reflect-metadata": "0.1.13",
+    "reflect-metadata": "^0.1.13",
     "rimraf": "3.0.2",
     "rxjs": "7.1.0",
     "sequelize": "^6.17.0",
     "sequelize-cli": "^6.4.1",
+    "sequelize-typescript": "^2.1.3",
     "swagger-ui-express": "4.2.0",
     "uuidv4": "^6.2.12",
     "winston": "3.3.3"

@@ -44,7 +44,10 @@ function CreatePatientModalContainer({
       const result = await doCreatePatient(payload);
 
       if (result) {
-        notification.success({ message: "You've created a patient successfully." });
+        notification.success({
+          message: 'Successfully',
+          description: "You've created a patient.",
+        });
         form.resetFields();
         if (onCancel) {
           onCancel();
@@ -129,7 +132,7 @@ function CreatePatientModalContainer({
           <Item
             requiredMark="optional"
             label="DATE OF BIRTH"
-            name="dateOfBirth"
+            name="dayOfBirth"
             rules={[{ required: true }]}
             className="w-1/2 text-tertiary text-sm"
           >

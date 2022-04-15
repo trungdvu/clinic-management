@@ -40,13 +40,19 @@ function NewMedicalBillModalContainer({
       const result = await doCreateMedicalBill(payload);
 
       if (result) {
-        notification.success({ message: 'New medical bill has been created successfully.' });
+        notification.success({
+          message: 'Created',
+          description: "You've successfully created a medical bill",
+        });
         form.resetFields();
         if (onCancel) {
           onCancel();
         }
       } else {
-        notification.error({ message: 'Ops! Something went wrong.' });
+        notification.error({
+          message: 'Failed',
+          description: 'Ops! Something went wrong.',
+        });
       }
     },
     [doCreateMedicalBill, form, onCancel],
@@ -139,7 +145,7 @@ function NewMedicalBillModalContainer({
           <TextArea rows={6} placeholder="Optional" className="w-full text-sm" />
         </Item>
 
-        <div className="flex items-center w-full mt-10-4">
+        <div className="flex items-center w-full mt-10 gap-4">
           <Item>
             <PrimaryButton htmlType="submit" loading={loading.doCreateMedicalBill}>
               Create
