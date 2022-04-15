@@ -1,5 +1,5 @@
 import { createModel } from '@rematch/core';
-import { PATIENT_API } from 'consts';
+import { API } from 'consts';
 import { CreatePatientPayload, Patient } from 'interfaces';
 import { HttpService } from 'services';
 import { RootModel } from '.';
@@ -32,7 +32,7 @@ export const patientModel = createModel<RootModel>()({
   effects: (dispatch) => ({
     async doCreatePatient(payload: CreatePatientPayload) {
       try {
-        const endpoint = PATIENT_API.PATIENTS;
+        const endpoint = API.PATIENTS;
         const response = await HttpService.post(endpoint, payload);
 
         if (response.status === 200) {
@@ -49,7 +49,7 @@ export const patientModel = createModel<RootModel>()({
 
     async doGetPatients(payload?: string) {
       try {
-        const endpoint = `${PATIENT_API.PATIENTS}?text=${payload || ''}`;
+        const endpoint = API.PATIENTS_PARAMS({ text: payload || '' });
         const response = await HttpService.get(endpoint);
 
         if (response.status === 200) {
@@ -67,7 +67,7 @@ export const patientModel = createModel<RootModel>()({
 
     async doDeletePatient(payload: string) {
       try {
-        const endpoint = `${PATIENT_API.PATIENTS}/${payload}`;
+        const endpoint = API.PATIENTS_ID(payload);
         const response = await HttpService.delete(endpoint);
 
         return response.status === 200;

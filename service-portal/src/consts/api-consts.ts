@@ -1,14 +1,15 @@
+import { toParamsUrl } from 'utils';
+
 export const VERSION = 'v1.0.0';
 
-export const AUTH_API = {
+export const API = {
   SIGN_UP: `/${VERSION}/identities/sign-up`,
   SIGN_IN: `/${VERSION}/identities/sign-in`,
-};
 
-export const PATIENT_API = {
   PATIENTS: `/${VERSION}/patients`,
-};
+  PATIENTS_ID: (id: string) => `/${VERSION}/patients/${id}`,
+  PATIENTS_PARAMS: (params: any) => `/${VERSION}/patients${toParamsUrl(params)}`,
 
-export const MEDICAL_BILL_API = {
   MEDICAL_BILLS: `/${VERSION}/medical-bills`,
+  MEDICAL_BILLS_ID: (id: string) => `/${VERSION}/medical-bills/${id}`,
 };

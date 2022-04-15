@@ -1,7 +1,8 @@
 import { DownOutlined, PlusOutlined, ReloadOutlined, UserOutlined } from '@ant-design/icons';
-import { Col, DatePicker, Row, Tabs, Tooltip } from 'antd';
+import { Col, DatePicker, notification, Row, Tabs, Tooltip } from 'antd';
 import classNames from 'classnames';
-import { Heading, IconButton, PrimaryButton, Text } from 'components';
+import { Heading, IconButton, PrimaryButton, SkeletonListing, Text } from 'components';
+import { ConfirmModal } from 'components/modals';
 import { useTitle } from 'hooks';
 import _ from 'lodash';
 import moment from 'moment';
@@ -15,12 +16,21 @@ interface Props extends PropsFromStore {
   title?: string;
 }
 
-const MedicalBillPageContainer = ({ title, medicalBills, doGetMedicalBills }: Props) => {
+const MedicalBillPageContainer = ({
+  title,
+  loading,
+  medicalBillSummaries,
+  seletedMedicalBillId,
+  setSelectedMedicalbillId,
+  doGetMedicalBillSumarries,
+  doDeleteMedicalBill,
+}: Props) => {
   const [isCreateMedicalBillVisible, setIsCreateMedicalBillVisible] = useState(false);
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
 
   useEffect(() => {
-    doGetMedicalBills({});
-  }, [doGetMedicalBills]);
+    doGetMedicalBillSumarries();
+  }, [doGetMedicalBillSumarries]);
 
   useTitle(title);
 
@@ -32,9 +42,47 @@ const MedicalBillPageContainer = ({ title, medicalBills, doGetMedicalBills }: Pr
     setIsCreateMedicalBillVisible(false);
   }, []);
 
+  const onClickDeleteMedicalBill = useCallback(
+    (id: string) => () => {
+      setSelectedMedicalbillId(id);
+      setIsDeleteModalVisible(true);
+    },
+    [setSelectedMedicalbillId],
+  );
+
+  const onCancelDelete = useCallback(() => {
+    setIsDeleteModalVisible(false);
+    setSelectedMedicalbillId('');
+  }, [setSelectedMedicalbillId]);
+
+  const onOkDelele = useCallback(async () => {
+    const result = await doDeleteMedicalBill(seletedMedicalBillId);
+    if (result) {
+      setIsDeleteModalVisible(false);
+      notification.success({
+        message: 'Deleted',
+        description: 'The patient has been deleted.',
+      });
+    } else {
+      notification.error({
+        message: 'Failed',
+        description: 'Ops. Somethingn went wrong.',
+      });
+    }
+  }, [doDeleteMedicalBill, seletedMedicalBillId]);
+
   return (
     <div>
       <NewMedicalBillModal visible={isCreateMedicalBillVisible} onCancel={onCancelNewMedicalBill} />
+      <ConfirmModal
+        title="Delete medical bill"
+        messages={['This action cannot undo', 'Are you sure?']}
+        buttonLeftTitle="Delete"
+        buttonRightTitle="Cancel"
+        visible={isDeleteModalVisible}
+        onClickButtonLeft={onOkDelele}
+        onClickButtonRight={onCancelDelete}
+      />
 
       <div className="flex justify-between">
         <Heading level={3}>Medical bills</Heading>
@@ -47,79 +95,94 @@ const MedicalBillPageContainer = ({ title, medicalBills, doGetMedicalBills }: Pr
           </PrimaryButton>
         </div>
       </div>
-
-      <Tabs type="card" defaultActiveKey="1" className="pb-10">
-        <Tabs.TabPane key={1} tab="All medical bills">
-          <DatePicker.RangePicker
-            allowClear={false}
-            format={'d MMMM'}
-            suffixIcon={<DownOutlined className="text-tertiary" />}
-            className="border-none ml-5 mb-5 bg-link bg-opacity-5"
-          />
-          <Row gutter={24} className="px-5 py-3 text-tertiary font-medium">
-            <Col span={4}>BILL DATE</Col>
-            <Col span={4}>PATIENT NAME</Col>
-            <Col span={10}>SYSTOMS</Col>
-            <Col span={4}>STATUS</Col>
-            <Col span={2}></Col>
-          </Row>
-          <div className="h-px bg-brd" />
-
-          {_.map(medicalBills, (bill, index) => (
-            <Row
-              key={index}
-              gutter={24}
-              className={classNames('flex items-center px-5', {
-                'bg-black bg-opacity-[2.5%]': index % 2 !== 0,
-              })}
-            >
-              <Col span={4} className="flex flex-col cursor-pointer hover:underline py-3">
-                <Text className="font-semibold">{moment().format('ddd D MMM YY')}</Text>
-                <Text>{moment().format('H:mm A')}</Text>
-              </Col>
-              <Col
-                span={4}
-                className="flex items-center whitespace-nowrap text-ellipsis overflow-hidden"
-              >
-                <UserOutlined className="text-tertiary text-lg pb-1 mr-1" />
-                <Text>Vu Dinh Trung</Text>
-              </Col>
-              <Col span={10} className="whitespace-nowrap text-ellipsis overflow-hidden">
-                <Text>
-                  Lorem ipsum dolor sit amet consectetur adipisicing elit. At dolores voluptatum
-                  recusandae, hic sapiente a voluptates nihil iste in provident esse maiores
-                  consequuntur eveniet, deleniti reprehenderit beatae porro aspernatur. Provident!
-                </Text>
-              </Col>
-              <Col span={4}>
-                <Status status="PENDING" />
-              </Col>
-              <Col span={2}>
-                <button className="text-button-pri hover:underline px-2 py-1">Delete</button>
-              </Col>
+      {loading.doGetMedicalBillSummaries ? (
+        <SkeletonListing />
+      ) : (
+        <Tabs type="card" defaultActiveKey="1" className="pb-10">
+          <Tabs.TabPane key={1} tab="All medical bills">
+            <DatePicker.RangePicker
+              allowClear={false}
+              format={'d MMMM'}
+              suffixIcon={<DownOutlined className="text-tertiary" />}
+              className="border-none ml-5 mb-5 bg-link bg-opacity-5"
+            />
+            <Row gutter={24} className="px-5 py-3 text-tertiary font-medium">
+              <Col span={4}>BILL DATE</Col>
+              <Col span={4}>PATIENT NAME</Col>
+              <Col span={10}>SYSTOMS</Col>
+              <Col span={4}>STATUS</Col>
+              <Col span={2}></Col>
             </Row>
-          ))}
-        </Tabs.TabPane>
-        <Tabs.TabPane key={2} tab="Pending">
-          <Text>tab 2</Text>
-        </Tabs.TabPane>
-        <Tabs.TabPane key={3} tab="Active">
-          <Text>tab 3</Text>
-        </Tabs.TabPane>
-        <Tabs.TabPane key={4} tab="Completed">
-          <Text>tab 4</Text>
-        </Tabs.TabPane>
-      </Tabs>
+            <div className="h-px bg-brd" />
+
+            {_.map(medicalBillSummaries, (bill, index) => (
+              <Row
+                key={index}
+                gutter={24}
+                className={classNames('flex items-center px-5', {
+                  'bg-black bg-opacity-[2.5%]': index % 2 !== 0,
+                })}
+              >
+                <Col span={4} className="flex flex-col cursor-pointer hover:underline py-3">
+                  <Text className="font-semibold">
+                    {moment(bill.createdAt).format('ddd D MMM YY')}
+                  </Text>
+                  <Text>{moment(bill.createdAt).format('H:mm A')}</Text>
+                </Col>
+                <Col
+                  span={4}
+                  className="flex items-center whitespace-nowrap text-ellipsis overflow-hidden"
+                >
+                  <UserOutlined className="text-tertiary text-lg pb-1 mr-1" />
+                  <Text>{bill.patientFullName}</Text>
+                </Col>
+                <Col span={10} className="whitespace-nowrap text-ellipsis overflow-hidden">
+                  <Text>
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. At dolores voluptatum
+                    recusandae, hic sapiente a voluptates nihil iste in provident esse maiores
+                    consequuntur eveniet, deleniti reprehenderit beatae porro aspernatur. Provident!
+                  </Text>
+                </Col>
+                <Col span={4}>
+                  <Status status={bill.status} />
+                </Col>
+                <Col span={2}>
+                  <button
+                    disabled={bill.status !== 'pending'}
+                    className="text-button-pri hover:underline px-2 py-1 disabled:opacity-50 disabled:hover:no-underline disabled:cursor-not-allowed"
+                    onClick={onClickDeleteMedicalBill(bill.id)}
+                  >
+                    Delete
+                  </button>
+                </Col>
+              </Row>
+            ))}
+          </Tabs.TabPane>
+          <Tabs.TabPane key={2} tab="Pending">
+            <Text>tab 2</Text>
+          </Tabs.TabPane>
+          <Tabs.TabPane key={3} tab="Active">
+            <Text>tab 3</Text>
+          </Tabs.TabPane>
+          <Tabs.TabPane key={4} tab="Completed">
+            <Text>tab 4</Text>
+          </Tabs.TabPane>
+        </Tabs>
+      )}
     </div>
   );
 };
 
 const mapState = (state: RootState) => ({
-  medicalBills: state.medicalBillModel.medicalBills,
+  medicalBillSummaries: state.medicalBillModel.medicalBillSummaries,
+  seletedMedicalBillId: state.medicalBillModel.selectedMedicalBillId,
+  loading: state.loading.effects.medicalBillModel,
 });
 
 const mapDispatch = (dispatch: RootDispatch) => ({
-  doGetMedicalBills: dispatch.medicalBillModel.doGetMedicalBills,
+  setSelectedMedicalbillId: dispatch.medicalBillModel.setSelectedMedicalBillId,
+  doGetMedicalBillSumarries: dispatch.medicalBillModel.doGetMedicalBillSummaries,
+  doDeleteMedicalBill: dispatch.medicalBillModel.doDeleteMedicalBill,
 });
 
 type PropsFromStore = ReturnType<typeof mapState> & ReturnType<typeof mapDispatch>;

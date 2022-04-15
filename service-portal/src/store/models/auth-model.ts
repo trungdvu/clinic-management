@@ -1,5 +1,5 @@
 import { createModel } from '@rematch/core';
-import { AUTH_API } from 'consts';
+import { API } from 'consts';
 import { SignInPayload, SignUpPayload, User } from 'interfaces';
 import { HttpService } from 'services';
 import { authLocalStorage, ErrorModel } from 'shared';
@@ -22,7 +22,8 @@ export const authModel = createModel<RootModel>()({
   effects: (dispatch) => ({
     async doSignIn(payload: SignInPayload, state): Promise<boolean | ErrorModel> {
       try {
-        const response = await HttpService.post(AUTH_API.SIGN_IN, payload);
+        const endpoint = API.SIGN_IN;
+        const response = await HttpService.post(endpoint, payload);
         const { data, errorCode, status } = response;
 
         if (status === 200) {
@@ -42,7 +43,8 @@ export const authModel = createModel<RootModel>()({
 
     async doSignUp(payload: SignUpPayload, state): Promise<boolean | ErrorModel> {
       try {
-        const response = await HttpService.post(AUTH_API.SIGN_UP, payload);
+        const endpoint = API.SIGN_UP;
+        const response = await HttpService.post(endpoint, payload);
         const { data, errorCode, status } = response;
 
         if (status === 200) {

@@ -14,6 +14,7 @@ export const SecondaryButton: React.FC<ButtonProps> = memo(
           'text-sm text-button-pri font-medium',
           'hover:border-button-pri-hv hover:text-button-pri-hv',
           'active:bg-transparent active:text-button-pri active:border-button-pri',
+          'disabled:text-button-pri disabled:border-button-pri disabled:opacity-50',
           {
             'border-opacity-30 text-button-pri hover:bg-transparent hover:text-button-pri hover:cursor-not-allowed':
               loading,

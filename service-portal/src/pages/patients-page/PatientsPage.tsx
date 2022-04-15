@@ -6,9 +6,9 @@ import {
   UserOutlined,
   WomanOutlined,
 } from '@ant-design/icons';
-import { Col, Empty, Row, Skeleton, Tabs } from 'antd';
+import { Col, Empty, Row, Tabs } from 'antd';
 import classNames from 'classnames';
-import { Heading, PrimaryButton, Text } from 'components';
+import { Heading, PrimaryButton, SkeletonListing, Text } from 'components';
 import { PAGE_ROUTES } from 'consts';
 import { useTitle } from 'hooks';
 import { Patient } from 'interfaces';
@@ -95,10 +95,7 @@ function PatientsPageContainer({
       </div>
 
       {loading.doGetPatients ? (
-        <div className="flex flex-col gap-2 mt-5">
-          <Skeleton.Button active={true} className="h-14 w-56" />
-          <Skeleton.Button active={true} className="h-14" block={true} />
-        </div>
+        <SkeletonListing />
       ) : (
         <Tabs type="card" defaultActiveKey="1" className="pb-10">
           <Tabs.TabPane key={1} tab="All patients">

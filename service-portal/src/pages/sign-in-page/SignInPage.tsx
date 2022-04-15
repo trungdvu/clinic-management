@@ -53,7 +53,7 @@ function SignInPageContainer({ title, currentUser, loading, doSignIn }: Props) {
 
       if (result instanceof ErrorModel) {
         notification.error({
-          message: 'Authentication failed',
+          message: 'Failed',
           description: result.data?.message,
         });
       }

@@ -1,5 +1,9 @@
-export const MEDICAL_BILLS_STATUSES = {
-  PENDING: 'Pending',
-  ACTIVE: 'Active',
-  COMPETED: 'Completed',
+import { MedicalBillStatus } from 'interfaces';
+
+export const MEDICAL_BILLS_STATUSES: {
+  [key in MedicalBillStatus]: string;
+} = {
+  pending: 'Pending',
+  active: 'Active',
+  completed: 'Completed',
 };

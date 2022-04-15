@@ -1,3 +1,5 @@
+export type MedicalBillStatus = 'pending' | 'active' | 'completed';
+
 export interface NewMedicalBillPayload {
   patientId: string;
   systomDescription: string;
@@ -5,11 +7,12 @@ export interface NewMedicalBillPayload {
   diseaseTypeId?: string;
 }
 
-export interface MedicalBill {
+export interface MedicalBillSumary {
   id: string;
   diseaseTypeId: string;
   prediction: string;
   symptomDescription: string;
-  patientId: string;
-  drugs: any[];
+  status: MedicalBillStatus;
+  patientFullName: string;
+  createdAt: string;
 }

@@ -1,6 +1,7 @@
 import { EditOutlined, EnvironmentOutlined, LeftOutlined, PhoneOutlined } from '@ant-design/icons';
 import { Col, Image, notification, Row } from 'antd';
-import { ConfirmModal, Heading, PrimaryButton, Text } from 'components';
+import { Heading, PrimaryButton, Text } from 'components';
+import { ConfirmModal } from 'components/modals';
 import { PAGE_ROUTES } from 'consts';
 import { useTitle } from 'hooks';
 import moment from 'moment';
@@ -32,10 +33,16 @@ function PatientDetailsPageContainer({ title, selectedPatient, doDeletePatient }
   const onClickOkDelete = useCallback(async () => {
     const result = await doDeletePatient(id);
     if (result) {
-      notification.success({ message: 'Deleted the patient successfully.' });
+      notification.success({
+        message: 'Deleted',
+        description: "You've successfully deleted a patient.",
+      });
       setTimeout(() => navigate(PAGE_ROUTES.PATIENTS.PATH), 200);
     } else {
-      notification.error({ message: 'Ops! Delete patient failed.' });
+      notification.error({
+        message: 'Failed',
+        description: "Ops! You can't delete this patient.",
+      });
     }
   }, [doDeletePatient, id, navigate]);
 
@@ -138,8 +145,8 @@ function PatientDetailsPageContainer({ title, selectedPatient, doDeletePatient }
         messages={['This action cannot undo', 'Are you sure?']}
         buttonLeftTitle="Delete"
         buttonRightTitle="Cancel"
-        buttonLeft={onClickOkDelete}
-        buttonRight={onClickCancelDelete}
+        onClickButtonLeft={onClickOkDelete}
+        onClickButtonRight={onClickCancelDelete}
       />
     </div>
   );
