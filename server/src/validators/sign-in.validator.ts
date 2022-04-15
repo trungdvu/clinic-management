@@ -24,7 +24,7 @@ export const signInValidationSchema: ObjectSchema<SignInValidationSchema> = joi
       .regex(strongPasswordRegex)
       .messages({
         "string.email": "Password must be a valid email address",
-        "string.pattern.base": "Wrong Password Format",
+        "string.pattern.base": "Incorrect password",
       }),
   });
 

@@ -1,5 +1,5 @@
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
-import { Divider, Form, Input } from 'antd';
+import { Divider, Form, Input, notification } from 'antd';
 import {
   Heading,
   HyperLinkButton,
@@ -12,10 +12,10 @@ import { PAGE_ROUTES } from 'consts';
 import { useTitle } from 'hooks';
 import { SignInPayload } from 'interfaces';
 import _ from 'lodash';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import { authLocalStorage } from 'shared';
+import { authLocalStorage, ErrorModel } from 'shared';
 import { RootDispatch, RootState } from 'store';
 import { SignUpModel } from './SignUpModal';
 
@@ -25,14 +25,7 @@ interface Props extends PropsFromStore {
   title?: string;
 }
 
-function SignInPageContainer({
-  title,
-  currentUser,
-  errorMessages,
-  loading,
-  doSignIn,
-  setErrorMessages,
-}: Props) {
+function SignInPageContainer({ title, currentUser, loading, doSignIn }: Props) {
   const [isSignInModalVisible, setIsSignInModalVisible] = useState(false);
 
   const [form] = useForm();
@@ -54,9 +47,19 @@ function SignInPageContainer({
     }
   }, [currentUser, navigate]);
 
-  function onFinish(values: SignInPayload): void {
-    doSignIn(values);
-  }
+  const onFinish = useCallback(
+    async (values: SignInPayload) => {
+      const result = await doSignIn(values);
+
+      if (result instanceof ErrorModel) {
+        notification.error({
+          message: 'Authentication failed',
+          description: result.data?.message,
+        });
+      }
+    },
+    [doSignIn],
+  );
 
   function onClickForgottenPassword(): void {
     navigate(PAGE_ROUTES.ACCOUNT_RECOVER.PATH);
@@ -68,12 +71,6 @@ function SignInPageContainer({
 
   function onCancelSignUpModal(): void {
     setIsSignInModalVisible(false);
-  }
-
-  function onChangeForm(): void {
-    if (!_.isEmpty(errorMessages)) {
-      setErrorMessages([]);
-    }
   }
 
   return (
@@ -94,7 +91,6 @@ function SignInPageContainer({
             layout="vertical"
             className="m-0"
             onFinish={onFinish}
-            onChange={onChangeForm}
           >
             <Item
               name="email"
@@ -110,7 +106,7 @@ function SignInPageContainer({
             <Item
               name="password"
               rules={[{ required: true, message: 'Password is required' }]}
-              className="mb-1"
+              className="mb-3"
             >
               <Input.Password
                 placeholder="Password"
@@ -119,15 +115,7 @@ function SignInPageContainer({
               />
             </Item>
 
-            <Item className="mb-0">
-              <div className="min-h-[22px] flex flex-col mb-1">
-                {_.map(errorMessages, (message, index) => (
-                  <Text key={index} type="danger" className="w-full">
-                    *{message}
-                  </Text>
-                ))}
-              </div>
-
+            <Item className="mt-6">
               <PrimaryButton htmlType="submit" className="w-full py-5" loading={loading.doSignIn}>
                 Sign In
               </PrimaryButton>
@@ -153,13 +141,11 @@ function SignInPageContainer({
 
 const mapState = (state: RootState) => ({
   currentUser: state.authModel.currentUser,
-  errorMessages: state.authModel.errorMessages,
   loading: state.loading.effects.authModel,
 });
 
 const mapDispatch = (dispatch: RootDispatch) => ({
   doSignIn: dispatch.authModel.doSignIn,
-  setErrorMessages: dispatch.authModel.setErrorMessages,
 });
 
 type PropsFromStore = ReturnType<typeof mapState> & ReturnType<typeof mapDispatch>;

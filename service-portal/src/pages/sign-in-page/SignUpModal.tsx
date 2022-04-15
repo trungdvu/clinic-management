@@ -1,12 +1,11 @@
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
-import { DatePicker, Form, Input, Modal, ModalProps } from 'antd';
+import { Form, Input, Modal, ModalProps, notification } from 'antd';
 import classNames from 'classnames';
 import { ModalHeader, PrimaryButton, Text } from 'components';
 import { SignUpPayload } from 'interfaces';
-import _ from 'lodash';
-import moment from 'moment';
 import { memo, useCallback } from 'react';
 import { connect } from 'react-redux';
+import { ErrorModel } from 'shared';
 import { RootDispatch, RootState } from 'store';
 import './SignUpModal.css';
 
@@ -21,21 +20,25 @@ function SignUpModalContainer({
   loading,
   doSignUp,
   className,
-  errorMessages,
   onCancel,
   ...props
 }: Props): JSX.Element {
   const [form] = useForm();
 
   const onFinish = useCallback(
-    (values: any) => {
+    async (values: any) => {
       const payload: SignUpPayload = {
         ...values,
         passwordConfirm: values.password,
-        dayOfBirth: moment(values.dayOfBirth).toISOString(),
       };
 
-      doSignUp(payload);
+      const result = await doSignUp(payload);
+      if (result instanceof ErrorModel) {
+        notification.error({
+          message: 'Authentication failed',
+          description: result.data?.message,
+        });
+      }
     },
     [doSignUp],
   );
@@ -110,18 +113,17 @@ function SignUpModalContainer({
           />
         </Item>
 
-        <Item name="dayOfBirth" className="w-full bg-opacity-50 rounded-md bg-brd">
-          <DatePicker
-            className="w-full py-1.5 rounded-md bg-brd bg-opacity-50"
-            placeholder="Day of birth"
+        <Item
+          name="phoneNumber"
+          required
+          rules={[{ required: true }]}
+          className="w-full bg-opacity-50 rounded-md bg-brd"
+        >
+          <Input
+            placeholder="Phone number"
+            className="w-full py-2 text-sm font-medium rounded-md"
           />
         </Item>
-
-        {_.map(errorMessages, (message, index) => (
-          <Text key={index} type="danger" className="w-full mt-2">
-            *{message}
-          </Text>
-        ))}
 
         <Text className="w-full mt-2 text-xs text-tertiary">
           *By clicking Sign Up, you agree to our Terms, Data Policy and Cookie Policy. You may
@@ -140,7 +142,6 @@ function SignUpModalContainer({
 
 const mapState = (state: RootState) => ({
   loading: state.loading.effects.authModel,
-  errorMessages: state.authModel.errorMessages,
 });
 
 const mapDispatch = (dispatch: RootDispatch) => ({
