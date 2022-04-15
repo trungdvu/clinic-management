@@ -6,22 +6,31 @@ import { RootModel } from '.';
 
 interface PatientModalState {
   patients: Patient[];
-  selectedPatientId: string;
+  selectedPatient: Patient;
 }
+
+const defaultPatient: Patient = {
+  id: '',
+  fullName: '',
+  gender: '',
+  dayOfBirth: '',
+  address: '',
+  phoneNumber: '',
+};
 
 export const patientModel = createModel<RootModel>()({
   state: {
     patients: [],
-    selectedPatientId: '',
+    selectedPatient: { ...defaultPatient },
   } as PatientModalState,
 
   reducers: {
     setPatients: (state, payload: Patient[]) => ({ ...state, patients: payload }),
-    setSelectedPatientId: (state, payload: string) => ({ ...state, selectedPatientId: payload }),
+    setSelectedPatient: (state, payload: Patient) => ({ ...state, selectedPatient: payload }),
   },
 
   effects: (dispatch) => ({
-    async doCreatePatient(payload: CreatePatientPayload): Promise<boolean> {
+    async doCreatePatient(payload: CreatePatientPayload) {
       try {
         const endpoint = PATIENT_API.PATIENTS;
         const response = await HttpService.post(endpoint, payload);
@@ -38,7 +47,7 @@ export const patientModel = createModel<RootModel>()({
       }
     },
 
-    async doGetPatients(payload?: string): Promise<Patient[] | false> {
+    async doGetPatients(payload?: string) {
       try {
         const endpoint = `${PATIENT_API.PATIENTS}?text=${payload || ''}`;
         const response = await HttpService.get(endpoint);
@@ -50,6 +59,18 @@ export const patientModel = createModel<RootModel>()({
         } else {
           return false;
         }
+      } catch (error) {
+        console.log('doGetPatients', error);
+        return false;
+      }
+    },
+
+    async doDeletePatient(payload: string) {
+      try {
+        const endpoint = `${PATIENT_API.PATIENTS}/${payload}`;
+        const response = await HttpService.delete(endpoint);
+
+        return response.status === 200;
       } catch (error) {
         console.log('doGetPatients', error);
         return false;

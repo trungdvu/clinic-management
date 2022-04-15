@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import { DebounceSelect, ModalHeader, PrimaryButton, SecondaryButton, Text } from 'components';
 import { NewMedicalBillPayload, Patient } from 'interfaces';
 import _ from 'lodash';
-import { useCallback } from 'react';
+import { memo, useCallback } from 'react';
 import { connect } from 'react-redux';
 import { RootDispatch, RootState } from 'store';
 
@@ -139,7 +139,7 @@ function NewMedicalBillModalContainer({
           <TextArea rows={6} placeholder="Optional" className="w-full text-sm" />
         </Item>
 
-        <div className="flex items-center w-full mt-2 gap-4">
+        <div className="flex items-center w-full mt-10-4">
           <Item>
             <PrimaryButton htmlType="submit" loading={loading.doCreateMedicalBill}>
               Create
@@ -165,4 +165,7 @@ const mapDispatch = (dispatch: RootDispatch) => ({
 
 type PropsFromStores = ReturnType<typeof mapState> & ReturnType<typeof mapDispatch>;
 
-export const NewMedicalBillModal = connect(mapState, mapDispatch)(NewMedicalBillModalContainer);
+export const NewMedicalBillModal = connect(
+  mapState,
+  mapDispatch,
+)(memo(NewMedicalBillModalContainer));

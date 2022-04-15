@@ -7,7 +7,7 @@ import {
 import { Divider, Dropdown, Image, Menu } from 'antd';
 import { PAGE_ROUTES } from 'consts';
 import { User } from 'interfaces';
-import { memo, useState } from 'react';
+import { memo, useCallback, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { LoadingSignOutModal } from '../../loadings';
 import { Text } from '../../typography';
@@ -17,17 +17,17 @@ interface Props {
   onSignOutClick: () => void;
 }
 
-export const ProfileDropdown = memo(({ currentUser, onSignOutClick }: Props): JSX.Element => {
+export const ProfileDropdown = memo(({ currentUser, onSignOutClick }: Props) => {
   const [isLoadingSignOutModalVisible, setIsLoadingSignOutModalVisible] = useState(false);
 
-  function _onClickSignOut(): void {
+  const _onClickSignOut = useCallback(() => {
     setIsLoadingSignOutModalVisible(true);
     onSignOutClick();
-  }
+  }, [onSignOutClick]);
 
-  function onCancelLoadingSignOutModal(): void {
+  const onCancelLoadingSignOutModal = useCallback(() => {
     setIsLoadingSignOutModalVisible(false);
-  }
+  }, []);
 
   const menu = (
     <Menu className="w-56 py-0 rounded-md">

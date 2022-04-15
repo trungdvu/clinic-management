@@ -9,6 +9,7 @@ import {
   InvoicesPage,
   MedicalBillPage,
   NotFoundPage,
+  PatientDetailsPage,
   PatientsPage,
   ProfilePage,
   SignInPage,
@@ -36,6 +37,10 @@ export const MainRoutes: React.FC = () => {
         <Route
           path={PAGE_ROUTES.PATIENTS.PATH}
           element={<PatientsPage title={PAGE_ROUTES.PATIENTS.TITLE} />}
+        />
+        <Route
+          path={PAGE_ROUTES.PATIENTS.DETAILS.PATH}
+          element={<PatientDetailsPage title={PAGE_ROUTES.PATIENTS.DETAILS.TITLE} />}
         />
         <Route
           path={PAGE_ROUTES.INVOICES.PATH}

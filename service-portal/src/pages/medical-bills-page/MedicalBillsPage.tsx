@@ -5,7 +5,7 @@ import { Heading, IconButton, PrimaryButton, Text } from 'components';
 import { useTitle } from 'hooks';
 import _ from 'lodash';
 import moment from 'moment';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { RootDispatch, RootState } from 'store';
 import { NewMedicalBillModal } from './NewMedicalBillModal';
@@ -15,8 +15,12 @@ interface Props extends PropsFromStore {
   title?: string;
 }
 
-const MedicalBillPageContainer = ({ title }: Props) => {
-  const [isCreateMedicalBillVisible, setIsCreateMedicalBillVisible] = useState<boolean>(false);
+const MedicalBillPageContainer = ({ title, medicalBills, doGetMedicalBills }: Props) => {
+  const [isCreateMedicalBillVisible, setIsCreateMedicalBillVisible] = useState(false);
+
+  useEffect(() => {
+    doGetMedicalBills({});
+  }, [doGetMedicalBills]);
 
   useTitle(title);
 
@@ -60,7 +64,8 @@ const MedicalBillPageContainer = ({ title }: Props) => {
             <Col span={2}></Col>
           </Row>
           <div className="h-px bg-brd" />
-          {_.map([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13], (bill, index) => (
+
+          {_.map(medicalBills, (bill, index) => (
             <Row
               key={index}
               gutter={24}
@@ -109,9 +114,13 @@ const MedicalBillPageContainer = ({ title }: Props) => {
   );
 };
 
-const mapState = (state: RootState) => ({});
+const mapState = (state: RootState) => ({
+  medicalBills: state.medicalBillModel.medicalBills,
+});
 
-const mapDispatch = (dispatch: RootDispatch) => ({});
+const mapDispatch = (dispatch: RootDispatch) => ({
+  doGetMedicalBills: dispatch.medicalBillModel.doGetMedicalBills,
+});
 
 type PropsFromStore = ReturnType<typeof mapState> & ReturnType<typeof mapDispatch>;
 

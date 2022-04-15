@@ -5,7 +5,7 @@ import { ModalHeader, PrimaryButton, Text } from 'components';
 import { SignUpPayload } from 'interfaces';
 import _ from 'lodash';
 import moment from 'moment';
-import { useCallback } from 'react';
+import { memo, useCallback } from 'react';
 import { connect } from 'react-redux';
 import { RootDispatch, RootState } from 'store';
 import './SignUpModal.css';
@@ -128,7 +128,7 @@ function SignUpModalContainer({
           receive SMS notifications from us and can opt out at any time.
         </Text>
 
-        <Item className="mt-2">
+        <Item className="mt-10">
           <PrimaryButton htmlType="submit" loading={loading.doSignUp} className="px-20">
             Sign Up
           </PrimaryButton>
@@ -149,4 +149,4 @@ const mapDispatch = (dispatch: RootDispatch) => ({
 
 type PropsFromStores = ReturnType<typeof mapState> & ReturnType<typeof mapDispatch>;
 
-export const SignUpModel = connect(mapState, mapDispatch)(SignUpModalContainer);
+export const SignUpModel = connect(mapState, mapDispatch)(memo(SignUpModalContainer));

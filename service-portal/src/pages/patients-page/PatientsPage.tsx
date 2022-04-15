@@ -6,14 +6,17 @@ import {
   UserOutlined,
   WomanOutlined,
 } from '@ant-design/icons';
-import { Col, Row, Skeleton, Tabs } from 'antd';
+import { Col, Empty, Row, Skeleton, Tabs } from 'antd';
 import classNames from 'classnames';
 import { Heading, PrimaryButton, Text } from 'components';
+import { PAGE_ROUTES } from 'consts';
 import { useTitle } from 'hooks';
+import { Patient } from 'interfaces';
 import _ from 'lodash';
 import moment from 'moment';
 import { useCallback, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { RootDispatch, RootState } from 'store';
 import { CreatePatientModal } from './CreatePatientModal';
 
@@ -21,8 +24,15 @@ interface Props extends PropsFromStore {
   title?: string;
 }
 
-function PatientsPageContainer({ title, patients, loading, doGetPatients }: Props) {
+function PatientsPageContainer({
+  title,
+  patients,
+  loading,
+  setSelectedPatient,
+  doGetPatients,
+}: Props) {
   const [isCreatePatientModalVisible, setIsCreatePatientModalVisible] = useState<boolean>(false);
+  const navigate = useNavigate();
 
   useTitle(title);
 
@@ -37,6 +47,14 @@ function PatientsPageContainer({ title, patients, loading, doGetPatients }: Prop
   const onCancelCreatePatient = useCallback(() => {
     setIsCreatePatientModalVisible(false);
   }, []);
+
+  const onClickRowPatient = useCallback(
+    (patient: Patient) => {
+      setSelectedPatient(patient);
+      navigate(PAGE_ROUTES.PATIENTS.DETAILS.ID(patient.id));
+    },
+    [navigate, setSelectedPatient],
+  );
 
   const renderPatientGender = useCallback((gender: string) => {
     if (gender === 'Male') {
@@ -71,7 +89,7 @@ function PatientsPageContainer({ title, patients, loading, doGetPatients }: Prop
         <Heading level={3}>Medical bills</Heading>
         <div className="flex items-center gap-5">
           <PrimaryButton icon={<PlusOutlined />} onClick={onClickCreatePatient}>
-            Create a new patient
+            New Patient
           </PrimaryButton>
         </div>
       </div>
@@ -92,48 +110,59 @@ function PatientsPageContainer({ title, patients, loading, doGetPatients }: Prop
               <Col span={8}>ADDRESS</Col>
             </Row>
             <div className="h-px bg-brd" />
-            {_.map(patients, (patient, index) => (
-              <Row
-                key={index}
-                gutter={24}
-                className={classNames(
-                  'flex items-center py-3 px-5 group cursor-pointer transition-all duration-100 hover:underline',
-                  {
-                    'bg-black bg-opacity-[2.5%]': index % 2 !== 0,
-                  },
-                )}
-              >
-                <Col
-                  span={4}
-                  className="flex items-center whitespace-nowrap text-ellipsis overflow-hidden"
-                >
-                  <UserOutlined className="text-tertiary text-lg pb-1 mr-1" />
-                  <Text>{patient.fullName}</Text>
-                </Col>
-                <Col
-                  span={4}
-                  className="flex items-center whitespace-nowrap text-ellipsis overflow-hidden"
-                >
-                  <PhoneOutlined className="text-tertiary text-lg pb-1 mr-1" />
-                  <Text>{patient.phoneNumber}</Text>
-                </Col>
-                <Col
-                  span={4}
-                  className="flex items-center whitespace-nowrap text-ellipsis overflow-hidden"
-                >
-                  <Text>{moment(patient.dayOfBirth).format('DD/MM/YYYY')}</Text>
-                </Col>
-                <Col
-                  span={4}
-                  className="flex items-center whitespace-nowrap text-ellipsis overflow-hidden"
-                >
-                  {renderPatientGender(patient.gender)}
-                </Col>
-                <Col span={8} className="whitespace-nowrap text-ellipsis overflow-hidden">
-                  <Text>{patient.address}</Text>
-                </Col>
-              </Row>
-            ))}
+            {_.isEmpty(patients) ? (
+              <Empty
+                description="No patient. Click ʻNew Patientʼ to create new one."
+                className="mt-16"
+                image={Empty.PRESENTED_IMAGE_SIMPLE}
+              />
+            ) : (
+              <>
+                {_.map(patients, (patient, index) => (
+                  <Row
+                    key={index}
+                    gutter={24}
+                    className={classNames(
+                      'flex items-center py-3 px-5 group cursor-pointer transition-all duration-100 hover:underline',
+                      {
+                        'bg-black bg-opacity-[2.5%]': index % 2 !== 0,
+                      },
+                    )}
+                    onClick={() => onClickRowPatient(patient)}
+                  >
+                    <Col
+                      span={4}
+                      className="flex items-center whitespace-nowrap text-ellipsis overflow-hidden"
+                    >
+                      <UserOutlined className="text-tertiary text-lg pb-1 mr-1" />
+                      <Text>{patient.fullName}</Text>
+                    </Col>
+                    <Col
+                      span={4}
+                      className="flex items-center whitespace-nowrap text-ellipsis overflow-hidden"
+                    >
+                      <PhoneOutlined className="text-tertiary text-lg pb-1 mr-1" />
+                      <Text>{patient.phoneNumber}</Text>
+                    </Col>
+                    <Col
+                      span={4}
+                      className="flex items-center whitespace-nowrap text-ellipsis overflow-hidden"
+                    >
+                      <Text>{moment(patient.dayOfBirth).format('DD/MM/YYYY')}</Text>
+                    </Col>
+                    <Col
+                      span={4}
+                      className="flex items-center whitespace-nowrap text-ellipsis overflow-hidden"
+                    >
+                      {renderPatientGender(patient.gender)}
+                    </Col>
+                    <Col span={8} className="whitespace-nowrap text-ellipsis overflow-hidden">
+                      <Text>{patient.address}</Text>
+                    </Col>
+                  </Row>
+                ))}
+              </>
+            )}
           </Tabs.TabPane>
         </Tabs>
       )}
@@ -147,6 +176,7 @@ const mapState = (state: RootState) => ({
 });
 
 const mapDispatch = (dispatch: RootDispatch) => ({
+  setSelectedPatient: dispatch.patientModel.setSelectedPatient,
   doGetPatients: dispatch.patientModel.doGetPatients,
 });
 

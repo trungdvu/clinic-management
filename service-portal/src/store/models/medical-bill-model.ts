@@ -52,5 +52,23 @@ export const medicalBillModel = createModel<RootModel>()({
         return false;
       }
     },
+
+    async doGetMedicalBills(payload?: any) {
+      try {
+        const endpoint = `${MEDICAL_BILL_API.MEDICAL_BILLS}`;
+        const response = await HttpService.get(endpoint);
+
+        if (response.status === 200) {
+          const medicalBills = response.data.data;
+          console.log('🚀 ~ medicalBills', medicalBills);
+          return medicalBills;
+        } else {
+          return false;
+        }
+      } catch (error) {
+        console.log('doGetMedicalBill', error);
+        return false;
+      }
+    },
   }),
 });
