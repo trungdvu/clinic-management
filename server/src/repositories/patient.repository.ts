@@ -1,3 +1,4 @@
+import { Op } from "sequelize";
 import { CreatePatientDto, FindPatientsQuery, UpdatePatientDto } from "../dtos";
 import { Patient } from "../models";
 import { InternalServerError } from "../shared";
@@ -6,7 +7,11 @@ export class PatientRepository {
   static async findMany(query: FindPatientsQuery): Promise<Patient[]> {
     try {
       const { text } = query;
-      return await Patient.findAll();
+      return await Patient.findAll({
+        where: {
+          fullName: { [Op.like]: `%${text || ""}%` },
+        },
+      });
     } catch (error) {
       throw new InternalServerError(error.message);
     }
