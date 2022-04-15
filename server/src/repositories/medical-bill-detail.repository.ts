@@ -4,7 +4,7 @@ import {
   DrugInformation,
   UpdateMedicalBillDetailDto,
 } from "../dtos";
-import { models } from "../models";
+import { models } from "../js-models";
 import { InternalServerError } from "../shared";
 
 const { MedicalBillDetail } = models;

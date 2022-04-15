@@ -12,11 +12,22 @@ import {
   UpdatePatientDto,
 } from "../dtos";
 import { PatientRepository } from "../repositories";
+import { Patient } from "../models";
 
 export class PatientService {
   static async findMany(query: FindPatientsQuery): Promise<PatientResponse[]> {
     try {
-      return await PatientRepository.findMany(query);
+      const records: Patient[] = await PatientRepository.findMany(query);
+      return records.map((record: PatientResponse) => {
+        return {
+          id: record.id,
+          fullName: record.fullName,
+          gender: record.gender,
+          dayOfBirth: record.dayOfBirth,
+          address: record.address,
+          phoneNumber: record.phoneNumber,
+        } as PatientResponse;
+      });
     } catch (error) {
       throw new InternalServerError(error.message as string);
     }
@@ -68,7 +79,7 @@ export class PatientService {
     }
   }
 
-  static async delete(id: string): Promise<string> {
+  static async delete(id: string): Promise<number> {
     try {
       return await PatientRepository.delete(id);
     } catch (error) {

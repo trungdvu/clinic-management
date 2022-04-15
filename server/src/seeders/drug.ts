@@ -1,7 +1,7 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.bulkInsert(
-      "drugs",
+      "Drugs",
       [
         {
           id: "6bd89381-afaf-40e3-8ef3-2282825ab06d",
@@ -47,7 +47,7 @@ module.exports = {
         },
         {
           id: "1be640cd-7704-4250-a089-49e172c04df5",
-          description: "Neo codion",
+          description: "Neo Codion",
           price: 50000,
           createdAt: new Date(),
           updatedAt: new Date(),
@@ -58,6 +58,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.bulkDelete("drugs", null, {});
+    return queryInterface.bulkDelete("Drugs", null, {});
   },
 };

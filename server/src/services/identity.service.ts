@@ -13,6 +13,7 @@ import { GENERATE_SALT } from "../constants";
 import { AccessToken } from "../dtos/token/access-token";
 import { comparePassword } from "../utils";
 import { TokenService } from "./token.service";
+import { Identity } from "../models";
 
 export class IdentityService {
   static async signIn(dto: SignInDto): Promise<SignInResponse> {
@@ -29,38 +30,36 @@ export class IdentityService {
         throw new BadRequestError("Password cannot be empty");
       }
 
-      const userModel = await IdentityRepository.findByEmail(email);
+      const userModel: Identity = await IdentityRepository.findByEmail(email);
       if (!userModel) {
         throw new BadRequestError("User Not Found!!!");
       }
 
-      const profileData = userModel.dataValues;
-
       const isPasswordMatched = await comparePassword(
         password,
-        profileData.password
+        userModel.password
       );
       if (!isPasswordMatched) {
         throw new BadRequestError("Incorrect Password!!");
       }
 
       const tokenGenerated = await TokenService.createToken({
-        userId: profileData.id,
+        userId: userModel.id,
         email,
       } as AccessToken);
 
       const signInResponse: SignInResponse = {
         accessToken: tokenGenerated,
         profile: {
-          id: profileData.id,
-          firstName: profileData.firstName,
-          lastName: profileData.lastName,
-          username: profileData.username,
-          phoneNumber: profileData.phoneNumber,
+          id: userModel.id,
+          firstName: userModel.firstName,
+          lastName: userModel.lastName,
+          username: userModel.username,
+          phoneNumber: userModel.phoneNumber,
         } as UserResponse,
       };
 
-      await IdentityRepository.update(profileData.id, userModel);
+      await IdentityRepository.update(userModel.id, userModel);
 
       return signInResponse;
     } catch (error) {
@@ -131,8 +130,7 @@ export class IdentityService {
         phoneNumber: phoneNumber ?? "",
       };
 
-      const result = await IdentityRepository.create(signUpInfo);
-      return result;
+      await IdentityRepository.create(signUpInfo);
     } catch (error) {
       ErrorHandler(error);
     }
@@ -142,11 +140,8 @@ export class IdentityService {
     try {
       const { email } = await TokenService.decode(token);
       const user = await IdentityRepository.findByEmail(email);
-      if (user) {
-        return true;
-      }
 
-      return false;
+      return user ? true : false;
     } catch (error) {
       return false;
     }

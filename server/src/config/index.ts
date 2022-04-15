@@ -19,3 +19,4 @@ export { sequelize, Sequelize };
 
 export * from "./token.config";
 export * from "./api.config";
+export * from "./development.config";

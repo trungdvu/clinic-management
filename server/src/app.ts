@@ -2,7 +2,7 @@
 import express, { Application } from "express";
 import logger from "morgan";
 import cors from "cors";
-import { models } from "./models";
+import { sequelize } from "./models";
 import apiRouters from "./routers";
 
 const app: Application = express();
@@ -27,7 +27,7 @@ app.use(`/${apiVersion}`, apiRouters);
 // Sync
 app.listen(port, async () => {
   try {
-    await models.sequelize.sync();
+    await sequelize.sync();
     console.log("Database sync");
     console.log("Server running ..");
   } catch (error) {

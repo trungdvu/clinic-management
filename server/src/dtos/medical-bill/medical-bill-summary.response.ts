@@ -3,5 +3,7 @@ export interface MedicalBillSummaryResponse {
   diseaseTypeId: string;
   prediction: string;
   symptomDescription: string;
-  patientId: string;
+  status: string;
+  patientFullName: string;
+  createdAt: string;
 }
