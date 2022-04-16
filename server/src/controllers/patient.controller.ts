@@ -26,6 +26,23 @@ export class PatientController {
     }
   }
 
+  static async findById(req: Request, res: Response): Promise<void> {
+    try {
+      const { id } = req.params;
+      const response: PatientResponse = await PatientService.findById(id);
+
+      const bodyResponse: BodyResponse<PatientResponse> = {
+        message: "Execute Successfully",
+        data: response,
+        statusCode: 200,
+      };
+
+      res.status(200).json(bodyResponse);
+    } catch (error) {
+      ErrorResponse(error, res);
+    }
+  }
+
   static async create(req: Request, res: Response): Promise<void> {
     try {
       const dto: CreatePatientDto = req.body;

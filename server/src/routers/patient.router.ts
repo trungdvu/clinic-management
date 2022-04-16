@@ -5,6 +5,7 @@ const router = Router();
 
 router.get("/", PatientController.findAll);
 router.post("/", PatientController.create);
+router.get("/:id", PatientController.findById);
 router.patch("/:id", PatientController.update);
 router.delete("/:id", PatientController.delete);
 

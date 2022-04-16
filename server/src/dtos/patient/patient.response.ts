@@ -5,4 +5,6 @@ export interface PatientResponse {
   dayOfBirth: string;
   address: string;
   phoneNumber: string;
+  createdAt?: string;
+  creatorId?: string;
 }

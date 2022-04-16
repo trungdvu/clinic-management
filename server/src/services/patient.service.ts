@@ -10,6 +10,7 @@ import {
   BadRequestError,
   Checker,
   CheckerCollections,
+  ErrorHandler,
   InternalServerError,
 } from "../shared";
 
@@ -25,10 +26,30 @@ export class PatientService {
           dayOfBirth: record.dayOfBirth,
           address: record.address,
           phoneNumber: record.phoneNumber,
+          createdAt: record.createdAt,
         } as PatientResponse;
       });
     } catch (error) {
       throw new InternalServerError(error.message as string);
+    }
+  }
+
+  static async findById(id: string): Promise<PatientResponse> {
+    try {
+      const record = await PatientRepository.findById(id);
+      const patientResponse: PatientResponse = {
+        id: record.id,
+        fullName: record.fullName,
+        address: record.address,
+        dayOfBirth: record.dayOfBirth,
+        gender: record.gender,
+        phoneNumber: record.phoneNumber,
+        createdAt: record.createdAt,
+      };
+
+      return patientResponse;
+    } catch (error) {
+      ErrorHandler(error);
     }
   }
 
