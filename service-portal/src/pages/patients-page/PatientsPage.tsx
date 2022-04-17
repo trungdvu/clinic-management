@@ -49,7 +49,7 @@ function PatientsPageContainer({
   }, []);
 
   const onClickRowPatient = useCallback(
-    (patient: Patient) => {
+    (patient: Patient) => () => {
       setSelectedPatient(patient);
       navigate(PAGE_ROUTES.PATIENTS.DETAILS.ID(patient.id));
     },
@@ -82,7 +82,7 @@ function PatientsPageContainer({
   }, []);
 
   return (
-    <div>
+    <>
       <CreatePatientModal visible={isCreatePatientModalVisible} onCancel={onCancelCreatePatient} />
 
       <div className="flex justify-between">
@@ -109,7 +109,11 @@ function PatientsPageContainer({
             <div className="h-px bg-brd" />
             {_.isEmpty(patients) ? (
               <Empty
-                description="No patient. Click ʻNew Patientʼ to create new one."
+                description={
+                  <Text className="text-tertiary">
+                    Empty. Click <b>+ New Patient</b> to create a new one.
+                  </Text>
+                }
                 className="mt-16"
                 image={Empty.PRESENTED_IMAGE_SIMPLE}
               />
@@ -125,7 +129,7 @@ function PatientsPageContainer({
                         'bg-black bg-opacity-[2.5%]': index % 2 !== 0,
                       },
                     )}
-                    onClick={() => onClickRowPatient(patient)}
+                    onClick={onClickRowPatient(patient)}
                   >
                     <Col
                       span={4}
@@ -163,7 +167,7 @@ function PatientsPageContainer({
           </Tabs.TabPane>
         </Tabs>
       )}
-    </div>
+    </>
   );
 }
 

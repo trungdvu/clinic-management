@@ -54,7 +54,7 @@ function SignInPageContainer({ title, currentUser, loading, doSignIn }: Props) {
       if (result instanceof ErrorModel) {
         notification.error({
           message: 'Failed',
-          description: result.data?.message,
+          description: result.data?.message || 'Ops! Something went wrong.',
         });
       }
     },

@@ -1,5 +1,5 @@
-import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
-import { Form, Input, Modal, ModalProps, notification } from 'antd';
+import { EyeInvisibleOutlined, EyeTwoTone, QuestionCircleOutlined } from '@ant-design/icons';
+import { Form, Input, Modal, ModalProps, notification, Tooltip } from 'antd';
 import classNames from 'classnames';
 import { ModalHeader, PrimaryButton, Text } from 'components';
 import { SignUpPayload } from 'interfaces';
@@ -35,8 +35,8 @@ function SignUpModalContainer({
       const result = await doSignUp(payload);
       if (result instanceof ErrorModel) {
         notification.error({
-          message: 'Authentication failed',
-          description: result.data?.message,
+          message: 'Failed',
+          description: result.data?.message || 'Ops! Something went worng.',
         });
       }
     },
@@ -69,7 +69,6 @@ function SignUpModalContainer({
         <div className="flex items-center w-full gap-2">
           <Item
             name="firstName"
-            required
             rules={[{ required: true }]}
             className="w-1/2 bg-opacity-50 rounded-md bg-brd"
           >
@@ -80,7 +79,6 @@ function SignUpModalContainer({
           </Item>
           <Item
             name="lastName"
-            required
             rules={[{ required: true }]}
             className="w-1/2 bg-opacity-50 rounded-md bg-brd"
           >
@@ -90,8 +88,13 @@ function SignUpModalContainer({
 
         <Item
           name="email"
-          required
-          rules={[{ required: true }]}
+          rules={[
+            {
+              required: true,
+              // eslint-disable-next-line no-useless-escape
+              pattern: new RegExp(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/),
+            },
+          ]}
           className="w-full bg-opacity-50 rounded-md bg-brd"
         >
           <Input
@@ -103,23 +106,43 @@ function SignUpModalContainer({
         <Item
           name="password"
           className="w-full bg-opacity-50 rounded-md bg-brd"
-          required
-          rules={[{ required: true }]}
+          rules={[
+            {
+              required: true,
+              pattern: new RegExp(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/),
+            },
+          ]}
         >
           <Input.Password
             placeholder="Password"
-            iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
+            iconRender={(visible) => (
+              <div className="flex items-center justify-center">
+                {visible ? (
+                  <EyeTwoTone className="cursor-pointer" />
+                ) : (
+                  <EyeInvisibleOutlined className="cursor-pointer" />
+                )}
+                <Tooltip
+                  title="You need enter a strong password. Containing at least 8 characters, including numbers, special symbols."
+                  placement="bottom"
+                  className="text-xs"
+                >
+                  <QuestionCircleOutlined className="ml-2" />
+                </Tooltip>
+              </div>
+            )}
             className="w-full py-1.5 text-sm font-medium bg-opacity-50 rounded-md bg-brd"
           />
         </Item>
 
         <Item
           name="phoneNumber"
-          required
-          rules={[{ required: true }]}
+          tooltip="At least 9 to 15 numbers"
+          rules={[{ required: true, pattern: new RegExp(/^[0-9]*$/g) }]}
           className="w-full bg-opacity-50 rounded-md bg-brd"
         >
           <Input
+            maxLength={15}
             placeholder="Phone number"
             className="w-full py-2 text-sm font-medium rounded-md"
           />

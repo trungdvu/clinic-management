@@ -1,14 +1,5 @@
 import { ManOutlined, MehOutlined, WomanOutlined } from '@ant-design/icons';
-import {
-  DatePicker,
-  Form,
-  Input,
-  InputNumber,
-  Modal,
-  ModalProps,
-  notification,
-  Select,
-} from 'antd';
+import { DatePicker, Form, Input, Modal, ModalProps, notification, Select } from 'antd';
 import classNames from 'classnames';
 import { ModalHeader, PrimaryButton, SecondaryButton, Text } from 'components';
 import { CreatePatientPayload } from 'interfaces';
@@ -148,13 +139,15 @@ function CreatePatientModalContainer({
           requiredMark="optional"
           label="PHONE NUMBER"
           name="phoneNumber"
-          rules={[{ required: true }]}
+          tooltip="At least 9 to 15 numbers"
+          rules={[{ required: true, pattern: new RegExp(/^[0-9]*$/g) }]}
           className="w-full"
         >
-          <InputNumber
+          <Input
             size="large"
+            maxLength={15}
+            minLength={9}
             placeholder="0987674314"
-            controls={false}
             className="text-sm w-full"
           />
         </Item>

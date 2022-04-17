@@ -79,7 +79,7 @@ const AuthenticatedLayoutContainer = ({ title, currentUser, ...props }: Props) =
             <Affix offsetTop={0}>
               <Sider
                 width={250}
-                className="pr-3 mr-3 overflow-auto bg-transparent border-r-2 select-none border-brd"
+                className="pr-3 mr-3 overflow-auto bg-white shadow-stone-300 shadow-xl select-none"
               >
                 <Menu
                   defaultSelectedKeys={[`${pathname}`]}
@@ -104,7 +104,7 @@ const AuthenticatedLayoutContainer = ({ title, currentUser, ...props }: Props) =
 
             {/* Page will be render through <Outlet /> */}
             <Layout>
-              <Content className="pr-5">
+              <Content className="pr-5 max-w-screen-2xl">
                 <Outlet />
               </Content>
             </Layout>

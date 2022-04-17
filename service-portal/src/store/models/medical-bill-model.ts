@@ -1,6 +1,6 @@
 import { createModel } from '@rematch/core';
 import { API } from 'consts';
-import { MedicalBillSumary, NewMedicalBillPayload } from 'interfaces';
+import { MedicalBillDetails, MedicalBillSumary, NewMedicalBillPayload } from 'interfaces';
 import _ from 'lodash';
 import { HttpService } from 'services';
 import { RootModel } from '.';
@@ -40,19 +40,19 @@ export const medicalBillModel = createModel<RootModel>()({
       }
     },
 
-    async doGetMedicalBill(payload: string) {
+    async doGetMedicalBillDetails(payload: string) {
       try {
         const endpoint = API.MEDICAL_BILLS_ID(payload);
-        const response = await HttpService.get(endpoint);
+        const { data, status } = await HttpService.get(endpoint);
 
-        if (response.status === 200) {
-          const medicalBill = response.data.data;
+        if (status === 200) {
+          const medicalBill: MedicalBillDetails = data.data;
           return medicalBill;
         } else {
           return false;
         }
       } catch (error) {
-        console.log('doGetMedicalBill', error);
+        console.log('doGetMedicalBillDetails', error);
         return false;
       }
     },

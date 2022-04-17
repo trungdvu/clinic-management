@@ -7,6 +7,7 @@ import {
   DashboardPage,
   HelpCenterPage,
   InvoicesPage,
+  MedicalBillDetailsPage,
   MedicalBillPage,
   NotFoundPage,
   PatientDetailsPage,
@@ -33,6 +34,10 @@ export const MainRoutes: React.FC = () => {
         <Route
           path={PAGE_ROUTES.MEDICAL_BILLS.PATH}
           element={<MedicalBillPage title={PAGE_ROUTES.MEDICAL_BILLS.TITLE} />}
+        />
+        <Route
+          path={PAGE_ROUTES.MEDICAL_BILLS.DETAILS.PATH}
+          element={<MedicalBillDetailsPage title={PAGE_ROUTES.MEDICAL_BILLS.DETAILS.TITLE} />}
         />
         <Route
           path={PAGE_ROUTES.PATIENTS.PATH}

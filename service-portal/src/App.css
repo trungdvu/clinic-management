@@ -39,3 +39,7 @@ body {
 .ant-form-item-explain-connected {
   display: none;
 }
+
+.ant-image-preview-img-wrapper {
+  @apply flex items-center justify-center;
+}

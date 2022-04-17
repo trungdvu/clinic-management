@@ -1,13 +1,15 @@
 import { DownOutlined, PlusOutlined, ReloadOutlined, UserOutlined } from '@ant-design/icons';
-import { Col, DatePicker, notification, Row, Tabs, Tooltip } from 'antd';
+import { Col, DatePicker, Empty, notification, Row, Tabs, Tooltip } from 'antd';
 import classNames from 'classnames';
 import { Heading, IconButton, PrimaryButton, SkeletonListing, Text } from 'components';
 import { ConfirmModal } from 'components/modals';
+import { PAGE_ROUTES } from 'consts';
 import { useTitle } from 'hooks';
 import _ from 'lodash';
 import moment from 'moment';
 import { useCallback, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { RootDispatch, RootState } from 'store';
 import { NewMedicalBillModal } from './NewMedicalBillModal';
 import { Status } from './Status';
@@ -27,6 +29,7 @@ const MedicalBillPageContainer = ({
 }: Props) => {
   const [isCreateMedicalBillVisible, setIsCreateMedicalBillVisible] = useState(false);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     doGetMedicalBillSumarries();
@@ -66,13 +69,24 @@ const MedicalBillPageContainer = ({
     } else {
       notification.error({
         message: 'Failed',
-        description: 'Ops. Somethingn went wrong.',
+        description: 'Ops. Something went wrong.',
       });
     }
   }, [doDeleteMedicalBill, seletedMedicalBillId]);
 
+  const onClickBillDate = useCallback(
+    (id: string) => () => {
+      navigate(PAGE_ROUTES.MEDICAL_BILLS.DETAILS.ID(id));
+    },
+    [navigate],
+  );
+
+  const onClickReload = useCallback(() => {
+    window.location.reload();
+  }, []);
+
   return (
-    <div>
+    <>
       <NewMedicalBillModal visible={isCreateMedicalBillVisible} onCancel={onCancelNewMedicalBill} />
       <ConfirmModal
         title="Delete medical bill"
@@ -88,10 +102,10 @@ const MedicalBillPageContainer = ({
         <Heading level={3}>Medical bills</Heading>
         <div className="flex items-center gap-5">
           <Tooltip title="Refresh this page" placement="bottom" className="text-xs">
-            <IconButton size="large" icon={<ReloadOutlined />} />
+            <IconButton size="large" icon={<ReloadOutlined />} onClick={onClickReload} />
           </Tooltip>
           <PrimaryButton icon={<PlusOutlined />} onClick={onClickNewMedicalBill}>
-            New medical bill
+            New Medical Bill
           </PrimaryButton>
         </div>
       </div>
@@ -114,49 +128,67 @@ const MedicalBillPageContainer = ({
               <Col span={2}></Col>
             </Row>
             <div className="h-px bg-brd" />
-
-            {_.map(medicalBillSummaries, (bill, index) => (
-              <Row
-                key={index}
-                gutter={24}
-                className={classNames('flex items-center px-5', {
-                  'bg-black bg-opacity-[2.5%]': index % 2 !== 0,
-                })}
-              >
-                <Col span={4} className="flex flex-col cursor-pointer hover:underline py-3">
-                  <Text className="font-semibold">
-                    {moment(bill.createdAt).format('ddd D MMM YY')}
+            {_.isEmpty(medicalBillSummaries) ? (
+              <Empty
+                description={
+                  <Text className="text-tertiary">
+                    Empty. Click <b>+ New Medical Bill</b> to create a new one.
                   </Text>
-                  <Text>{moment(bill.createdAt).format('H:mm A')}</Text>
-                </Col>
-                <Col
-                  span={4}
-                  className="flex items-center whitespace-nowrap text-ellipsis overflow-hidden"
-                >
-                  <UserOutlined className="text-tertiary text-lg pb-1 mr-1" />
-                  <Text>{bill.patientFullName}</Text>
-                </Col>
-                <Col span={10} className="whitespace-nowrap text-ellipsis overflow-hidden">
-                  <Text>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. At dolores voluptatum
-                    recusandae, hic sapiente a voluptates nihil iste in provident esse maiores
-                    consequuntur eveniet, deleniti reprehenderit beatae porro aspernatur. Provident!
-                  </Text>
-                </Col>
-                <Col span={4}>
-                  <Status status={bill.status} />
-                </Col>
-                <Col span={2}>
-                  <button
-                    disabled={bill.status !== 'pending'}
-                    className="text-button-pri hover:underline px-2 py-1 disabled:opacity-50 disabled:hover:no-underline disabled:cursor-not-allowed"
-                    onClick={onClickDeleteMedicalBill(bill.id)}
+                }
+                className="mt-16"
+                image={Empty.PRESENTED_IMAGE_SIMPLE}
+              />
+            ) : (
+              <>
+                {_.map(medicalBillSummaries, (bill, index) => (
+                  <Row
+                    key={index}
+                    gutter={24}
+                    className={classNames('flex items-center px-5', {
+                      'bg-black bg-opacity-[2.5%]': index % 2 !== 0,
+                    })}
                   >
-                    Delete
-                  </button>
-                </Col>
-              </Row>
-            ))}
+                    <Col
+                      span={4}
+                      className="flex flex-col cursor-pointer hover:underline py-3"
+                      onClick={onClickBillDate(bill.id)}
+                    >
+                      <Text className="font-semibold">
+                        {moment(bill.createdAt).format('ddd D MMM YY')}
+                      </Text>
+                      <Text>{moment(bill.createdAt).format('H:mm A')}</Text>
+                    </Col>
+                    <Col
+                      span={4}
+                      className="flex items-center whitespace-nowrap text-ellipsis overflow-hidden"
+                    >
+                      <UserOutlined className="text-tertiary text-lg pb-1 mr-1" />
+                      <Text>{bill.patientFullName}</Text>
+                    </Col>
+                    <Col span={10} className="whitespace-nowrap text-ellipsis overflow-hidden">
+                      <Text>
+                        Lorem ipsum dolor sit amet consectetur adipisicing elit. At dolores
+                        voluptatum recusandae, hic sapiente a voluptates nihil iste in provident
+                        esse maiores consequuntur eveniet, deleniti reprehenderit beatae porro
+                        aspernatur. Provident!
+                      </Text>
+                    </Col>
+                    <Col span={4}>
+                      <Status status={bill.status} />
+                    </Col>
+                    <Col span={2}>
+                      <button
+                        disabled={bill.status !== 'pending'}
+                        className="px-3 text-center text-button-pri transition-all duration-100 hover:bg-black hover:bg-opacity-5 active:bg-opacity-10 disabled:opacity-50 disabled:hover:no-underline disabled:cursor-not-allowed"
+                        onClick={onClickDeleteMedicalBill(bill.id)}
+                      >
+                        Delete
+                      </button>
+                    </Col>
+                  </Row>
+                ))}
+              </>
+            )}
           </Tabs.TabPane>
           <Tabs.TabPane key={2} tab="Pending">
             <Text>tab 2</Text>
@@ -169,7 +201,7 @@ const MedicalBillPageContainer = ({
           </Tabs.TabPane>
         </Tabs>
       )}
-    </div>
+    </>
   );
 };
 
