@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import { Heading, IconButton, PrimaryButton, SkeletonListing, Text } from 'components';
 import { ConfirmModal } from 'components/modals';
 import { PAGE_ROUTES } from 'consts';
+import { motion } from 'framer-motion';
 import { useTitle } from 'hooks';
 import _ from 'lodash';
 import moment from 'moment';
@@ -11,6 +12,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { RootDispatch, RootState } from 'store';
+import { defaultLayoutVariants } from 'utils';
 import { NewMedicalBillModal } from './NewMedicalBillModal';
 import { Status } from './Status';
 
@@ -86,7 +88,7 @@ const MedicalBillPageContainer = ({
   }, []);
 
   return (
-    <>
+    <motion.div variants={defaultLayoutVariants} initial="initial" animate="animate">
       <NewMedicalBillModal visible={isCreateMedicalBillVisible} onCancel={onCancelNewMedicalBill} />
       <ConfirmModal
         title="Delete medical bill"
@@ -112,7 +114,13 @@ const MedicalBillPageContainer = ({
       {loading.doGetMedicalBillSummaries ? (
         <SkeletonListing />
       ) : (
-        <Tabs type="card" defaultActiveKey="1" className="pb-10">
+        <Tabs
+          type="card"
+          defaultActiveKey="1"
+          tabPosition="top"
+          animated={{ inkBar: true, tabPane: true }}
+          className="pb-10"
+        >
           <Tabs.TabPane key={1} tab="All medical bills">
             <DatePicker.RangePicker
               allowClear={false}
@@ -201,7 +209,7 @@ const MedicalBillPageContainer = ({
           </Tabs.TabPane>
         </Tabs>
       )}
-    </>
+    </motion.div>
   );
 };
 

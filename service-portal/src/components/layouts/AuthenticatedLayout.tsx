@@ -9,12 +9,14 @@ import {
 } from '@ant-design/icons';
 import { Affix, Layout, LayoutProps, Menu } from 'antd';
 import { PAGE_ROUTES } from 'consts';
+import { motion } from 'framer-motion';
 import { useRouterLocation } from 'hooks';
 import _ from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link, Outlet } from 'react-router-dom';
 import { RootDispatch, RootState } from 'store';
+import { defaultPageVariants } from 'utils';
 import { Navbar } from '../views';
 
 const { Content, Sider } = Layout;
@@ -70,7 +72,7 @@ const AuthenticatedLayoutContainer = ({ title, currentUser, ...props }: Props) =
   };
 
   return (
-    <>
+    <motion.div variants={defaultPageVariants} initial="initial" animate="animate">
       {!_.isEmpty(currentUser) && (
         <Layout {...props}>
           <Navbar />
@@ -111,7 +113,7 @@ const AuthenticatedLayoutContainer = ({ title, currentUser, ...props }: Props) =
           </Layout>
         </Layout>
       )}
-    </>
+    </motion.div>
   );
 };
 

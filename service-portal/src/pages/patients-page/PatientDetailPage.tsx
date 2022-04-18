@@ -1,9 +1,10 @@
 import { EditOutlined, EnvironmentOutlined, LeftOutlined, PhoneOutlined } from '@ant-design/icons';
-import { Col, Image, notification, Row } from 'antd';
-import { Heading, PrimaryButton, Text } from 'components';
+import { Col, Image, notification, Row, Tooltip } from 'antd';
+import { Heading, IconButton, Text } from 'components';
 import { SkeletonPatientDetails } from 'components/loadings/SkeletonPatientDetails';
 import { ConfirmModal } from 'components/modals';
 import { PAGE_ROUTES } from 'consts';
+import { motion } from 'framer-motion';
 import { useTitle } from 'hooks';
 import { PatientDetails } from 'interfaces';
 import moment from 'moment';
@@ -11,6 +12,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { RootDispatch, RootState } from 'store';
+import { generateFadeInFadeOut } from 'utils';
 
 interface Props extends PropsFromStore {
   title?: string;
@@ -45,7 +47,7 @@ function PatientDetailsPageContainer({
     }
   }, [doGetPatientDetails, params.id]);
 
-  const onPressEditInfomation = useCallback(() => {
+  const onClickEdit = useCallback(() => {
     notification.info({
       message: 'In coming feature',
     });
@@ -79,7 +81,12 @@ function PatientDetailsPageContainer({
   }, []);
 
   return (
-    <div className="px-[8%]">
+    <motion.div
+      variants={generateFadeInFadeOut()}
+      initial="initial"
+      animate="animate"
+      className="px-[8%] pb-8"
+    >
       <ConfirmModal
         visible={isConfirmDeleteModalVisible}
         title="Delete patient"
@@ -126,21 +133,23 @@ function PatientDetailsPageContainer({
                 </div>
               </div>
 
-              <div className="flex items-baseline justify-between w-full mt-10">
-                <div className="flex-1 mr-5">
+              <Row gutter={24} className="mt-10 items-center flex">
+                <Col span={12} className="flex flex-col">
                   <Heading level={3} className="mb-0">
                     General Infomation
                   </Heading>
                   <Text type="secondary">General infomation about this Patient</Text>
-                </div>
-                <PrimaryButton
-                  size="middle"
-                  icon={<EditOutlined />}
-                  onClick={onPressEditInfomation}
-                >
-                  Edit Infomation
-                </PrimaryButton>
-              </div>
+                </Col>
+                <Col span={12} className="flex flex-col">
+                  <Tooltip
+                    title="Edit general information"
+                    placement="bottom"
+                    className="text-xs text-center"
+                  >
+                    <IconButton icon={<EditOutlined />} onClick={onClickEdit} />
+                  </Tooltip>
+                </Col>
+              </Row>
 
               <Row gutter={24} className="mt-4">
                 <Col span={12} className="flex flex-col">
@@ -219,7 +228,7 @@ function PatientDetailsPageContainer({
           )}
         </>
       )}
-    </div>
+    </motion.div>
   );
 }
 

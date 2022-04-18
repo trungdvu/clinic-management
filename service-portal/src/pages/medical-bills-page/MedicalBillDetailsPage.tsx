@@ -17,6 +17,7 @@ import {
 } from 'components';
 import { ConfirmModal } from 'components/modals';
 import { PAGE_ROUTES } from 'consts';
+import { motion } from 'framer-motion';
 import { useTitle } from 'hooks';
 import { MedicalBillDetails } from 'interfaces';
 import _ from 'lodash';
@@ -25,6 +26,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import { RootDispatch, RootState } from 'store';
+import { generateFadeInFadeOut } from 'utils';
 import { EditableDrugRow } from './EditTableDrugRow';
 import { StatusTimeLine } from './StatusTimeLine';
 
@@ -110,7 +112,12 @@ function MedicalBillDetailsPageContainer({ title, loading, doGetMedicalBillDetai
   );
 
   return (
-    <div className="px-[8%] pb-20">
+    <motion.div
+      variants={generateFadeInFadeOut()}
+      initial="initial"
+      animate="animate"
+      className="px-[8%] pb-20"
+    >
       <ConfirmModal
         visible={isConfirmDeleteModalVisible}
         title="Delete this medical bill"
@@ -416,7 +423,7 @@ function MedicalBillDetailsPageContainer({ title, loading, doGetMedicalBillDetai
           )}
         </>
       )}
-    </div>
+    </motion.div>
   );
 }
 

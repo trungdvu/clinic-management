@@ -10,6 +10,7 @@ import { Col, Empty, Row, Tabs } from 'antd';
 import classNames from 'classnames';
 import { Heading, PrimaryButton, SkeletonListing, Text } from 'components';
 import { PAGE_ROUTES } from 'consts';
+import { motion } from 'framer-motion';
 import { useTitle } from 'hooks';
 import { Patient } from 'interfaces';
 import _ from 'lodash';
@@ -18,6 +19,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { RootDispatch, RootState } from 'store';
+import { defaultLayoutVariants } from 'utils';
 import { CreatePatientModal } from './CreatePatientModal';
 
 interface Props extends PropsFromStore {
@@ -82,11 +84,16 @@ function PatientsPageContainer({
   }, []);
 
   return (
-    <>
+    <motion.div
+      variants={defaultLayoutVariants}
+      initial="initial"
+      animate="animate"
+      className="pb-8"
+    >
       <CreatePatientModal visible={isCreatePatientModalVisible} onCancel={onCancelCreatePatient} />
 
       <div className="flex justify-between">
-        <Heading level={3}>Medical bills</Heading>
+        <Heading level={3}>Patients</Heading>
         <div className="flex items-center gap-5">
           <PrimaryButton icon={<PlusOutlined />} onClick={onClickCreatePatient}>
             New Patient
@@ -167,7 +174,7 @@ function PatientsPageContainer({
           </Tabs.TabPane>
         </Tabs>
       )}
-    </>
+    </motion.div>
   );
 }
 

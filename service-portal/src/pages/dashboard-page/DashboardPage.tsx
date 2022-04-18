@@ -1,10 +1,12 @@
 import { WomanOutlined } from '@ant-design/icons';
 import { Empty, Row } from 'antd';
 import { BackToTop, Text } from 'components';
+import { motion } from 'framer-motion';
 import { useTitle } from 'hooks';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { RootDispatch, RootState } from 'store';
+import { defaultLayoutVariants } from 'utils';
 
 interface Props {
   title?: string;
@@ -14,7 +16,12 @@ const DashboardPageContainer = ({ title }: Props): JSX.Element => {
   useTitle(title);
 
   return (
-    <div className="flex flex-row gap-3 mb-10">
+    <motion.div
+      variants={defaultLayoutVariants}
+      initial="initial"
+      animate="animate"
+      className="flex flex-row gap-3 mb-10"
+    >
       <div className="flex flex-col w-2/3">
         <div className="flex flex-col justify-center w-full gap-1">
           <Text className="text-xs font-medium text-tertiary">SUMMARY FOR TODAY</Text>
@@ -194,7 +201,7 @@ const DashboardPageContainer = ({ title }: Props): JSX.Element => {
         </div>
       </div>
       <BackToTop />
-    </div>
+    </motion.div>
   );
 };
 
