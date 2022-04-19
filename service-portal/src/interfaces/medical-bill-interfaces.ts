@@ -1,3 +1,5 @@
+import { Drug } from './drug-interfaces';
+
 export type MedicalBillStatus = 'pending' | 'active' | 'completed';
 
 export interface NewMedicalBillPayload {
@@ -15,4 +17,14 @@ export interface MedicalBillSumary {
   status: MedicalBillStatus;
   patientFullName: string;
   createdAt: string;
+}
+
+export interface MedicalBillDetails {
+  id: string;
+  diseaseTypeId: string;
+  prediction: string;
+  status: MedicalBillStatus;
+  symptomDescription: string;
+  patientId: string;
+  drugs: Drug[];
 }

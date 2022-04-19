@@ -10,6 +10,7 @@ import { Col, Empty, Row, Tabs } from 'antd';
 import classNames from 'classnames';
 import { Heading, PrimaryButton, SkeletonListing, Text } from 'components';
 import { PAGE_ROUTES } from 'consts';
+import { motion } from 'framer-motion';
 import { useTitle } from 'hooks';
 import { Patient } from 'interfaces';
 import _ from 'lodash';
@@ -18,6 +19,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { RootDispatch, RootState } from 'store';
+import { defaultLayoutVariants } from 'utils';
 import { CreatePatientModal } from './CreatePatientModal';
 
 interface Props extends PropsFromStore {
@@ -49,7 +51,7 @@ function PatientsPageContainer({
   }, []);
 
   const onClickRowPatient = useCallback(
-    (patient: Patient) => {
+    (patient: Patient) => () => {
       setSelectedPatient(patient);
       navigate(PAGE_ROUTES.PATIENTS.DETAILS.ID(patient.id));
     },
@@ -82,11 +84,16 @@ function PatientsPageContainer({
   }, []);
 
   return (
-    <div>
+    <motion.div
+      variants={defaultLayoutVariants}
+      initial="initial"
+      animate="animate"
+      className="pb-8"
+    >
       <CreatePatientModal visible={isCreatePatientModalVisible} onCancel={onCancelCreatePatient} />
 
       <div className="flex justify-between">
-        <Heading level={3}>Medical bills</Heading>
+        <Heading level={3}>Patients</Heading>
         <div className="flex items-center gap-5">
           <PrimaryButton icon={<PlusOutlined />} onClick={onClickCreatePatient}>
             New Patient
@@ -109,7 +116,11 @@ function PatientsPageContainer({
             <div className="h-px bg-brd" />
             {_.isEmpty(patients) ? (
               <Empty
-                description="No patient. Click ʻNew Patientʼ to create new one."
+                description={
+                  <Text className="text-tertiary">
+                    Empty. Click <b>+ New Patient</b> to create a new one.
+                  </Text>
+                }
                 className="mt-16"
                 image={Empty.PRESENTED_IMAGE_SIMPLE}
               />
@@ -125,7 +136,7 @@ function PatientsPageContainer({
                         'bg-black bg-opacity-[2.5%]': index % 2 !== 0,
                       },
                     )}
-                    onClick={() => onClickRowPatient(patient)}
+                    onClick={onClickRowPatient(patient)}
                   >
                     <Col
                       span={4}
@@ -163,7 +174,7 @@ function PatientsPageContainer({
           </Tabs.TabPane>
         </Tabs>
       )}
-    </div>
+    </motion.div>
   );
 }
 

@@ -1,6 +1,6 @@
 import { createModel } from '@rematch/core';
 import { API } from 'consts';
-import { CreatePatientPayload, Patient } from 'interfaces';
+import { CreatePatientPayload, Patient, PatientDetails } from 'interfaces';
 import { HttpService } from 'services';
 import { RootModel } from '.';
 
@@ -73,6 +73,23 @@ export const patientModel = createModel<RootModel>()({
         return response.status === 200;
       } catch (error) {
         console.log('doGetPatients', error);
+        return false;
+      }
+    },
+
+    async doGetPatientDetails(payload: string): Promise<false | PatientDetails> {
+      try {
+        const endpoint = API.PATIENTS_ID(payload);
+        const { status, data } = await HttpService.get(endpoint);
+
+        if (status === 200) {
+          const patient = data.data as PatientDetails;
+          return patient;
+        } else {
+          return false;
+        }
+      } catch (error) {
+        console.log('doGetPatientDetails', error);
         return false;
       }
     },

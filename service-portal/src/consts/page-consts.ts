@@ -10,9 +10,14 @@ export const PAGE_ROUTES = {
     TITLE_MENU: 'Sign In',
   },
   MEDICAL_BILLS: {
-    PATH: '/bookings',
+    PATH: '/medical-bills',
     TITLE: 'Medical Bills - ClinicX',
     TITLE_MENU: 'Medical bills',
+    DETAILS: {
+      PATH: '/medical-bills/:id',
+      ID: (id: string) => `/medical-bills/${id}`,
+      TITLE: 'Medical Bill Details - ClinicX',
+    },
   },
   PATIENTS: {
     PATH: '/patients',
@@ -21,7 +26,7 @@ export const PAGE_ROUTES = {
     DETAILS: {
       PATH: '/patients/:id',
       ID: (id: string) => `/patients/${id}`,
-      TITLE: 'ClinicX - Patient Details',
+      TITLE: 'Patient Details - ClinicX',
     },
   },
   INVOICES: {

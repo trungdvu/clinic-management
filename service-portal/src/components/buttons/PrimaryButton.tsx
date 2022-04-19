@@ -10,10 +10,10 @@ export const PrimaryButton: React.FC<ButtonProps> = memo(
           'flex justify-center items-center box box-border',
           'text-sm font-medium text-primary-2',
           'transition duration-100',
-          'bg-button-pri',
+          'bg-button-pri border-button-pri',
           'hover:bg-button-pri-hv hover:border-button-pri-hv',
           'active:bg-button-pri active:border-button-pri',
-          'focus:bg-button-pri focus:border-button-pri',
+          'focus:border-button-pri-hv focus:bg-button-pri-hv',
           {
             'bg-button-pri opacity-50 hover:cursor-not-allowed hover:bg-button-pri': loading,
           },

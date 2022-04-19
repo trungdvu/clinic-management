@@ -36,8 +36,10 @@ export function DebounceSelect<
   }, [fetchOptions, debounceTimeout]);
 
   const onFocus = useCallback(() => {
-    debounceFetcher('');
-  }, [debounceFetcher]);
+    if (_.isEmpty(options)) {
+      debounceFetcher('');
+    }
+  }, [debounceFetcher, options]);
 
   const renderLoading = useCallback(() => {
     return fetching ? <Spin size="default" /> : null;

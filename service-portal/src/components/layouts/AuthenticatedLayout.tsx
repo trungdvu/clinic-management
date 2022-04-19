@@ -9,12 +9,14 @@ import {
 } from '@ant-design/icons';
 import { Affix, Layout, LayoutProps, Menu } from 'antd';
 import { PAGE_ROUTES } from 'consts';
+import { motion } from 'framer-motion';
 import { useRouterLocation } from 'hooks';
 import _ from 'lodash';
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link, Outlet } from 'react-router-dom';
 import { RootDispatch, RootState } from 'store';
+import { defaultPageVariants } from 'utils';
 import { Navbar } from '../views';
 
 const { Content, Sider } = Layout;
@@ -70,7 +72,7 @@ const AuthenticatedLayoutContainer = ({ title, currentUser, ...props }: Props) =
   };
 
   return (
-    <>
+    <motion.div variants={defaultPageVariants} initial="initial" animate="animate">
       {!_.isEmpty(currentUser) && (
         <Layout {...props}>
           <Navbar />
@@ -79,7 +81,7 @@ const AuthenticatedLayoutContainer = ({ title, currentUser, ...props }: Props) =
             <Affix offsetTop={0}>
               <Sider
                 width={250}
-                className="pr-3 mr-3 overflow-auto bg-transparent border-r-2 select-none border-brd"
+                className="pr-3 mr-3 overflow-auto bg-white shadow-stone-300 shadow-xl select-none"
               >
                 <Menu
                   defaultSelectedKeys={[`${pathname}`]}
@@ -104,14 +106,14 @@ const AuthenticatedLayoutContainer = ({ title, currentUser, ...props }: Props) =
 
             {/* Page will be render through <Outlet /> */}
             <Layout>
-              <Content className="pr-5">
+              <Content className="pr-5 max-w-screen-2xl">
                 <Outlet />
               </Content>
             </Layout>
           </Layout>
         </Layout>
       )}
-    </>
+    </motion.div>
   );
 };
 
