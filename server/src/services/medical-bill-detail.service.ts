@@ -29,7 +29,7 @@ export class MedicalBillDetailService {
       const medicalBillDetailRecords: MedicalBillDetail[] = await MedicalBillDetailRepository.findMany(
         medicalBillId
       );
-      let medicalBillDetailResponses: MedicalBillDetailResponse[] = [];
+      const medicalBillDetailResponses: MedicalBillDetailResponse[] = [];
 
       for (const record of medicalBillDetailRecords) {
         const availableUnits: UnitResponse[] = await this.findAvailableUnits(
@@ -42,6 +42,7 @@ export class MedicalBillDetailService {
         );
         const drugFounded = await DrugRepository.findById(record.drugId);
         const usageFounded = await UsageRepository.findById(record.usageId);
+        const unitFounded = await UnitRepository.findById(record.unitId);
 
         const totalPrice = record.quantity * price;
 
@@ -50,6 +51,10 @@ export class MedicalBillDetailService {
           drug: {
             id: drugFounded.id,
             description: drugFounded.description,
+          },
+          unit: {
+            id: unitFounded.id,
+            description: unitFounded.description,
           },
           availableUnits: availableUnits,
           usage: {

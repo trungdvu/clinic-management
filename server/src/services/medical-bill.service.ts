@@ -5,11 +5,12 @@ import {
   MedicalBillDetailResponse,
   MedicalBillResponse,
   MedicalBillSummaryResponse,
+  PatientResponse,
   UpdateMedicalBillDto,
 } from "../dtos";
-import { DiseaseType, MedicalBill } from "../models";
+import { MedicalBill } from "../models";
+import { MedicalBillDiseaseType } from "../models/medical-bill-disease-type.model";
 import {
-  CreateMedicalBillRecord,
   DiseaseTypeRepository,
   MedicalBillDiseaseTypeRepository,
   MedicalBillRepository,
@@ -22,8 +23,8 @@ import {
   ErrorHandler,
 } from "../shared";
 import { MedicalBillDetailService } from "./medical-bill-detail.service";
-import { v4 as uuidv4 } from "uuid";
-import { MedicalBillDiseaseType } from "../models/medical-bill-disease-type.model";
+import { PatientService } from "./patient.service";
+
 export class MedicalBillService {
   static async findMany(
     query: FindMedicalBillsQueryParams
@@ -100,6 +101,9 @@ export class MedicalBillService {
       const diseaseTypeResponses: DiseaseTypeResponse[] = await this.findDiseaseTypeByMedicalBillId(
         id
       );
+      const patient: PatientResponse = await PatientService.findById(
+        medicalBill.patientId
+      );
 
       return {
         id: medicalBill.id,
@@ -107,7 +111,7 @@ export class MedicalBillService {
         prediction: medicalBill.prediction,
         status: medicalBill.status,
         symptomDescription: medicalBill.symptomDescription,
-        patient: medicalBill.patient,
+        patient,
         createdAt: medicalBill.createdAt,
         drugDetails: medicalBillDetails,
       } as MedicalBillResponse;
