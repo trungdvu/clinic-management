@@ -19,15 +19,14 @@ export class MedicalBillRepository {
     query: FindMedicalBillsQueryParams
   ): Promise<MedicalBill[]> {
     try {
-      const { patientId } = query;
+      const { patientId, page } = query;
       return await MedicalBill.findAll({
-        where: {
-          patientId,
-        },
+        where: patientId ? { patientId } : undefined,
         include: {
           model: Patient,
           attributes: ["fullName"],
         },
+        limit: page ? page * 20 : undefined,
       });
     } catch (error) {
       throw new InternalServerError(error.message);

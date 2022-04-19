@@ -29,12 +29,6 @@ export class MedicalBillService {
     query: FindMedicalBillsQueryParams
   ): Promise<MedicalBillSummaryResponse[]> {
     try {
-      const { patientId } = query;
-      const isNotExistedPatientId = await this.isNotExistedPatientId(patientId);
-      if (isNotExistedPatientId) {
-        throw new BadRequestError("Patient Id was not existed!!!");
-      }
-
       const medicalBillRecords: MedicalBill[] = await MedicalBillRepository.findMany(
         query
       );
