@@ -1,11 +1,15 @@
 import {
+  BelongsTo,
+  BelongsToMany,
   Column,
   DataType,
+  ForeignKey,
   HasMany,
   Model,
   PrimaryKey,
   Table,
 } from "sequelize-typescript";
+import { MedicalBillDiseaseType } from "./medical-bill-disease-type.model";
 import { MedicalBill } from "./medical-bill.model";
 
 export interface DiseaseTypeAttributes {
@@ -29,6 +33,6 @@ export class DiseaseType
   description: string;
 
   // Associations
-  @HasMany(() => MedicalBill)
+  @BelongsToMany(() => MedicalBill, () => MedicalBillDiseaseType)
   medicalBills: MedicalBill[];
 }

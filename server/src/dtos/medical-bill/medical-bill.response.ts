@@ -1,11 +1,14 @@
-import { DrugResponse } from "./drug.response";
+import { DiseaseTypeResponse } from "../disease-type";
+import { MedicalBillDetailResponse } from "../medical-bill-detail";
+import { PatientResponse } from "../patient";
 
 export interface MedicalBillResponse {
   id: string;
-  diseaseTypeId: string;
+  diseaseTypes: DiseaseTypeResponse[];
   prediction: string;
   status: string;
   symptomDescription: string;
-  patientId: string;
-  drugs: DrugResponse[];
+  patient: PatientResponse;
+  drugDetails: MedicalBillDetailResponse[];
+  createdAt: string;
 }

@@ -1,15 +1,13 @@
 import {
   DrugInformation,
-  DrugResponse,
   UpdateMedicalBillDetailDto,
+  CreateMedicalBillDetailDto,
 } from "../dtos";
-import { MedicalBillDetail as M } from "../models";
+import { MedicalBillDetail } from "../models";
 import { InternalServerError } from "../shared";
 
-const MedicalBillDetail: any = M;
-
 export class MedicalBillDetailRepository {
-  static async findMany(medicalBillId: string): Promise<DrugResponse[]> {
+  static async findMany(medicalBillId: string): Promise<MedicalBillDetail[]> {
     try {
       return await MedicalBillDetail.findAll({
         where: {
@@ -21,7 +19,7 @@ export class MedicalBillDetailRepository {
     }
   }
 
-  static async findById(id: string): Promise<typeof MedicalBillDetail> {
+  static async findById(id: string): Promise<MedicalBillDetail> {
     try {
       return await MedicalBillDetail.findByPk(id);
     } catch (error) {
@@ -29,9 +27,17 @@ export class MedicalBillDetailRepository {
     }
   }
 
-  static async create(dto: DrugInformation): Promise<void> {
+  static async create(
+    dto: CreateMedicalBillDetailDto
+  ): Promise<MedicalBillDetail> {
     try {
-      return await MedicalBillDetail.create(dto);
+      const { medicalBillId, drugInformation } = dto;
+      const input = {
+        medicalBillId,
+        ...drugInformation,
+      };
+
+      return await MedicalBillDetail.create(input);
     } catch (error) {
       throw new InternalServerError(error.message);
     }
@@ -40,11 +46,9 @@ export class MedicalBillDetailRepository {
   static async update(
     id: string,
     dto: UpdateMedicalBillDetailDto
-  ): Promise<typeof MedicalBillDetail> {
+  ): Promise<any> {
     try {
-      const medicalBillDetailFounded = await this.findById(id);
-
-      await medicalBillDetailFounded.update(dto, {
+      await MedicalBillDetail.update(dto, {
         where: {
           id,
         },
@@ -54,7 +58,7 @@ export class MedicalBillDetailRepository {
     }
   }
 
-  static async delete(id: string): Promise<typeof MedicalBillDetail> {
+  static async delete(id: string): Promise<number> {
     try {
       return await MedicalBillDetail.destroy({
         where: {

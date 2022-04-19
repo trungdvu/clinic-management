@@ -2,7 +2,10 @@ import { Response } from "express";
 import { BodyResponse } from "../api.response";
 import { ApiError } from "./api-base.error";
 
-export const ErrorResponse = (error: Error, expressResponse: Response) => {
+export const ErrorResponseHandler = (
+  error: Error,
+  expressResponse: Response
+) => {
   if (error instanceof ApiError) {
     const errorMessage: BodyResponse<void> = {
       message: error.message,

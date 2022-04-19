@@ -1,8 +1,10 @@
 import {
   BelongsTo,
+  BelongsToMany,
   Column,
   DataType,
   ForeignKey,
+  HasMany,
   Model,
   PrimaryKey,
   Table,
@@ -50,7 +52,7 @@ export class MedicalBillDetail
   @Column(DataType.UUID)
   medicalBillId: string;
 
-  @Column(DataType.BOOLEAN)
+  @Column({ type: DataType.BOOLEAN, defaultValue: false })
   isDeleted: boolean;
 
   @Column(DataType.INTEGER)

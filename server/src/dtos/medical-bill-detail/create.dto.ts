@@ -7,5 +7,5 @@ export interface DrugInformation {
 
 export interface CreateMedicalBillDetailDto {
   medicalBillId: string;
-  drugInformations: DrugInformation[];
+  drugInformation: DrugInformation;
 }

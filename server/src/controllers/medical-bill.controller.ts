@@ -7,7 +7,7 @@ import {
   UpdateMedicalBillDto,
 } from "../dtos";
 import { MedicalBillService } from "../services";
-import { BodyResponse, ErrorResponse } from "../shared";
+import { BodyResponse, ErrorResponseHandler } from "../shared";
 
 export class MedicalBillController {
   static async findAll(req: Request, res: Response): Promise<void> {
@@ -23,16 +23,15 @@ export class MedicalBillController {
         statusCode: 200,
       };
 
-      res.status(200).json(bodyResponse);
+      res.status(bodyResponse.statusCode).json(bodyResponse);
     } catch (error) {
-      ErrorResponse(error, res);
+      ErrorResponseHandler(error, res);
     }
   }
 
   static async findById(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
-
       const medicalBillFounded = await MedicalBillService.findById(id);
 
       const bodyResponse: BodyResponse<MedicalBillResponse> = {
@@ -41,9 +40,9 @@ export class MedicalBillController {
         statusCode: 200,
       };
 
-      res.status(200).json(bodyResponse);
+      res.status(bodyResponse.statusCode).json(bodyResponse);
     } catch (error) {
-      ErrorResponse(error, res);
+      ErrorResponseHandler(error, res);
     }
   }
 
@@ -57,9 +56,10 @@ export class MedicalBillController {
         message: "Execute Successfully",
         statusCode: 200,
       };
-      res.status(200).json(bodyResponse);
+
+      res.status(bodyResponse.statusCode).json(bodyResponse);
     } catch (error) {
-      ErrorResponse(error, res);
+      ErrorResponseHandler(error, res);
     }
   }
 
@@ -74,9 +74,10 @@ export class MedicalBillController {
         message: "Execute Successfully",
         statusCode: 200,
       };
-      res.status(200).json(bodyResponse);
+
+      res.status(bodyResponse.statusCode).json(bodyResponse);
     } catch (error) {
-      ErrorResponse(error, res);
+      ErrorResponseHandler(error, res);
     }
   }
 
@@ -90,9 +91,10 @@ export class MedicalBillController {
         message: "Execute Successfully",
         statusCode: 200,
       };
-      res.status(200).json(bodyResponse);
+
+      res.status(bodyResponse.statusCode).json(bodyResponse);
     } catch (error) {
-      ErrorResponse(error, res);
+      ErrorResponseHandler(error, res);
     }
   }
 }

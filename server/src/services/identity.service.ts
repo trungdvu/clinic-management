@@ -115,7 +115,7 @@ export class IdentityService {
 
       const user = await IdentityRepository.findByEmail(email);
       if (user) {
-        throw new NotFoundError("Email has been taken!!!");
+        throw new BadRequestError("Email has been taken!!!");
       }
 
       const passwordHashed = await hash(password, GENERATE_SALT);

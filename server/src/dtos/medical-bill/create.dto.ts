@@ -1,5 +1,5 @@
 export interface CreateMedicalBillDto {
-  diseaseTypeId?: string;
+  diseaseTypeIds?: string[];
   symptomDescription: string;
   prediction: string;
   patientId: string;

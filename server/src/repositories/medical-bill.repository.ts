@@ -7,6 +7,13 @@ import { MedicalBill } from "../models";
 import { Patient } from "../models/patient.model";
 import { InternalServerError } from "../shared";
 
+export interface CreateMedicalBillRecord {
+  id?: string;
+  diseaseTypeId: string;
+  symptomDescription: string;
+  patientId: string;
+  prediction: string;
+}
 export class MedicalBillRepository {
   static async findMany(
     query: FindMedicalBillsQueryParams
@@ -14,6 +21,9 @@ export class MedicalBillRepository {
     try {
       const { patientId } = query;
       return await MedicalBill.findAll({
+        where: {
+          patientId,
+        },
         include: {
           model: Patient,
           attributes: ["fullName"],

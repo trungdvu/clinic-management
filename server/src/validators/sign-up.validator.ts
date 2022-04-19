@@ -49,7 +49,7 @@ export const signUpValidationSchema: ObjectSchema<SignUpValidationSchema> = joi
       .allow(joi.ref("password"))
       .required()
       .messages({
-        "string.disallow": "Password khong match",
+        "string.disallow": "Password not match",
       }),
 
     phoneNumber: joi.string().trim().required().messages({
@@ -72,5 +72,6 @@ export const signUpRequestValidatorMiddleware = (
     res.status(bodyResponse.statusCode).json(bodyResponse);
     return;
   }
+
   next();
 };

@@ -1,4 +1,6 @@
 import {
+  BelongsTo,
+  BelongsToMany,
   Column,
   DataType,
   HasMany,

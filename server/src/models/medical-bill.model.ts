@@ -1,8 +1,10 @@
 import {
   BelongsTo,
+  BelongsToMany,
   Column,
   DataType,
   ForeignKey,
+  HasMany,
   HasOne,
   Model,
   PrimaryKey,
@@ -10,6 +12,7 @@ import {
 } from "sequelize-typescript";
 import { DiseaseType } from "./disease-type.model";
 import { MedicalBillDetail } from "./medical-bill-detail.model";
+import { MedicalBillDiseaseType } from "./medical-bill-disease-type.model";
 import { Patient } from "./patient.model";
 
 enum MedicalBillStatus {
@@ -20,7 +23,6 @@ enum MedicalBillStatus {
 
 export interface MedicalBillAttributes {
   id: string;
-  diseaseTypeId: string;
   symptomDescription: string;
   status?: MedicalBillStatus;
   prediction: string;
@@ -38,10 +40,6 @@ export class MedicalBill
     defaultValue: DataType.UUIDV4,
   })
   id!: string;
-
-  @ForeignKey(() => DiseaseType)
-  @Column(DataType.UUID)
-  diseaseTypeId: string;
 
   @Column(DataType.STRING)
   symptomDescription: string;
@@ -63,6 +61,6 @@ export class MedicalBill
   @HasOne(() => MedicalBillDetail)
   medicalBillDetail: MedicalBillDetail;
 
-  @BelongsTo(() => DiseaseType)
-  diseaseType: DiseaseType;
+  @BelongsToMany(() => DiseaseType, () => MedicalBillDiseaseType)
+  diseaseTypes: DiseaseType[];
 }

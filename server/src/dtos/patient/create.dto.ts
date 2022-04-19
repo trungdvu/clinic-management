@@ -4,4 +4,5 @@ export interface CreatePatientDto {
   dayOfBirth: string;
   phoneNumber: string;
   address?: string;
+  creatorId: string;
 }

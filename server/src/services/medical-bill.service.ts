@@ -1,15 +1,19 @@
 import {
   CreateMedicalBillDto,
-  DrugResponse,
+  DiseaseTypeResponse,
   FindMedicalBillsQueryParams,
+  MedicalBillDetailResponse,
   MedicalBillResponse,
   MedicalBillSummaryResponse,
   UpdateMedicalBillDto,
 } from "../dtos";
-import { MedicalBill } from "../models";
+import { DiseaseType, MedicalBill } from "../models";
 import {
-  MedicalBillDetailRepository,
+  CreateMedicalBillRecord,
+  DiseaseTypeRepository,
+  MedicalBillDiseaseTypeRepository,
   MedicalBillRepository,
+  PatientRepository,
 } from "../repositories";
 import {
   BadRequestError,
@@ -17,60 +21,112 @@ import {
   CheckerCollections,
   ErrorHandler,
 } from "../shared";
-
+import { MedicalBillDetailService } from "./medical-bill-detail.service";
+import { v4 as uuidv4 } from "uuid";
+import { MedicalBillDiseaseType } from "../models/medical-bill-disease-type.model";
 export class MedicalBillService {
   static async findMany(
     query: FindMedicalBillsQueryParams
   ): Promise<MedicalBillSummaryResponse[]> {
     try {
+      const { patientId } = query;
+      const isNotExistedPatientId = await this.isNotExistedPatientId(patientId);
+      if (isNotExistedPatientId) {
+        throw new BadRequestError("Patient Id was not existed!!!");
+      }
+
       const medicalBillRecords: MedicalBill[] = await MedicalBillRepository.findMany(
         query
       );
 
-      return medicalBillRecords.map((record) => {
-        return {
+      const responses: MedicalBillSummaryResponse[] = [];
+
+      // TODO: Refactor these
+      for (const record of medicalBillRecords) {
+        // const mappingDiseaseTypes: DiseaseTypeResponse[] = record.diseaseTypes.map(
+        //   (diseaseType: DiseaseTypeResponse) => {
+        //     return {
+        //       id: diseaseType.id,
+        //       description: diseaseType.description,
+        //     } as DiseaseTypeResponse;
+        //   }
+        // );
+
+        const diseaseTypeResponses: DiseaseTypeResponse[] = await this.findDiseaseTypeByMedicalBillId(
+          record.id
+        );
+
+        const medicalBillResponse: MedicalBillSummaryResponse = {
           id: record.id,
-          diseaseTypeId: record.diseaseTypeId,
+          diseaseTypes: diseaseTypeResponses,
           prediction: record.prediction,
           symptomDescription: record.symptomDescription,
           status: record.status,
           patientFullName: record.patient.fullName,
           createdAt: record.createdAt,
-        } as MedicalBillSummaryResponse;
-      });
+        };
+
+        responses.push(medicalBillResponse);
+      }
+
+      return responses;
     } catch (error) {
       ErrorHandler(error);
     }
   }
 
+  static async findDiseaseTypeByMedicalBillId(
+    medicalBillId: string
+  ): Promise<DiseaseTypeResponse[]> {
+    const medicalBillDiseaseTypes: MedicalBillDiseaseType[] = await MedicalBillDiseaseTypeRepository.findManyByMedicalBillId(
+      medicalBillId
+    );
+
+    return medicalBillDiseaseTypes.map(
+      (medicalBillDiseaseType: MedicalBillDiseaseType) => {
+        return {
+          id: medicalBillDiseaseType.diseaseType.id,
+          description: medicalBillDiseaseType.diseaseType.description,
+        } as DiseaseTypeResponse;
+      }
+    );
+  }
+
+  static async isNotExistedPatientId(patientId: string): Promise<boolean> {
+    const patientFounded = await PatientRepository.findById(patientId);
+    return patientFounded ? false : true;
+  }
+
   static async findById(id: string): Promise<MedicalBillResponse> {
     try {
-      const medicalBill = await MedicalBillRepository.findById(id);
-      const drugResponses: DrugResponse[] = await MedicalBillDetailRepository.findMany(
-        medicalBill.id
+      const medicalBill: MedicalBill = await MedicalBillRepository.findById(id);
+      const medicalBillDetails: MedicalBillDetailResponse[] = await MedicalBillDetailService.findMany(
+        id
+      );
+      const diseaseTypeResponses: DiseaseTypeResponse[] = await this.findDiseaseTypeByMedicalBillId(
+        id
       );
 
       return {
         id: medicalBill.id,
-        diseaseTypeId: medicalBill.diseaseTypeId,
+        diseaseTypes: diseaseTypeResponses,
         prediction: medicalBill.prediction,
+        status: medicalBill.status,
         symptomDescription: medicalBill.symptomDescription,
-        patientId: medicalBill.patientId,
-        drugs: drugResponses,
+        patient: medicalBill.patient,
+        createdAt: medicalBill.createdAt,
+        drugDetails: medicalBillDetails,
       } as MedicalBillResponse;
     } catch (error) {
       ErrorHandler(error);
     }
   }
 
-  static async create(dto: CreateMedicalBillDto): Promise<any> {
+  static async create(dto: CreateMedicalBillDto): Promise<void> {
     try {
-      const { diseaseTypeId, symptomDescription, prediction, patientId } = dto;
+      const { diseaseTypeIds, symptomDescription, prediction, patientId } = dto;
+
       const collections: CheckerCollections = [
-        {
-          argument: diseaseTypeId,
-          argumentName: "Disease Type Id",
-        },
         {
           argument: symptomDescription,
           argumentName: "Symptom Description",
@@ -86,10 +142,34 @@ export class MedicalBillService {
       ];
       const checkerResult = Checker.isNullOrUndefinedBulk(collections);
       if (!checkerResult.succeed) {
-        return new BadRequestError(checkerResult.message as string);
+        throw new BadRequestError(checkerResult.message as string);
       }
 
-      return await MedicalBillRepository.create(dto);
+      const medicalBillResult: MedicalBill = await MedicalBillRepository.create(
+        dto
+      );
+
+      if (diseaseTypeIds) {
+        for (const diseaseTypeId of diseaseTypeIds) {
+          const diseaseTypeFounded = await DiseaseTypeRepository.findById(
+            diseaseTypeId
+          );
+
+          const diseaseTypeExistedResult = Checker.isNullOrUndefined(
+            diseaseTypeFounded
+          );
+          if (!diseaseTypeExistedResult.succeed) {
+            throw new BadRequestError(
+              `DiseaseType id: ${diseaseTypeId} was not existed`
+            );
+          }
+
+          await MedicalBillDiseaseTypeRepository.create(
+            medicalBillResult.id,
+            diseaseTypeId
+          );
+        }
+      }
     } catch (error) {
       ErrorHandler(error);
     }

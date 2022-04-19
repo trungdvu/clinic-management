@@ -23,7 +23,7 @@ export const signInValidationSchema: ObjectSchema<SignInValidationSchema> = joi
       .required()
       .regex(strongPasswordRegex)
       .messages({
-        "string.email": "Password must be a valid email address",
+        "string.empty": "Password is required",
         "string.pattern.base": "Incorrect password",
       }),
   });
@@ -34,7 +34,6 @@ export const signInRequestValidatorMiddleware = (
   next: NextFunction
 ): void => {
   const { error } = signInValidationSchema.validate(req.body);
-
   if (error) {
     const bodyResponse: BodyResponse<void> = {
       message: error.message,
@@ -44,5 +43,6 @@ export const signInRequestValidatorMiddleware = (
     res.status(bodyResponse.statusCode).json(bodyResponse);
     return;
   }
+
   next();
 };

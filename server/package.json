@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "db:seed": "cd src/ && npx sequelize-cli db:seed:all",
-    "db:migrate": "cd src/ && npx sequelize-cli db:migrate",
+    "db:seed": "cd src/ && npx sequelize-cli db:seed:undo:all && sequelize db:seed --seed unit.ts --debug && sequelize db:seed --seed drug.ts --debug && sequelize db:seed --seed usage.ts --debug && sequelize db:seed --seed disease-type.ts --debug && sequelize db:seed --seed drug-type.ts --debug && sequelize db:seed --seed drug-price.ts --debug",
+    "db:migrate": "cd src/ && sequelize-cli db:migrate:undo:all && npx sequelize-cli db:migrate",
     "start": "node dist/app.js",
     "dev": "nodemon src/app.ts",
     "build": "tsc -p .",

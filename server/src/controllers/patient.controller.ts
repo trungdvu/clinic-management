@@ -6,7 +6,7 @@ import {
   UpdatePatientDto,
 } from "../dtos";
 import { PatientService } from "../services";
-import { BodyResponse, ErrorResponse } from "../shared";
+import { BodyResponse, ErrorResponseHandler } from "../shared";
 
 export class PatientController {
   static async findAll(req: Request, res: Response): Promise<void> {
@@ -20,9 +20,9 @@ export class PatientController {
         statusCode: 200,
       };
 
-      res.status(200).json(bodyResponse);
+      res.status(bodyResponse.statusCode).json(bodyResponse);
     } catch (error) {
-      ErrorResponse(error, res);
+      ErrorResponseHandler(error, res);
     }
   }
 
@@ -39,23 +39,24 @@ export class PatientController {
 
       res.status(200).json(bodyResponse);
     } catch (error) {
-      ErrorResponse(error, res);
+      ErrorResponseHandler(error, res);
     }
   }
 
   static async create(req: Request, res: Response): Promise<void> {
     try {
       const dto: CreatePatientDto = req.body;
-      const response: string = await PatientService.create(dto);
+
+      await PatientService.create(dto);
 
       const bodyResponse: BodyResponse<void> = {
         message: "Execute Successfully",
         statusCode: 200,
       };
 
-      res.status(200).json(bodyResponse);
+      res.status(bodyResponse.statusCode).json(bodyResponse);
     } catch (error) {
-      ErrorResponse(error, res);
+      ErrorResponseHandler(error, res);
     }
   }
 
@@ -70,9 +71,9 @@ export class PatientController {
         statusCode: 200,
       };
 
-      res.status(200).json(bodyResponse);
+      res.status(bodyResponse.statusCode).json(bodyResponse);
     } catch (error) {
-      ErrorResponse(error, res);
+      ErrorResponseHandler(error, res);
     }
   }
 
@@ -86,9 +87,9 @@ export class PatientController {
         statusCode: 200,
       };
 
-      res.status(200).json(bodyResponse);
+      res.status(bodyResponse.statusCode).json(bodyResponse);
     } catch (error) {
-      ErrorResponse(error, res);
+      ErrorResponseHandler(error, res);
     }
   }
 }

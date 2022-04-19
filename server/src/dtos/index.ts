@@ -3,3 +3,7 @@ export * from "./patient";
 export * from "./token";
 export * from "./medical-bill";
 export * from "./medical-bill-detail";
+export * from "./drug";
+export * from "./unit";
+export * from "./usage";
+export * from "./disease-type";

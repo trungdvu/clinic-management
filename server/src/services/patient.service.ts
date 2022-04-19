@@ -4,21 +4,21 @@ import {
   PatientResponse,
   UpdatePatientDto,
 } from "../dtos";
-import { Patient } from "../models";
-import { PatientRepository } from "../repositories";
+import { Identity, Patient } from "../models";
+import { IdentityRepository, PatientRepository } from "../repositories";
 import {
   BadRequestError,
   Checker,
   CheckerCollections,
   ErrorHandler,
-  InternalServerError,
 } from "../shared";
 
 export class PatientService {
   static async findMany(query: FindPatientsQuery): Promise<PatientResponse[]> {
     try {
       const records: Patient[] = await PatientRepository.findMany(query);
-      return records.map((record: PatientResponse) => {
+
+      return records.map((record: Patient) => {
         return {
           id: record.id,
           fullName: record.fullName,
@@ -30,32 +30,37 @@ export class PatientService {
         } as PatientResponse;
       });
     } catch (error) {
-      throw new InternalServerError(error.message as string);
+      ErrorHandler(error);
     }
   }
 
   static async findById(id: string): Promise<PatientResponse> {
     try {
-      const record = await PatientRepository.findById(id);
-      const patientResponse: PatientResponse = {
+      const record: Patient = await PatientRepository.findById(id);
+
+      return {
         id: record.id,
         fullName: record.fullName,
-        address: record.address,
-        dayOfBirth: record.dayOfBirth,
         gender: record.gender,
+        dayOfBirth: record.dayOfBirth,
+        address: record.address,
         phoneNumber: record.phoneNumber,
-        createdAt: record.createdAt,
-      };
-
-      return patientResponse;
+      } as PatientResponse;
     } catch (error) {
       ErrorHandler(error);
     }
   }
 
-  static async create(dto: CreatePatientDto): Promise<any> {
+  static async create(dto: CreatePatientDto): Promise<void> {
     try {
-      const { fullName, phoneNumber, gender, dayOfBirth, address } = dto;
+      const {
+        fullName,
+        phoneNumber,
+        gender,
+        dayOfBirth,
+        address,
+        creatorId,
+      } = dto;
       const collections: CheckerCollections = [
         {
           argument: fullName,
@@ -73,11 +78,19 @@ export class PatientService {
           argument: dayOfBirth,
           argumentName: "Day of birth",
         },
+        {
+          argument: creatorId,
+          argumentName: "Creator Id",
+        },
       ];
-
       const checkerResult = Checker.isNullOrUndefinedBulk(collections);
       if (!checkerResult.succeed) {
-        return new BadRequestError(checkerResult.message as string);
+        throw new BadRequestError(checkerResult.message as string);
+      }
+
+      const isCreatorIdNotExisted = await this.isCreatorIdNotExisted(creatorId);
+      if (isCreatorIdNotExisted) {
+        throw new BadRequestError("Creator Id was not existed!!!");
       }
 
       const defaultProps: CreatePatientDto = {
@@ -85,17 +98,23 @@ export class PatientService {
         address: address ?? "",
       };
 
-      return await PatientRepository.create(defaultProps);
+      await PatientRepository.create(defaultProps);
     } catch (error) {
-      throw new InternalServerError(error.message as string);
+      ErrorHandler(error);
     }
+  }
+
+  static async isCreatorIdNotExisted(creatorId: string): Promise<boolean> {
+    const creatorFounded = await IdentityRepository.findById(creatorId);
+    console.log("find by id: ", creatorFounded);
+    return creatorFounded ? false : true;
   }
 
   static async update(id: string, dto: UpdatePatientDto): Promise<string> {
     try {
       return await PatientRepository.update(id, dto);
     } catch (error) {
-      throw new InternalServerError(error.message as string);
+      ErrorHandler(error);
     }
   }
 
@@ -103,7 +122,7 @@ export class PatientService {
     try {
       return await PatientRepository.delete(id);
     } catch (error) {
-      throw new InternalServerError(error.message as string);
+      ErrorHandler(error);
     }
   }
 }

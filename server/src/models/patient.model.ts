@@ -55,5 +55,5 @@ export class Patient extends Model<Patient> implements PatientAttributes {
   medicalBills: MedicalBill[];
 
   @BelongsTo(() => Identity)
-  identity: Identity;
+  creator: Identity;
 }

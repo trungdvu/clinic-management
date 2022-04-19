@@ -1,10 +1,12 @@
 import {
   Column,
   DataType,
+  HasMany,
   Model,
   PrimaryKey,
   Table,
 } from "sequelize-typescript";
+import { Patient } from "./patient.model";
 
 export interface IdentityAttributes {
   id: string;
@@ -25,7 +27,7 @@ export class Identity extends Model<Identity> {
     type: DataType.UUID,
     defaultValue: DataType.UUIDV4,
   })
-  id!: string;
+  id: string;
 
   @Column(DataType.STRING)
   email: string;
@@ -47,4 +49,7 @@ export class Identity extends Model<Identity> {
 
   @Column(DataType.STRING)
   accessToken: string;
+
+  @HasMany(() => Patient)
+  patients: Patient[];
 }

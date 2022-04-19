@@ -1,6 +1,8 @@
+import { DiseaseTypeResponse } from "../disease-type";
+
 export interface MedicalBillSummaryResponse {
   id: string;
-  diseaseTypeId: string;
+  diseaseTypes: DiseaseTypeResponse[];
   prediction: string;
   symptomDescription: string;
   status: string;
