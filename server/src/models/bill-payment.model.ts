@@ -33,11 +33,11 @@ export class BillPayment
   id: string;
 
   @ForeignKey(() => MedicalBill)
-  @Column(DataType.STRING)
+  @Column(DataType.UUID)
   medicalBillId: string;
 
   @ForeignKey(() => Patient)
-  @Column(DataType.STRING)
+  @Column(DataType.UUID)
   patientId: string;
 
   @Column({
@@ -53,6 +53,6 @@ export class BillPayment
   @BelongsTo(() => MedicalBill)
   medicalBill: MedicalBill;
 
-  @HasOne(() => Patient)
+  @BelongsTo(() => Patient)
   patient: Patient;
 }

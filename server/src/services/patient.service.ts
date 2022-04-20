@@ -106,7 +106,6 @@ export class PatientService {
 
   static async isCreatorIdNotExisted(creatorId: string): Promise<boolean> {
     const creatorFounded = await IdentityRepository.findById(creatorId);
-    console.log("find by id: ", creatorFounded);
     return creatorFounded ? false : true;
   }
 

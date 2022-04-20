@@ -24,7 +24,6 @@ import {
 } from "../shared";
 import { MedicalBillDetailService } from "./medical-bill-detail.service";
 import { PatientService } from "./patient.service";
-
 export class MedicalBillService {
   static async findMany(
     query: FindMedicalBillsQueryParams

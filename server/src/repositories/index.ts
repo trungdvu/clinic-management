@@ -11,3 +11,4 @@ export * from "./drug-price.repository";
 export * from "./disease-type.repository";
 export * from "./medical-bill-disease-type.repository";
 export * from "./drug-type.repository";
+export * from "./bill-payment.repository";

@@ -4,6 +4,7 @@ import logger from "morgan";
 import cors from "cors";
 import { sequelize } from "./models";
 import apiRouters from "./routers";
+import { redisClient, startRedisServer } from "./config";
 
 const app: Application = express();
 
@@ -28,6 +29,7 @@ app.use(`/${apiVersion}`, apiRouters);
 app.listen(port, async () => {
   try {
     await sequelize.sync();
+    startRedisServer();
     console.log("Database sync");
     console.log("Server running ..");
   } catch (error) {

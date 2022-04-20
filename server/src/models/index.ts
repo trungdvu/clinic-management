@@ -12,6 +12,7 @@ import { Unit } from "./unit.model";
 import { Usage } from "./usage.model";
 import { DrugType } from "./drug-type.model";
 import { MedicalBillDiseaseType } from "./medical-bill-disease-type.model";
+import { BillPayment } from "./bill-payment.model";
 
 export const sequelize = new Sequelize({
   dialect: developmentConfig.dialect as Dialect,
@@ -31,6 +32,7 @@ export const sequelize = new Sequelize({
     DrugPrice,
     DrugType,
     MedicalBillDiseaseType,
+    BillPayment,
   ],
 });
 
@@ -45,3 +47,4 @@ export * from "./usage.model";
 export * from "./drug-price.model";
 export * from "./drug-type.model";
 export * from "./medical-bill-disease-type.model";
+export * from "./bill-payment.model";

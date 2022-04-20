@@ -24,6 +24,7 @@
     "@types/mongodb": "^4.0.7",
     "@types/morgan": "^1.9.3",
     "@types/pg": "^8.6.5",
+    "@types/redis": "^4.0.11",
     "@types/sequelize": "^4.28.11",
     "@types/uuidv4": "^5.0.0",
     "bcrypt": "^5.0.1",

@@ -4,10 +4,13 @@ import {
   DataType,
   ForeignKey,
   HasMany,
+  HasOne,
+  Index,
   Model,
   PrimaryKey,
   Table,
 } from "sequelize-typescript";
+import { BillPayment } from "./bill-payment.model";
 import { Identity } from "./identity.model";
 import { MedicalBill } from "./medical-bill.model";
 
@@ -31,6 +34,7 @@ export class Patient extends Model<Patient> implements PatientAttributes {
   })
   id!: string;
 
+  @Index
   @Column(DataType.STRING)
   fullName: string;
 
@@ -43,6 +47,7 @@ export class Patient extends Model<Patient> implements PatientAttributes {
   @Column(DataType.STRING)
   address: string;
 
+  @Index
   @Column(DataType.STRING)
   phoneNumber: string;
 
@@ -56,4 +61,7 @@ export class Patient extends Model<Patient> implements PatientAttributes {
 
   @BelongsTo(() => Identity)
   creator: Identity;
+
+  @HasOne(() => BillPayment)
+  billPayment: BillPayment;
 }

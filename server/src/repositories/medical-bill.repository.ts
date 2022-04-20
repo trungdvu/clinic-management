@@ -19,14 +19,30 @@ export class MedicalBillRepository {
     query: FindMedicalBillsQueryParams
   ): Promise<MedicalBill[]> {
     try {
-      const { patientId, page } = query;
+      const { patientId, page, limit } = query;
+
+      const defaultItemPerPage = 10;
+      const defaultLimit: number = limit
+        ? parseInt(limit.toString())
+        : defaultItemPerPage;
+
+      const defaultOffset: number =
+        page && parseInt(page.toString()) > 1
+          ? parseInt(page.toString()) * defaultItemPerPage
+          : 0;
+
       return await MedicalBill.findAll({
-        where: patientId ? { patientId } : undefined,
+        where: patientId
+          ? {
+              patientId,
+            }
+          : undefined,
         include: {
           model: Patient,
           attributes: ["fullName"],
         },
-        limit: page ? page * 20 : undefined,
+        limit: defaultLimit,
+        offset: defaultOffset,
       });
     } catch (error) {
       throw new InternalServerError(error.message);

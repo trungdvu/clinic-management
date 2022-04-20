@@ -4,6 +4,7 @@ import IdentityRouter from "./identity.router";
 import MedicalBillDetailRouter from "./medical-bill-detail.router";
 import MedicalBillRouter from "./medical-bill.router";
 import PatientRouter from "./patient.router";
+import BillPaymentRouter from "./bill-payment.router";
 
 const router = Router();
 
@@ -15,5 +16,6 @@ router.use(
   verifyUserMiddleware,
   MedicalBillDetailRouter
 );
+router.use("/bill-payments", verifyUserMiddleware, BillPaymentRouter);
 
 export default router;

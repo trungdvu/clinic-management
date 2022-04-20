@@ -13,9 +13,7 @@ export class IdentityRepository {
 
   static async findById(id: string): Promise<Identity> {
     try {
-      const d = await Identity.findByPk(id);
-      console.log("ddd", d);
-      return d;
+      return await Identity.findByPk(id);
     } catch (error) {
       throw new InternalServerError(error.message);
     }

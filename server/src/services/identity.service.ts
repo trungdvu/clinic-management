@@ -9,7 +9,6 @@ import {
   Checker,
   CheckerCollection,
   ErrorHandler,
-  NotFoundError,
 } from "../shared";
 import { comparePassword } from "../utils";
 import { TokenService } from "./token.service";

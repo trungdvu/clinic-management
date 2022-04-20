@@ -7,3 +7,4 @@ export * from "./drug";
 export * from "./unit";
 export * from "./usage";
 export * from "./disease-type";
+export * from "./bill-payment";
