@@ -6,11 +6,20 @@ import { InternalServerError } from "../shared";
 export class PatientRepository {
   static async findMany(query: FindPatientsQuery): Promise<Patient[]> {
     try {
-      const { text } = query;
+      const { text, page, limit } = query;
+
+      const defaultItemPerPage = 2;
+      const defaultLimit: number | undefined = limit ? limit : undefined;
+      const defaultOffset: number | undefined = page
+        ? page * (limit ? limit : defaultItemPerPage)
+        : undefined;
+
       return await Patient.findAll({
         where: {
           fullName: { [Op.like]: `%${text || ""}%` },
         },
+        limit: defaultLimit,
+        offset: defaultOffset,
       });
     } catch (error) {
       throw new InternalServerError(error.message);

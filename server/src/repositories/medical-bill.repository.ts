@@ -22,15 +22,14 @@ export class MedicalBillRepository {
       const { patientId, page, limit } = query;
 
       const defaultItemPerPage = 10;
-      const defaultLimit: number = limit
-        ? parseInt(limit.toString())
-        : defaultItemPerPage;
+      const defaultLimit: number | undefined = limit ? limit : undefined;
+      const defaultOffset: number | undefined = page
+        ? page * (limit ? limit : defaultItemPerPage)
+        : undefined;
+      // ? page * defaultItemPerPage
+      // : undefined;
 
-      const defaultOffset: number =
-        page && parseInt(page.toString()) > 1
-          ? parseInt(page.toString()) * defaultItemPerPage
-          : 0;
-
+      console.log("helo", defaultLimit, defaultOffset);
       return await MedicalBill.findAll({
         where: patientId
           ? {

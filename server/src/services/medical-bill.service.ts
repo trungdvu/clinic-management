@@ -25,6 +25,7 @@ import {
 import { MedicalBillDetailService } from "./medical-bill-detail.service";
 import { PatientService } from "./patient.service";
 export class MedicalBillService {
+  // TODO: cache data from findAll API to Redis
   static async findMany(
     query: FindMedicalBillsQueryParams
   ): Promise<MedicalBillSummaryResponse[]> {
