@@ -7,6 +7,7 @@ import { memo, useCallback } from 'react';
 import { connect } from 'react-redux';
 import { ErrorModel } from 'shared';
 import { RootDispatch, RootState } from 'store';
+import { regExpEmail, regExpNumber } from 'utils';
 import './SignUpModal.css';
 
 const { useForm, Item } = Form;
@@ -67,51 +68,35 @@ function SignUpModalContainer({
         onFinish={onFinish}
       >
         <div className="flex items-center w-full gap-2">
-          <Item
-            name="firstName"
-            rules={[{ required: true }]}
-            className="w-1/2 bg-opacity-50 rounded-md bg-brd"
-          >
+          <Item name="firstName" rules={[{ required: true }]} className="w-1/2 rounded-md">
             <Input
               placeholder="First name"
-              className="w-full py-2 text-sm font-medium rounded-md"
+              className="w-full py-2 text-sm font-medium rounded-md bg-brd bg-opacity-50"
             />
           </Item>
-          <Item
-            name="lastName"
-            rules={[{ required: true }]}
-            className="w-1/2 bg-opacity-50 rounded-md bg-brd"
-          >
-            <Input placeholder="Surname" className="w-full py-2 text-sm rounded-md font-medium" />
+          <Item name="lastName" rules={[{ required: true }]} className="w-1/2 rounded-md">
+            <Input
+              placeholder="Surname"
+              className="w-full py-2 text-sm rounded-md font-medium bg-brd bg-opacity-50"
+            />
           </Item>
         </div>
 
         <Item
           name="email"
-          rules={[
-            {
-              required: true,
-              // eslint-disable-next-line no-useless-escape
-              pattern: new RegExp(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/),
-            },
-          ]}
-          className="w-full bg-opacity-50 rounded-md bg-brd"
+          rules={[{ required: true, pattern: regExpEmail }]}
+          className="w-full rounded-md"
         >
           <Input
-            placeholder="Email or username"
-            className="w-full py-2 text-sm font-medium rounded-md"
+            placeholder="Email"
+            className="w-full py-2 text-sm font-medium rounded-md bg-brd bg-opacity-50"
           />
         </Item>
 
         <Item
           name="password"
-          className="w-full bg-opacity-50 rounded-md bg-brd"
-          rules={[
-            {
-              required: true,
-              pattern: new RegExp(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/),
-            },
-          ]}
+          className="w-full rounded-md"
+          rules={[{ required: true, pattern: regExpNumber }]}
         >
           <Input.Password
             placeholder="Password"
@@ -139,12 +124,12 @@ function SignUpModalContainer({
           name="phoneNumber"
           tooltip="At least 9 to 15 numbers"
           rules={[{ required: true, pattern: new RegExp(/^[0-9]*$/g) }]}
-          className="w-full bg-opacity-50 rounded-md bg-brd"
+          className="w-full rounded-md"
         >
           <Input
             maxLength={15}
             placeholder="Phone number"
-            className="w-full py-2 text-sm font-medium rounded-md"
+            className="w-full py-2 text-sm font-medium rounded-md bg-brd bg-opacity-50"
           />
         </Item>
 

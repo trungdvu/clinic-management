@@ -1,4 +1,4 @@
-export interface Drug {
+export interface Unit {
   id: string;
   description: string;
 }

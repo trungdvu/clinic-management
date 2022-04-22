@@ -1,19 +1,26 @@
 import { createModel } from '@rematch/core';
 import { API } from 'consts';
-import { MedicalBillDetails, MedicalBillSumary, NewMedicalBillPayload } from 'interfaces';
+import { MedicalBillDetail, MedicalBillSumary, NewMedicalBillPayload } from 'interfaces';
 import _ from 'lodash';
 import { HttpService } from 'services';
 import { RootModel } from '.';
 
+type Page = 'allMedicalBillSummariesPage';
+type HasMore = 'allMedicalBillSummariesHasMore';
+
 interface MedicalBillState {
   medicalBillSummaries: MedicalBillSumary[];
   selectedMedicalBillId: string;
+  allMedicalBillSummariesHasMore: boolean;
+  allMedicalBillSummariesPage: number;
 }
 
 export const medicalBillModel = createModel<RootModel>()({
   state: {
     medicalBillSummaries: [],
     selectedMedicalBillId: '',
+    allMedicalBillSummariesPage: 0,
+    allMedicalBillSummariesHasMore: true,
   } as MedicalBillState,
 
   reducers: {
@@ -24,6 +31,18 @@ export const medicalBillModel = createModel<RootModel>()({
     setSelectedMedicalBillId: (state, payload: string) => ({
       ...state,
       selectedMedicalBillId: payload,
+    }),
+    increasePage: (state, payload: Page) => ({
+      ...state,
+      [payload]: state[payload] + 1,
+    }),
+    resetPage: (state, payload: Page) => ({
+      ...state,
+      [payload]: 0,
+    }),
+    setHasMore: (state, payload: { key: HasMore; value: boolean }) => ({
+      ...state,
+      [payload.key]: payload.value,
     }),
   },
 
@@ -46,7 +65,7 @@ export const medicalBillModel = createModel<RootModel>()({
         const { data, status } = await HttpService.get(endpoint);
 
         if (status === 200) {
-          const medicalBill: MedicalBillDetails = data.data;
+          const medicalBill: MedicalBillDetail = data.data;
           return medicalBill;
         } else {
           return false;
@@ -71,6 +90,39 @@ export const medicalBillModel = createModel<RootModel>()({
         }
       } catch (error) {
         console.log('doGetMedicalBill', error);
+        return false;
+      }
+    },
+
+    async doGetMoreMedicalBillSummaries(__: undefined, state) {
+      try {
+        const { medicalBillSummaries, allMedicalBillSummariesPage: medicalBillSummariesPage } =
+          state.medicalBillModel;
+        const endpoint = API.MEDICAL_BILLS_PARAMS({
+          page: medicalBillSummariesPage,
+          limit: 20,
+        });
+        const { data, status } = await HttpService.get(endpoint);
+
+        if (status === 200 && !_.isEmpty(data.data)) {
+          const moreMedicalBillSummaries = data.data;
+
+          dispatch.medicalBillModel.setMedicalBillSummaries([
+            ...medicalBillSummaries,
+            ...moreMedicalBillSummaries,
+          ]);
+          dispatch.medicalBillModel.increasePage('allMedicalBillSummariesPage');
+
+          return moreMedicalBillSummaries;
+        } else {
+          dispatch.medicalBillModel.setHasMore({
+            key: 'allMedicalBillSummariesHasMore',
+            value: false,
+          });
+          return false;
+        }
+      } catch (error) {
+        console.log('doGetMoreMedicalBillSummaries', error);
         return false;
       }
     },

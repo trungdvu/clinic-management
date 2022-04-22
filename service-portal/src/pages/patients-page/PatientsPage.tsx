@@ -1,26 +1,18 @@
-import {
-  ManOutlined,
-  MehOutlined,
-  PhoneOutlined,
-  PlusOutlined,
-  UserOutlined,
-  WomanOutlined,
-} from '@ant-design/icons';
-import { Col, Empty, Row, Tabs } from 'antd';
-import classNames from 'classnames';
+import { PlusOutlined } from '@ant-design/icons';
+import { Col, Divider, Empty, Row, Spin, Tabs } from 'antd';
 import { Heading, PrimaryButton, SkeletonListing, Text } from 'components';
 import { PAGE_ROUTES } from 'consts';
 import { motion } from 'framer-motion';
 import { useTitle } from 'hooks';
-import { Patient } from 'interfaces';
 import _ from 'lodash';
-import moment from 'moment';
 import { useCallback, useEffect, useState } from 'react';
+import InfiniteScroll from 'react-infinite-scroll-component';
 import { connect } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { RootDispatch, RootState } from 'store';
 import { defaultLayoutVariants } from 'utils';
-import { CreatePatientModal } from './CreatePatientModal';
+import { CreatePatientModal } from './components/CreatePatientModal';
+import { PatientRow } from './components/PatientRow';
 
 interface Props extends PropsFromStore {
   title?: string;
@@ -29,18 +21,22 @@ interface Props extends PropsFromStore {
 function PatientsPageContainer({
   title,
   patients,
-  loading,
-  setSelectedPatient,
-  doGetPatients,
+  allPatientsHasMore,
+  setHasMore,
+  doGetMorePatients,
 }: Props) {
-  const [isCreatePatientModalVisible, setIsCreatePatientModalVisible] = useState<boolean>(false);
+  const [isCreatePatientModalVisible, setIsCreatePatientModalVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
   const navigate = useNavigate();
 
   useTitle(title);
 
   useEffect(() => {
-    doGetPatients();
-  }, [doGetPatients]);
+    setIsLoading(true);
+    setHasMore({ key: 'allPatientsHasMore', value: true });
+    doGetMorePatients('').then(() => setIsLoading(false));
+  }, [doGetMorePatients, setHasMore]);
 
   const onClickCreatePatient = useCallback(() => {
     setIsCreatePatientModalVisible(true);
@@ -51,49 +47,32 @@ function PatientsPageContainer({
   }, []);
 
   const onClickRowPatient = useCallback(
-    (patient: Patient) => () => {
-      setSelectedPatient(patient);
-      navigate(PAGE_ROUTES.PATIENTS.DETAILS.ID(patient.id));
+    (id: string) => () => {
+      navigate(PAGE_ROUTES.PATIENTS.DETAILS.ID(id));
     },
-    [navigate, setSelectedPatient],
+    [navigate],
   );
 
-  const renderPatientGender = useCallback((gender: string) => {
-    if (gender === 'Male') {
-      return (
-        <>
-          <ManOutlined className="text-tertiary text-lg pb-1 mr-1" />
-          <Text>Male</Text>
-        </>
-      );
-    } else if (gender === 'Female') {
-      return (
-        <>
-          <WomanOutlined className="text-tertiary text-lg pb-1 mr-1" />
-          <Text>Female</Text>
-        </>
-      );
-    } else {
-      return (
-        <>
-          <MehOutlined className="text-tertiary text-lg pb-1 mr-1" />
-          <Text>Prefer not to say</Text>
-        </>
-      );
+  const _doGetMorePatients = useCallback(async () => {
+    if (isLoadingMore) {
+      return;
     }
-  }, []);
+    setIsLoadingMore(true);
+    await doGetMorePatients(undefined);
+    setIsLoadingMore(false);
+  }, [doGetMorePatients, isLoadingMore]);
 
   return (
     <motion.div
       variants={defaultLayoutVariants}
       initial="initial"
       animate="animate"
-      className="pb-8"
+      className="pb-8 min-h-full"
     >
       <CreatePatientModal visible={isCreatePatientModalVisible} onCancel={onCancelCreatePatient} />
 
       <div className="flex justify-between">
-        <Heading level={3}>Patients</Heading>
+        <Heading level={2}>Patients</Heading>
         <div className="flex items-center gap-5">
           <PrimaryButton icon={<PlusOutlined />} onClick={onClickCreatePatient}>
             New Patient
@@ -101,7 +80,7 @@ function PatientsPageContainer({
         </div>
       </div>
 
-      {loading.doGetPatients ? (
+      {isLoading ? (
         <SkeletonListing />
       ) : (
         <Tabs type="card" defaultActiveKey="1" className="pb-10">
@@ -125,51 +104,31 @@ function PatientsPageContainer({
                 image={Empty.PRESENTED_IMAGE_SIMPLE}
               />
             ) : (
-              <>
+              <InfiniteScroll
+                dataLength={patients.length}
+                hasMore={allPatientsHasMore}
+                scrollThreshold="50px"
+                loader={
+                  <div className="flex items-center justify-center py-3 mt-3">
+                    <Spin size="large" />
+                  </div>
+                }
+                endMessage={
+                  <Divider plain className="py-3">
+                    <Text type="secondary">No more</Text>
+                  </Divider>
+                }
+                next={_doGetMorePatients}
+              >
                 {_.map(patients, (patient, index) => (
-                  <Row
+                  <PatientRow
                     key={index}
-                    gutter={24}
-                    className={classNames(
-                      'flex items-center py-3 px-5 group cursor-pointer transition-all duration-100 hover:underline',
-                      {
-                        'bg-black bg-opacity-[2.5%]': index % 2 !== 0,
-                      },
-                    )}
-                    onClick={onClickRowPatient(patient)}
-                  >
-                    <Col
-                      span={4}
-                      className="flex items-center whitespace-nowrap text-ellipsis overflow-hidden"
-                    >
-                      <UserOutlined className="text-tertiary text-lg pb-1 mr-1" />
-                      <Text>{patient.fullName}</Text>
-                    </Col>
-                    <Col
-                      span={4}
-                      className="flex items-center whitespace-nowrap text-ellipsis overflow-hidden"
-                    >
-                      <PhoneOutlined className="text-tertiary text-lg pb-1 mr-1" />
-                      <Text>{patient.phoneNumber}</Text>
-                    </Col>
-                    <Col
-                      span={4}
-                      className="flex items-center whitespace-nowrap text-ellipsis overflow-hidden"
-                    >
-                      <Text>{moment(patient.dayOfBirth).format('DD/MM/YYYY')}</Text>
-                    </Col>
-                    <Col
-                      span={4}
-                      className="flex items-center whitespace-nowrap text-ellipsis overflow-hidden"
-                    >
-                      {renderPatientGender(patient.gender)}
-                    </Col>
-                    <Col span={8} className="whitespace-nowrap text-ellipsis overflow-hidden">
-                      <Text>{patient.address}</Text>
-                    </Col>
-                  </Row>
+                    index={index}
+                    patient={patient}
+                    onClick={onClickRowPatient(patient.id)}
+                  />
                 ))}
-              </>
+              </InfiniteScroll>
             )}
           </Tabs.TabPane>
         </Tabs>
@@ -180,12 +139,14 @@ function PatientsPageContainer({
 
 const mapState = (state: RootState) => ({
   patients: state.patientModel.patients,
+  allPatientsHasMore: state.patientModel.allPatientsHasMore,
   loading: state.loading.effects.patientModel,
 });
 
 const mapDispatch = (dispatch: RootDispatch) => ({
-  setSelectedPatient: dispatch.patientModel.setSelectedPatient,
+  setHasMore: dispatch.patientModel.setHasMore,
   doGetPatients: dispatch.patientModel.doGetPatients,
+  doGetMorePatients: dispatch.patientModel.doGetMorePatients,
 });
 
 type PropsFromStore = ReturnType<typeof mapState> & ReturnType<typeof mapDispatch>;

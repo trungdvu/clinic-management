@@ -10,7 +10,7 @@ export const Text: React.FC<TextProps> = memo(
     return (
       <AntText
         className={classNames(
-          'font-sans ',
+          'font-sans',
           {
             'text-inherit': !type,
             'text-info-err': type === 'danger',

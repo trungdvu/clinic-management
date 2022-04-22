@@ -7,10 +7,10 @@ import {
   DashboardPage,
   HelpCenterPage,
   InvoicesPage,
-  MedicalBillDetailsPage,
+  MedicalBillDetailPage,
   MedicalBillPage,
   NotFoundPage,
-  PatientDetailsPage,
+  PatientDetailPage,
   PatientsPage,
   ProfilePage,
   SignInPage,
@@ -37,7 +37,7 @@ export const MainRoutes: React.FC = () => {
         />
         <Route
           path={PAGE_ROUTES.MEDICAL_BILLS.DETAILS.PATH}
-          element={<MedicalBillDetailsPage title={PAGE_ROUTES.MEDICAL_BILLS.DETAILS.TITLE} />}
+          element={<MedicalBillDetailPage title={PAGE_ROUTES.MEDICAL_BILLS.DETAILS.TITLE} />}
         />
         <Route
           path={PAGE_ROUTES.PATIENTS.PATH}
@@ -45,7 +45,7 @@ export const MainRoutes: React.FC = () => {
         />
         <Route
           path={PAGE_ROUTES.PATIENTS.DETAILS.PATH}
-          element={<PatientDetailsPage title={PAGE_ROUTES.PATIENTS.DETAILS.TITLE} />}
+          element={<PatientDetailPage title={PAGE_ROUTES.PATIENTS.DETAILS.TITLE} />}
         />
         <Route
           path={PAGE_ROUTES.INVOICES.PATH}

@@ -64,10 +64,12 @@ export const ProfileDropdown = memo(({ currentUser, onSignOutClick }: Props) => 
 
   return (
     <>
-      <LoadingSignOutModal
-        visible={isLoadingSignOutModalVisible}
-        onCancel={onCancelLoadingSignOutModal}
-      />
+      {isLoadingSignOutModalVisible && (
+        <LoadingSignOutModal
+          visible={isLoadingSignOutModalVisible}
+          onCancel={onCancelLoadingSignOutModal}
+        />
+      )}
 
       <Dropdown overlay={menu} placement="bottomRight" className="rounded-lg">
         <div className="flex items-center">

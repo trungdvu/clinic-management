@@ -10,6 +10,7 @@ export const HyperLinkButton: React.FC<ButtonProps> = memo(
           'flex items-center justify-center',
           'font-medium',
           'transition duration-100',
+          'focus:none',
           className,
         ),
       [className],

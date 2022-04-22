@@ -7,7 +7,7 @@ export const Heading: React.FC<TitleProps> = memo(
     return (
       <Title
         level={level}
-        className={classNames('font-heading text-primary', className)}
+        className={classNames('font-heading text-inherit', className)}
         {...props}
       >
         {children}

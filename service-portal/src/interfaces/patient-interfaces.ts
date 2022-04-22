@@ -5,11 +5,8 @@ export interface Patient {
   dayOfBirth: string;
   address: string;
   phoneNumber: string;
-}
-
-export interface PatientDetails extends Patient {
-  creatorId?: string;
   createdAt: string;
+  creatorId: string;
 }
 
 export interface CreatePatientPayload {
@@ -18,4 +15,5 @@ export interface CreatePatientPayload {
   dayOfBirth: string;
   phoneNumber: string;
   address?: string;
+  creatorId: string;
 }

@@ -13,6 +13,7 @@ export const IconButton = memo(({ className, ...props }: Props): JSX.Element => 
         'hover:bg-black hover:bg-opacity-5 hover:border-brd',
         'active:bg-opacity-[10%]',
         'disabled:bg-[#f5f5f5] disabled:cursor-not-allowed',
+        'focus:none',
         className,
       ),
     [className],

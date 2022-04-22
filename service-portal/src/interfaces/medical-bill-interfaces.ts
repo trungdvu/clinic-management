@@ -1,4 +1,8 @@
+import { DiseaseType } from './disease-interfaces';
 import { Drug } from './drug-interfaces';
+import { Patient } from './patient-interfaces';
+import { Unit } from './unit-interfaces';
+import { Usage } from './usage-interfaces';
 
 export type MedicalBillStatus = 'pending' | 'active' | 'completed';
 
@@ -19,12 +23,23 @@ export interface MedicalBillSumary {
   createdAt: string;
 }
 
-export interface MedicalBillDetails {
+export interface MedicalBillDetail {
   id: string;
-  diseaseTypeId: string;
+  diseaseTypes: DiseaseType[];
   prediction: string;
   status: MedicalBillStatus;
   symptomDescription: string;
-  patientId: string;
-  drugs: Drug[];
+  patient: Patient;
+  drugDetails: MedicalBillDrug[];
+  createdAt: string;
+}
+
+export interface MedicalBillDrug {
+  id: string;
+  drug: Drug;
+  unit: Unit;
+  availableUnits: Unit[];
+  usage: Usage;
+  quantity: number;
+  price: number;
 }

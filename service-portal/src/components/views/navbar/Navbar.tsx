@@ -6,20 +6,16 @@ import { RootDispatch, RootState } from 'store';
 import { Heading } from '../../typography';
 import { ProfileDropdown } from './ProfileDropdown';
 
-interface Props extends PropsFromStores {}
+interface Props extends PropsFromStore {}
 
-function NavbarContainer({ currentUser, doSignOut }: Props): JSX.Element {
-  function onClickSignOut(): void {
-    doSignOut();
-  }
-
+function NavbarContainer({ currentUser, doSignOut }: Props) {
   return (
-    <div className="flex items-center justify-between w-full h-16 px-5 bg-white shadow-md">
+    <div className="flex items-center justify-between w-full h-20 px-10 bg-white shadow-md">
       <Link to={'/'} className="flex items-center">
-        <Image src={require('assets/images/logo.png')} preview={false} className="w-20 h-20" />
-        <Heading className="mb-0 select-none">ClinicX</Heading>
+        <Image src={require('assets/images/logo.png')} preview={false} className="h-14" />
+        <Heading className="mb-0 ml-1 select-none text-logo">ClinicX</Heading>
       </Link>
-      <ProfileDropdown currentUser={currentUser!} onSignOutClick={onClickSignOut} />
+      <ProfileDropdown currentUser={currentUser!} onSignOutClick={doSignOut} />
     </div>
   );
 }
@@ -32,6 +28,6 @@ const mapDispatch = (dispatch: RootDispatch) => ({
   doSignOut: dispatch.authModel.doSignOut,
 });
 
-type PropsFromStores = ReturnType<typeof mapState> & ReturnType<typeof mapDispatch>;
+type PropsFromStore = ReturnType<typeof mapState> & ReturnType<typeof mapDispatch>;
 
 export const Navbar = connect(mapState, mapDispatch)(memo(NavbarContainer));

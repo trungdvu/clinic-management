@@ -1,7 +1,7 @@
 import { Col, Form, Input, InputNumber, InputRef, notification, Row } from 'antd';
 import classNames from 'classnames';
 import { Text } from 'components';
-import { Drug } from 'interfaces';
+import { MedicalBillDrug } from 'interfaces';
 import _ from 'lodash';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { connect } from 'react-redux';
@@ -13,12 +13,17 @@ const { useForm, Item } = Form;
 interface Props extends PropsFromStore {
   medicalBillId: string;
   currentIndex: number;
-  drug: Drug;
-  durgs: Drug[];
+  medicalBillDrug: MedicalBillDrug;
+  medicalBillDurgs: MedicalBillDrug[];
 }
 
 // eslint-disable-next-line no-empty-pattern
-const EditTableDrugRowContainer = ({ medicalBillId, currentIndex, drug, durgs }: Props) => {
+const EditTableDrugRowContainer = ({
+  medicalBillId,
+  currentIndex,
+  medicalBillDrug,
+  medicalBillDurgs,
+}: Props) => {
   const [editing, setEditing] = useState(false);
   const inputRef = useRef<InputRef>(null);
   const [form] = useForm();
@@ -31,11 +36,11 @@ const EditTableDrugRowContainer = ({ medicalBillId, currentIndex, drug, durgs }:
 
   useEffect(() => {
     form.setFieldsValue({
-      usage: drug.usage,
-      unit: drug.unit,
-      quantity: drug.quantity,
+      usage: medicalBillDrug.usage,
+      unit: medicalBillDrug.unit.description,
+      quantity: medicalBillDrug.quantity,
     });
-  }, [drug, form]);
+  }, [medicalBillDrug, form]);
 
   const toggleEdit = useCallback(() => {
     setEditing((pre) => !pre);
@@ -60,12 +65,12 @@ const EditTableDrugRowContainer = ({ medicalBillId, currentIndex, drug, durgs }:
         description,
       });
       form.setFieldsValue({
-        usage: drug.usage,
-        unit: drug.unit,
-        quantity: drug.quantity,
+        usage: medicalBillDrug.usage,
+        unit: medicalBillDrug.unit.description,
+        quantity: medicalBillDrug.quantity,
       });
     }
-  }, [drug, form, toggleEdit]);
+  }, [medicalBillDrug, form, toggleEdit]);
 
   return (
     <Form form={form}>
@@ -76,10 +81,10 @@ const EditTableDrugRowContainer = ({ medicalBillId, currentIndex, drug, durgs }:
         })}
       >
         <Col span={1}>
-          <Text className="whitespace-nowrap">{durgs.length - currentIndex}</Text>
+          <Text className="whitespace-nowrap">{medicalBillDurgs.length - currentIndex}</Text>
         </Col>
         <Col span={5} className="pl-6">
-          <Link to={'#drug details'}>{drug.name}</Link>
+          <Link to={'#drug details'}>{medicalBillDrug.drug.description}</Link>
         </Col>
         <Col span={7} className="pl-6">
           <Item name="usage" rules={[{ required: true, message: 'Medication usage is required' }]}>

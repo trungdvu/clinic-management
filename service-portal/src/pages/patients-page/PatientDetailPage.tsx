@@ -1,12 +1,12 @@
 import { EditOutlined, EnvironmentOutlined, LeftOutlined, PhoneOutlined } from '@ant-design/icons';
 import { Col, Image, notification, Row, Tooltip } from 'antd';
-import { Heading, IconButton, Text } from 'components';
+import { DetailSection, Heading, IconButton, Text } from 'components';
 import { SkeletonPatientDetails } from 'components/loadings/SkeletonPatientDetails';
 import { ConfirmModal } from 'components/modals';
 import { PAGE_ROUTES } from 'consts';
 import { motion } from 'framer-motion';
 import { useTitle } from 'hooks';
-import { PatientDetails } from 'interfaces';
+import { Patient } from 'interfaces';
 import moment from 'moment';
 import { useCallback, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
@@ -18,14 +18,14 @@ interface Props extends PropsFromStore {
   title?: string;
 }
 
-function PatientDetailsPageContainer({
+function PatientDetailPageContainer({
   title,
   loading,
   doDeletePatient,
-  doGetPatientDetails,
+  doGetPatientDetail,
 }: Props) {
   const [isConfirmDeleteModalVisible, setIsConfirmDeleteModalVisible] = useState(false);
-  const [patientDetails, setPatientsDetails] = useState<PatientDetails>();
+  const [patientDetails, setPatientsDetails] = useState<Patient>();
 
   const params = useParams();
   const navigate = useNavigate();
@@ -34,7 +34,7 @@ function PatientDetailsPageContainer({
 
   useEffect(() => {
     if (params.id) {
-      doGetPatientDetails(params.id).then((res) => {
+      doGetPatientDetail(params.id).then((res) => {
         if (res === false) {
           notification.error({
             message: 'Failed',
@@ -45,7 +45,7 @@ function PatientDetailsPageContainer({
         }
       });
     }
-  }, [doGetPatientDetails, params.id]);
+  }, [doGetPatientDetail, params.id]);
 
   const onClickEdit = useCallback(() => {
     notification.info({
@@ -98,14 +98,14 @@ function PatientDetailsPageContainer({
       />
 
       <Link to={PAGE_ROUTES.PATIENTS.PATH} className="flex items-center gap-2">
-        <LeftOutlined className="text-lg" />
+        <LeftOutlined className="text-base flex items-center" />
         <Text className="text-base select-none">Back to Listing</Text>
       </Link>
       <Heading level={2} className="mt-4">
         Patient Details
       </Heading>
 
-      {loading.doGetPatientDetails ? (
+      {loading.doGetPatientDetail ? (
         <SkeletonPatientDetails />
       ) : (
         <>
@@ -204,22 +204,14 @@ function PatientDetailsPageContainer({
                 </Col>
               </Row>
 
-              <div className="flex items-baseline justify-between w-full mt-10">
-                <div className="flex-1 mr-5">
-                  <Heading level={3} className="mb-0">
-                    Others
-                  </Heading>
-                  <Text type="secondary" className="block">
-                    More action on this patient.
-                  </Text>
-                  <button
-                    className="mt-4 px-2 py-1 transition duration-100 hover:bg-black hover:bg-opacity-5 text-button-pri active:bg-opacity-10"
-                    onClick={onClickDelete}
-                  >
-                    Delete this patient
-                  </button>
-                </div>
-              </div>
+              <DetailSection title="Actions" subTitle="More action on this patient">
+                <button
+                  className="mt-4 px-2 py-1 transition duration-100 hover:bg-black hover:bg-opacity-5 text-button-pri active:bg-opacity-10"
+                  onClick={onClickDelete}
+                >
+                  Delete this patient
+                </button>
+              </DetailSection>
             </>
           ) : (
             <Text type="danger" className="text-base">
@@ -233,15 +225,14 @@ function PatientDetailsPageContainer({
 }
 
 const mapState = (state: RootState) => ({
-  selectedPatient: state.patientModel.selectedPatient,
   loading: state.loading.effects.patientModel,
 });
 
 const mapDispatch = (dispatch: RootDispatch) => ({
   doDeletePatient: dispatch.patientModel.doDeletePatient,
-  doGetPatientDetails: dispatch.patientModel.doGetPatientDetails,
+  doGetPatientDetail: dispatch.patientModel.doGetPatientDetail,
 });
 
 type PropsFromStore = ReturnType<typeof mapState> & ReturnType<typeof mapDispatch>;
 
-export const PatientDetailsPage = connect(mapState, mapDispatch)(PatientDetailsPageContainer);
+export const PatientDetailPage = connect(mapState, mapDispatch)(PatientDetailPageContainer);
