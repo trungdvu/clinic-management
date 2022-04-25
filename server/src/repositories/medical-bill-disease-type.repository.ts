@@ -1,6 +1,7 @@
 import { MedicalBillDiseaseType } from "../models";
 import { InternalServerError } from "../shared";
 import { DiseaseType } from "../models/disease-type.model";
+import { Transaction } from "sequelize";
 
 export class MedicalBillDiseaseTypeRepository {
   static async findManyByMedicalBillId(

@@ -1,3 +1,4 @@
+import { Transaction } from "sequelize";
 import {
   CreateMedicalBillDto,
   FindMedicalBillsQueryParams,
@@ -16,6 +17,7 @@ export interface CreateMedicalBillRecord {
 }
 export class MedicalBillRepository {
   static async findMany(
+    userId: string,
     query: FindMedicalBillsQueryParams
   ): Promise<MedicalBill[]> {
     try {
@@ -26,16 +28,12 @@ export class MedicalBillRepository {
       const defaultOffset: number | undefined = page
         ? page * (limit ? limit : defaultItemPerPage)
         : undefined;
-      // ? page * defaultItemPerPage
-      // : undefined;
 
-      console.log("helo", defaultLimit, defaultOffset);
       return await MedicalBill.findAll({
-        where: patientId
-          ? {
-              patientId,
-            }
-          : undefined,
+        where: {
+          creatorId: userId,
+          patientId: patientId ?? undefined,
+        },
         include: {
           model: Patient,
           attributes: ["fullName"],

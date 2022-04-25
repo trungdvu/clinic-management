@@ -35,7 +35,7 @@ export class DrugType extends Model<DrugType> implements DrugTypeAttributes {
   @Column(DataType.UUID)
   unitId: string;
 
-  // Associations;
+  // Associations
   @BelongsTo(() => Unit)
   unit: Unit;
 

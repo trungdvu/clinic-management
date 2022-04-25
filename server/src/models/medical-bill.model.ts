@@ -4,18 +4,18 @@ import {
   Column,
   DataType,
   ForeignKey,
-  HasMany,
   HasOne,
   Model,
   PrimaryKey,
   Table,
 } from "sequelize-typescript";
 import { DiseaseType } from "./disease-type.model";
+import { Identity } from "./identity.model";
 import { MedicalBillDetail } from "./medical-bill-detail.model";
 import { MedicalBillDiseaseType } from "./medical-bill-disease-type.model";
 import { Patient } from "./patient.model";
 
-enum MedicalBillStatus {
+export enum MedicalBillStatus {
   Pending = "pending",
   Active = "active",
   Completed = "completed",
@@ -27,6 +27,7 @@ export interface MedicalBillAttributes {
   status?: MedicalBillStatus;
   prediction: string;
   patientId: string;
+  creatorId: string;
 }
 
 @Table
@@ -54,9 +55,16 @@ export class MedicalBill
   @Column(DataType.UUID)
   patientId: string;
 
+  @ForeignKey(() => Identity)
+  @Column(DataType.UUID)
+  creatorId: string;
+
   // Associations
   @BelongsTo(() => Patient)
   patient: Patient;
+
+  @BelongsTo(() => Identity)
+  creator: Identity;
 
   @HasOne(() => MedicalBillDetail)
   medicalBillDetail: MedicalBillDetail;

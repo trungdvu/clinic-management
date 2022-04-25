@@ -26,7 +26,7 @@ export class MedicalBillDetailService {
     medicalBillId: string
   ): Promise<MedicalBillDetailResponse[]> {
     try {
-      const medicalBillDetailRecords: MedicalBillDetail[] = await MedicalBillDetailRepository.findMany(
+      const medicalBillDetailRecords: MedicalBillDetail[] = await MedicalBillDetailRepository.findManyByMedicalBillId(
         medicalBillId
       );
       const medicalBillDetailResponses: MedicalBillDetailResponse[] = [];
@@ -65,8 +65,6 @@ export class MedicalBillDetailService {
           price: totalPrice,
         };
 
-        console.log("record nene: ", record.drug);
-
         medicalBillDetailResponses.push(medicalBillResponse);
       }
 
@@ -80,7 +78,6 @@ export class MedicalBillDetailService {
     const drugTypes: DrugType[] = await DrugTypeRepository.findManyByDrugId(
       drugId
     );
-    console.log("drug types: ", drugTypes);
 
     return drugTypes.map((drugType: DrugType) => {
       return {

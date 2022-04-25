@@ -1,5 +1,5 @@
+import { Transaction } from "sequelize";
 import {
-  DrugInformation,
   UpdateMedicalBillDetailDto,
   CreateMedicalBillDetailDto,
 } from "../dtos";
@@ -7,7 +7,9 @@ import { MedicalBillDetail } from "../models";
 import { InternalServerError } from "../shared";
 
 export class MedicalBillDetailRepository {
-  static async findMany(medicalBillId: string): Promise<MedicalBillDetail[]> {
+  static async findManyByMedicalBillId(
+    medicalBillId: string
+  ): Promise<MedicalBillDetail[]> {
     try {
       return await MedicalBillDetail.findAll({
         where: {
@@ -28,7 +30,8 @@ export class MedicalBillDetailRepository {
   }
 
   static async create(
-    dto: CreateMedicalBillDetailDto
+    dto: CreateMedicalBillDetailDto,
+    transaction?: Transaction
   ): Promise<MedicalBillDetail> {
     try {
       const { medicalBillId, drugInformation } = dto;
@@ -37,7 +40,9 @@ export class MedicalBillDetailRepository {
         ...drugInformation,
       };
 
-      return await MedicalBillDetail.create(input);
+      return await MedicalBillDetail.create(input, {
+        transaction,
+      });
     } catch (error) {
       throw new InternalServerError(error.message);
     }

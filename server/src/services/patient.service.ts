@@ -4,31 +4,51 @@ import {
   PatientResponse,
   UpdatePatientDto,
 } from "../dtos";
-import { Identity, Patient } from "../models";
-import { IdentityRepository, PatientRepository } from "../repositories";
 import {
   BadRequestError,
   Checker,
   CheckerCollections,
   ErrorHandler,
 } from "../shared";
+import { IdentityRepository, PatientRepository } from "../repositories";
+import { Patient } from "../models";
+import { RedisService } from "./redis.service";
+import { TokenService } from "./token.service";
 
 export class PatientService {
   static async findMany(query: FindPatientsQuery): Promise<PatientResponse[]> {
     try {
-      const records: Patient[] = await PatientRepository.findMany(query);
+      const { userId } = await TokenService.decode(
+        TokenService.getCurrentToken()
+      );
 
-      return records.map((record: Patient) => {
-        return {
-          id: record.id,
-          fullName: record.fullName,
-          gender: record.gender,
-          dayOfBirth: record.dayOfBirth,
-          address: record.address,
-          phoneNumber: record.phoneNumber,
-          createdAt: record.createdAt,
-        } as PatientResponse;
-      });
+      const isExistedKey = await RedisService.has("patients" + userId);
+      if (isExistedKey) {
+        const cachedData = await RedisService.get("patients" + userId);
+
+        return JSON.parse(cachedData) as PatientResponse[];
+      } else {
+        const records: Patient[] = await PatientRepository.findMany(
+          userId,
+          query
+        );
+
+        const responses: PatientResponse[] = records.map((record: Patient) => {
+          return {
+            id: record.id,
+            fullName: record.fullName,
+            gender: record.gender,
+            dayOfBirth: record.dayOfBirth,
+            address: record.address,
+            phoneNumber: record.phoneNumber,
+            createdAt: record.createdAt,
+          } as PatientResponse;
+        });
+
+        await RedisService.set("patients" + userId, JSON.stringify(responses));
+        const defaultResponse = responses ?? [];
+        return defaultResponse;
+      }
     } catch (error) {
       ErrorHandler(error);
     }
@@ -53,6 +73,9 @@ export class PatientService {
 
   static async create(dto: CreatePatientDto): Promise<void> {
     try {
+      const { userId } = await TokenService.decode(
+        TokenService.getCurrentToken()
+      );
       const {
         fullName,
         phoneNumber,
@@ -76,7 +99,7 @@ export class PatientService {
         },
         {
           argument: dayOfBirth,
-          argumentName: "Day of birth",
+          argumentName: "Day of Birth",
         },
         {
           argument: creatorId,
@@ -99,6 +122,7 @@ export class PatientService {
       };
 
       await PatientRepository.create(defaultProps);
+      await RedisService.remove("patients" + userId);
     } catch (error) {
       ErrorHandler(error);
     }
@@ -117,9 +141,13 @@ export class PatientService {
     }
   }
 
-  static async delete(id: string): Promise<number> {
+  static async delete(id: string): Promise<void> {
     try {
-      return await PatientRepository.delete(id);
+      const { userId } = await TokenService.decode(
+        TokenService.getCurrentToken()
+      );
+      await PatientRepository.delete(id);
+      await RedisService.remove("patients" + userId);
     } catch (error) {
       ErrorHandler(error);
     }

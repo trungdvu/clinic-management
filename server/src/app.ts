@@ -4,7 +4,7 @@ import logger from "morgan";
 import cors from "cors";
 import { sequelize } from "./models";
 import apiRouters from "./routers";
-import { redisClient, startRedisServer } from "./config";
+import { startRedisServer } from "./config";
 
 const app: Application = express();
 

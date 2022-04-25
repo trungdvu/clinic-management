@@ -10,12 +10,12 @@ import {
 } from "sequelize-typescript";
 import { MedicalBill } from "./medical-bill.model";
 import { Patient } from "./patient.model";
-import { DEFAULT_MEDICAL_EXAMINATION_AMOUNT } from "../constants/medical-bill.constant";
+import { DEFAULT_MEDICAL_EXAMINATION_AMOUNT } from "../constants";
 
 export interface BillPaymentAttributes {
   id: string;
   medicalBillId: string;
-  medicalCost: number;
+  medicalExamCost: number;
   totalDrugCost: number;
   patientId: string;
 }
@@ -44,7 +44,7 @@ export class BillPayment
     type: DataType.INTEGER,
     defaultValue: DEFAULT_MEDICAL_EXAMINATION_AMOUNT,
   })
-  medicalCost: number;
+  medicalExamCost: number;
 
   @Column(DataType.INTEGER)
   totalDrugCost: number;

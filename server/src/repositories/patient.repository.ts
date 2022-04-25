@@ -4,11 +4,14 @@ import { Patient } from "../models";
 import { InternalServerError } from "../shared";
 
 export class PatientRepository {
-  static async findMany(query: FindPatientsQuery): Promise<Patient[]> {
+  static async findMany(
+    userId: string,
+    query: FindPatientsQuery
+  ): Promise<Patient[]> {
     try {
       const { text, page, limit } = query;
 
-      const defaultItemPerPage = 2;
+      const defaultItemPerPage = 10;
       const defaultLimit: number | undefined = limit ? limit : undefined;
       const defaultOffset: number | undefined = page
         ? page * (limit ? limit : defaultItemPerPage)
@@ -16,6 +19,7 @@ export class PatientRepository {
 
       return await Patient.findAll({
         where: {
+          creatorId: userId,
           fullName: { [Op.like]: `%${text || ""}%` },
         },
         limit: defaultLimit,

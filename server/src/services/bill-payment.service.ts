@@ -1,7 +1,9 @@
 import { CreateBillPaymentDto } from "../dtos";
-import { MedicalBill, Patient } from "../models";
+import { MedicalBill, MedicalBillDetail, Patient } from "../models";
 import {
   BillPaymentRepository,
+  DrugPriceRepository,
+  MedicalBillDetailRepository,
   MedicalBillRepository,
   PatientRepository,
 } from "../repositories";
@@ -15,7 +17,7 @@ import {
 export class BillPaymentService {
   static async create(dto: CreateBillPaymentDto): Promise<void> {
     try {
-      const { medicalBillId, patientId } = dto;
+      const { medicalBillId, patientId, medicalExamCost, totalDrugCost } = dto;
 
       const collections: CheckerCollections = [
         {
@@ -48,10 +50,35 @@ export class BillPaymentService {
         );
       }
 
-      await BillPaymentRepository.create(dto);
+      const drugsCost: number = await this.calculateTotalCost(medicalBillId);
+
+      const defaultDto: CreateBillPaymentDto = {
+        ...dto,
+        totalDrugCost: totalDrugCost ?? drugsCost,
+      };
+
+      await BillPaymentRepository.create(defaultDto);
     } catch (error) {
       ErrorHandler(error);
     }
+  }
+
+  static async calculateTotalCost(medicalBillId: string): Promise<number> {
+    const medicalBillDetails: MedicalBillDetail[] = await MedicalBillDetailRepository.findManyByMedicalBillId(
+      medicalBillId
+    );
+
+    let drugsCost = 0;
+    for (const medicalBillDetail of medicalBillDetails) {
+      const drugPrice: number = await DrugPriceRepository.findPrice(
+        medicalBillDetail.drugId,
+        medicalBillDetail.unitId
+      );
+
+      drugsCost += drugPrice * medicalBillDetail.quantity;
+    }
+
+    return drugsCost;
   }
 
   static async isMedicalBillIdNotExisted(

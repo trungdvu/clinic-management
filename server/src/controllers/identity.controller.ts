@@ -25,7 +25,7 @@ export class IdentityController {
     try {
       const signUpDto: SignUpDto = req.body;
 
-      const response = await IdentityService.signUp(signUpDto);
+      await IdentityService.signUp(signUpDto);
 
       const bodyResponse: BodyResponse<void> = {
         message: "Execute Successfully",

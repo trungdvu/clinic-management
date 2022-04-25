@@ -11,8 +11,6 @@ export class DrugPriceRepository {
         },
       });
 
-      console.log("record", record);
-
       return record.price;
     } catch (error) {
       throw new InternalServerError(error.message);

@@ -3,4 +3,5 @@ export interface CreateMedicalBillDto {
   symptomDescription: string;
   prediction: string;
   patientId: string;
+  creatorId: string;
 }

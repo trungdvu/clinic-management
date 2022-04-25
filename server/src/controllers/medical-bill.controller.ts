@@ -13,6 +13,7 @@ export class MedicalBillController {
   static async findAll(req: Request, res: Response): Promise<void> {
     try {
       const query: FindMedicalBillsQueryParams = req.query;
+      console.log("query: ", query);
       const medicalBillSummaryResponses = await MedicalBillService.findMany(
         query
       );
