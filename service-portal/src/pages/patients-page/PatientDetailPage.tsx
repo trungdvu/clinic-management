@@ -1,8 +1,7 @@
 import { EditOutlined, EnvironmentOutlined, LeftOutlined, PhoneOutlined } from '@ant-design/icons';
 import { Col, Image, notification, Row, Tooltip } from 'antd';
-import { DetailSection, Heading, IconButton, Text } from 'components';
+import { ConfirmModal, DetailSection, Heading, IconButton, Text } from 'components';
 import { SkeletonPatientDetails } from 'components/loadings/SkeletonPatientDetails';
-import { ConfirmModal } from 'components/modals';
 import { PAGE_ROUTES } from 'consts';
 import { motion } from 'framer-motion';
 import { useTitle } from 'hooks';

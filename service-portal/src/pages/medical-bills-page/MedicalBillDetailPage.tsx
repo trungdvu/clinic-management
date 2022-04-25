@@ -1,12 +1,13 @@
 import { DownOutlined, LeftOutlined, UpOutlined, WarningOutlined } from '@ant-design/icons';
-import { Col, Form, Image, Input, notification, Row } from 'antd';
+import { Col, Form, Image, Input, notification, Row, Select } from 'antd';
 import classNames from 'classnames';
 import {
   ConfirmModal,
+  DetailSection,
   EditableParagrahp,
+  EditableSelect,
   Heading,
   IconButton,
-  DetailSection,
   PrimaryButton,
   SecondaryButton,
   SkeletonMedicalBillDetails,
@@ -28,10 +29,17 @@ import { EditableDrugRow } from './components/EditTableDrugRow';
 import { EmptyDrugs } from './components/EmptyDrug';
 import { StatusTimeLine } from './components/StatusTimeLine';
 
+const { Option } = Select;
+
 const { useForm, Item } = Form;
 
 interface Props extends PropsFromStore {
   title?: string;
+}
+
+const children: any = [];
+for (let i = 10; i < 36; i++) {
+  children.push(<Option key={i.toString(36) + i}>{i.toString(36) + i}</Option>);
 }
 
 function MedicalBillDetailPageContainer({ title, loading, doGetMedicalBillDetails }: Props) {
@@ -200,6 +208,23 @@ function MedicalBillDetailPageContainer({ title, loading, doGetMedicalBillDetail
                         placeholder="Not set"
                         onSave={async () => {}}
                       />
+                    </Col>
+                  </Row>
+                  <Row gutter={24} align="top" className="mt-4">
+                    <Col span={6} className="mt-1">
+                      <Text type="secondary" className="font-medium">
+                        ACTUAL RESULT
+                      </Text>
+                    </Col>
+                    <Col span={12}>
+                      <EditableSelect
+                        mode="multiple"
+                        size="large"
+                        placeholder="Select diseases"
+                        className="w-full"
+                      >
+                        {children}
+                      </EditableSelect>
                     </Col>
                   </Row>
                 </Col>
