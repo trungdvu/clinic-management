@@ -18,6 +18,7 @@ import { Link, Outlet } from 'react-router-dom';
 import { RootDispatch, RootState } from 'store';
 import { defaultPageVariants } from 'utils';
 import { Navbar } from '../views';
+import { Text } from '../typography';
 
 const { Content, Sider } = Layout;
 
@@ -47,9 +48,9 @@ const AuthenticatedLayoutContainer = ({ title, currentUser, ...props }: Props) =
                 key={`${ITEM.PATH}`}
                 className="flex items-center py-6 m-0 rounded-r-md bg-button-pri"
               >
-                <Link to={ITEM.PATH} className="flex items-center duration-75">
-                  <ITEM.ICON className="text-primary-2" />
-                  <span className="text-primary-2">{ITEM.TITLE_MENU}</span>
+                <Link to={ITEM.PATH} className="flex items-center duration-75 text-primary-2">
+                  <ITEM.ICON className=" text-base flex items-center" />
+                  <Text className="text-base text-primary-2">{ITEM.TITLE_MENU}</Text>
                 </Link>
               </Menu.Item>
             );
@@ -60,8 +61,8 @@ const AuthenticatedLayoutContainer = ({ title, currentUser, ...props }: Props) =
                 className="flex items-center py-6 m-0 duration-75 rounded-r-md hover:bg-black hover:bg-opacity-5"
               >
                 <Link to={ITEM.PATH} className="flex items-center hover:text-primary">
-                  <ITEM.ICON className="text-primary" />
-                  <span>{ITEM.TITLE_MENU}</span>
+                  <ITEM.ICON className="text-primary text-base flex items-center" />
+                  <Text className="text-base">{ITEM.TITLE_MENU}</Text>
                 </Link>
               </Menu.Item>
             );
@@ -81,7 +82,7 @@ const AuthenticatedLayoutContainer = ({ title, currentUser, ...props }: Props) =
             <Affix offsetTop={0}>
               <Sider
                 width={250}
-                className="pr-3 mr-3 overflow-auto bg-white shadow-stone-300 shadow-xl select-none"
+                className="pr-3 mr-10 overflow-auto bg-white shadow-stone-300 shadow-xl select-none"
               >
                 <Menu
                   defaultSelectedKeys={[`${pathname}`]}
@@ -96,8 +97,8 @@ const AuthenticatedLayoutContainer = ({ title, currentUser, ...props }: Props) =
                       to={PAGE_ROUTES.SUPPORT.PATH}
                       className="flex items-center hover:text-primary"
                     >
-                      <LaptopOutlined className="text-primary" />
-                      <span>{PAGE_ROUTES.SUPPORT.TITLE_MENU}</span>
+                      <LaptopOutlined className="text-primary text-base flex items-end" />
+                      <Text className="text-base">{PAGE_ROUTES.SUPPORT.TITLE_MENU}</Text>
                     </Link>
                   </Menu.Item>
                 </Menu>
@@ -106,7 +107,7 @@ const AuthenticatedLayoutContainer = ({ title, currentUser, ...props }: Props) =
 
             {/* Page will be render through <Outlet /> */}
             <Layout>
-              <Content className="pr-5 max-w-screen-2xl">
+              <Content className="pr-10 max-w-screen-2xl pt-4">
                 <Outlet />
               </Content>
             </Layout>

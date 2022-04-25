@@ -39,6 +39,9 @@ const colors = {
   brd: {
     DEFAULT: '#e5e5e5',
   },
+  logo: {
+    DEFAULT: '#003054',
+  },
 };
 
 module.exports = { colors };

@@ -1,0 +1,14 @@
+.editable-select .ant-select-selector {
+  @apply transition-all duration-150 hover:bg-black hover:bg-opacity-5;
+  border: transparent !important;
+  background-color: transparent !important;
+}
+
+.editable-select .ant-select-selector .ant-select-selection-overflow {
+  background-color: transparent !important;
+}
+
+.editable-select .ant-select-selection-item-remove {
+  display: flex !important;
+  align-items: center !important;
+}

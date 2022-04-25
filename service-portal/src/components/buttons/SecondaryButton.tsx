@@ -7,7 +7,7 @@ export const SecondaryButton: React.FC<ButtonProps> = memo(
     const classes = useMemo(
       () =>
         classNames(
-          'flex items-center justify-center',
+          'flex items-center justify-center rounded-md min-w-[150px]',
           'bg-transparent',
           'transition duration-100',
           'border-2 border-button-pri',
@@ -15,6 +15,7 @@ export const SecondaryButton: React.FC<ButtonProps> = memo(
           'hover:border-button-pri-hv hover:text-button-pri-hv',
           'active:bg-transparent active:text-button-pri active:border-button-pri',
           'disabled:text-button-pri disabled:border-button-pri disabled:opacity-50',
+          'focus:none',
           {
             'border-opacity-30 text-button-pri hover:bg-transparent hover:text-button-pri hover:cursor-not-allowed':
               loading,
@@ -26,21 +27,13 @@ export const SecondaryButton: React.FC<ButtonProps> = memo(
 
     const styles = useMemo(
       () => ({
-        minWidth: '150px',
         ...style,
       }),
       [style],
     );
 
     return (
-      <Button
-        shape="round"
-        size="large"
-        loading={loading}
-        className={classes}
-        style={styles}
-        {...props}
-      >
+      <Button size="large" loading={loading} className={classes} style={styles} {...props}>
         {children}
       </Button>
     );

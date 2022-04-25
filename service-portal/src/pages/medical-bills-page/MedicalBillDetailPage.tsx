@@ -1,34 +1,35 @@
-import {
-  DownOutlined,
-  EditOutlined,
-  LeftOutlined,
-  UpOutlined,
-  WarningOutlined,
-} from '@ant-design/icons';
-import { Col, Empty, Form, Image, Input, InputNumber, notification, Row, Tooltip } from 'antd';
+import { DownOutlined, LeftOutlined, UpOutlined, WarningOutlined } from '@ant-design/icons';
+import { Col, Form, Image, Input, notification, Row, Select } from 'antd';
 import classNames from 'classnames';
 import {
+  ConfirmModal,
+  DetailSection,
+  EditableParagrahp,
+  EditableSelect,
   Heading,
   IconButton,
-  Paragraph,
   PrimaryButton,
+  SecondaryButton,
   SkeletonMedicalBillDetails,
   Text,
 } from 'components';
-import { ConfirmModal } from 'components/modals';
 import { PAGE_ROUTES } from 'consts';
 import { motion } from 'framer-motion';
 import { useTitle } from 'hooks';
-import { MedicalBillDetails } from 'interfaces';
+import { MedicalBillDetail } from 'interfaces';
 import _ from 'lodash';
 import moment from 'moment';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { connect } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
 import { RootDispatch, RootState } from 'store';
-import { generateFadeInFadeOut } from 'utils';
-import { EditableDrugRow } from './EditTableDrugRow';
-import { StatusTimeLine } from './StatusTimeLine';
+import { generateFadeInFadeOut, regExpNumber } from 'utils';
+import {} from '../../components/layouts/DetailSection';
+import { EditableDrugRow } from './components/EditTableDrugRow';
+import { EmptyDrugs } from './components/EmptyDrug';
+import { StatusTimeLine } from './components/StatusTimeLine';
+
+const { Option } = Select;
 
 const { useForm, Item } = Form;
 
@@ -36,10 +37,15 @@ interface Props extends PropsFromStore {
   title?: string;
 }
 
-function MedicalBillDetailsPageContainer({ title, loading, doGetMedicalBillDetails }: Props) {
+const children: any = [];
+for (let i = 10; i < 36; i++) {
+  children.push(<Option key={i.toString(36) + i}>{i.toString(36) + i}</Option>);
+}
+
+function MedicalBillDetailPageContainer({ title, loading, doGetMedicalBillDetails }: Props) {
   const [isConfirmDeleteModalVisible, setIsConfirmDeleteModalVisible] = useState(false);
   const [isMedicationsExpanded, setIsMedicationsExpanded] = useState(false);
-  const [medicalBillDetails, setMedicalBillDetails] = useState<MedicalBillDetails>();
+  const [billDetail, setMedicalBillDetail] = useState<MedicalBillDetail>();
 
   const [addDrugForm] = useForm();
   const params = useParams();
@@ -54,27 +60,24 @@ function MedicalBillDetailsPageContainer({ title, loading, doGetMedicalBillDetai
           description: 'Not founded the medical bill details.',
         });
       } else {
-        const newDrug: any = {
-          name: 'Drug 1',
-          quantity: 12,
-          usage: '1 pill per day',
-          unit: 'pill',
-        };
-
-        setMedicalBillDetails({ ...res, drugs: [newDrug] });
+        setMedicalBillDetail(res);
       }
     });
   }, [doGetMedicalBillDetails, params]);
 
   useEffect(() => {
     setIsMedicationsExpanded(false);
-  }, [medicalBillDetails]);
+  }, [billDetail]);
 
-  const onClickEditMedicalBill = useCallback(() => {
-    notification.info({
-      message: 'In coming feature',
-    });
-  }, []);
+  const totalPrice = useMemo(() => {
+    return _.reduce(
+      billDetail?.drugDetails,
+      (acc, drug) => {
+        return acc + drug.price;
+      },
+      0,
+    );
+  }, [billDetail?.drugDetails]);
 
   const onClickDelete = useCallback(() => {
     setIsConfirmDeleteModalVisible(true);
@@ -87,28 +90,16 @@ function MedicalBillDetailsPageContainer({ title, loading, doGetMedicalBillDetai
   }, []);
 
   const toggleExpandedMedications = useCallback(() => {
-    if (medicalBillDetails && medicalBillDetails.drugs.length > 4) {
+    if (billDetail && billDetail.drugDetails.length > 4) {
       setIsMedicationsExpanded((pre) => !pre);
     }
-  }, [medicalBillDetails]);
+  }, [billDetail]);
 
   const onClickAddMedication = useCallback(
     (values: any) => {
-      const newDrug: any = {
-        name: values.drugName,
-        quantity: values.drugQuantity,
-        usage: values.drugUsage,
-        unit: values.drugUnit,
-      };
-      const medicalBillDetailsUpdated: MedicalBillDetails = {
-        ...medicalBillDetails!,
-        drugs: [newDrug, ...medicalBillDetails!.drugs],
-      };
-
-      setMedicalBillDetails(medicalBillDetailsUpdated);
       addDrugForm.resetFields();
     },
-    [medicalBillDetails, addDrugForm],
+    [addDrugForm],
   );
 
   return (
@@ -129,7 +120,7 @@ function MedicalBillDetailsPageContainer({ title, loading, doGetMedicalBillDetai
       />
 
       <Link to={PAGE_ROUTES.MEDICAL_BILLS.PATH} className="flex items-center gap-2">
-        <LeftOutlined className="text-lg" />
+        <LeftOutlined className="text-base flex items-center" />
         <Text className="text-base select-none">Back to Listing</Text>
       </Link>
       <Heading level={2} className="mt-4">
@@ -140,7 +131,7 @@ function MedicalBillDetailsPageContainer({ title, loading, doGetMedicalBillDetai
         <SkeletonMedicalBillDetails />
       ) : (
         <>
-          {medicalBillDetails ? (
+          {billDetail ? (
             <>
               <StatusTimeLine status="pending" />
               <Row gutter={24} align="top" className="mt-8">
@@ -159,18 +150,12 @@ function MedicalBillDetailsPageContainer({ title, loading, doGetMedicalBillDetai
                       </Text>
                     </Col>
                     <Col span={12}>
-                      <Link to={PAGE_ROUTES.PATIENTS.DETAILS.ID(medicalBillDetails.patientId)}>
-                        David Backham
-                      </Link>
-                    </Col>
-                    <Col span={6} className="flex justify-start">
-                      <Tooltip
-                        title="Edit general information"
-                        placement="bottom"
-                        className="text-xs text-center"
+                      <Link
+                        to={PAGE_ROUTES.PATIENTS.DETAILS.ID(billDetail.patient.id)}
+                        className="px-3"
                       >
-                        <IconButton icon={<EditOutlined />} onClick={onClickEditMedicalBill} />
-                      </Tooltip>
+                        {billDetail.patient.fullName}
+                      </Link>
                     </Col>
                   </Row>
                   <Row gutter={24} align="top" className="mt-4">
@@ -180,61 +165,81 @@ function MedicalBillDetailsPageContainer({ title, loading, doGetMedicalBillDetai
                       </Text>
                     </Col>
                     <Col span={12} className="flex flex-col">
-                      <Text className="font-medium">{moment().format('dddd, D MMM YYYY')}</Text>
-                      <Text type="secondary">{moment().format('hh:mm A')}</Text>
+                      <Text className="font-medium px-3">
+                        {moment(billDetail.createdAt).format('dddd, D MMM YYYY')}
+                      </Text>
+                      <Text type="secondary" className="px-3">
+                        {moment(billDetail.createdAt).format('hh:mm A')}
+                      </Text>
                     </Col>
                   </Row>
                   <Row gutter={24} align="top" className="mt-4">
-                    <Col span={6}>
+                    <Col span={6} className="mt-1">
                       <Text type="secondary" className="font-medium">
                         SYSTOMS
                       </Text>
                     </Col>
                     <Col span={12}>
-                      <Paragraph>
-                        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Saepe itaque
-                        recusandae animi architecto optio, ipsa exercitationem possimus ut ad, sit,
-                        nostrum eos? Fugiat, ea ipsum animi eligendi quis nihil nulla?
-                      </Paragraph>
+                      <EditableParagrahp
+                        text={billDetail.symptomDescription}
+                        onSave={async () => {}}
+                      />
                     </Col>
                   </Row>
                   <Row gutter={24} align="top" className="mt-4">
-                    <Col span={6}>
+                    <Col span={6} className="mt-1">
                       <Text type="secondary" className="font-medium">
                         PREDICTION
                       </Text>
                     </Col>
                     <Col span={12}>
-                      <Paragraph>
-                        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Saepe itaque
-                        recusandae animi architecto optio, ipsa exercitationem possimus ut ad, sit,
-                        nostrum eos? Fugiat, ea ipsum animi eligendi quis nihil nulla?
-                      </Paragraph>
+                      <EditableParagrahp text={billDetail.prediction} onSave={async () => {}} />
                     </Col>
                   </Row>
                   <Row gutter={24} align="top" className="mt-4">
-                    <Col span={6}>
+                    <Col span={6} className="mt-1">
                       <Text type="secondary" className="font-medium">
                         ACTUAL RESULT
                       </Text>
                     </Col>
                     <Col span={12}>
-                      <Paragraph>
-                        Lorem ipsum dolor, sit amet consectetur adipisicing elit. Saepe itaque
-                        recusandae animi architecto optio, ipsa exercitationem possimus ut ad, sit,
-                        nostrum eos? Fugiat, ea ipsum animi eligendi quis nihil nulla?
-                      </Paragraph>
+                      <EditableParagrahp
+                        text={_.map(billDetail.diseaseTypes, (d) => d.description).join(', ')}
+                        placeholder="Not set"
+                        onSave={async () => {}}
+                      />
+                    </Col>
+                  </Row>
+                  <Row gutter={24} align="top" className="mt-4">
+                    <Col span={6} className="mt-1">
+                      <Text type="secondary" className="font-medium">
+                        ACTUAL RESULT
+                      </Text>
+                    </Col>
+                    <Col span={12}>
+                      <EditableSelect
+                        mode="multiple"
+                        size="large"
+                        placeholder="Select diseases"
+                        className="w-full"
+                      >
+                        {children}
+                      </EditableSelect>
                     </Col>
                   </Row>
                 </Col>
               </Row>
-              <section className="mt-10">
-                <Heading level={3} className="mb-0">
-                  Medications
-                </Heading>
-                <Text type="secondary">Medicines, durgs that for this medical bill.</Text>
-                <Form form={addDrugForm} onFinish={onClickAddMedication}>
-                  <Row gutter={24} className="px-5 py-3 mt-4">
+
+              <DetailSection
+                title="Medications"
+                subTitle="Medicines, durgs that for this medical bill.l"
+              >
+                <Form
+                  form={addDrugForm}
+                  onFinish={onClickAddMedication}
+                  className="bg-black bg-opacity-5 pr-7 py-2 mt-4"
+                >
+                  <Row gutter={24} className="px-5 py-3">
                     <Col span={1}></Col>
                     <Col span={5}>
                       <Item rules={[{ required: true }]} name="drugName">
@@ -249,28 +254,26 @@ function MedicalBillDetailsPageContainer({ title, loading, doGetMedicalBillDetai
                       <Item rules={[{ required: true }]} name="drugUsage">
                         <Input
                           size="large"
-                          placeholder="Description, usage..."
+                          placeholder="Description, usage"
                           className="text-sm h-10"
                         />
                       </Item>
                     </Col>
                     <Col span={3}>
                       <Item rules={[{ required: true }]} name="drugUnit">
-                        <Input size="large" placeholder="Pill, pack..." className="text-sm h-10" />
+                        <Input size="large" placeholder="Pill, pack" className="text-sm h-10" />
                       </Item>
                     </Col>
                     <Col span={3}>
-                      <Item rules={[{ required: true }]} name="drugQuantity">
-                        <InputNumber
-                          size="large"
-                          placeholder="1, 2, 3 .."
-                          className="text-sm w-full h-10"
-                        />
+                      <Item rules={[{ required: true, pattern: regExpNumber }]} name="drugQuantity">
+                        <Input size="large" placeholder="1, 2, 3" className="text-sm w-full h-10" />
                       </Item>
                     </Col>
                     <Col span={3}>
                       <Item>
-                        <PrimaryButton htmlType="submit">Add</PrimaryButton>
+                        <PrimaryButton htmlType="submit" className="px-10">
+                          Add
+                        </PrimaryButton>
                       </Item>
                     </Col>
                   </Row>
@@ -304,25 +307,17 @@ function MedicalBillDetailsPageContainer({ title, loading, doGetMedicalBillDetai
                       'h-[210px]': !isMedicationsExpanded,
                     })}
                   >
-                    {_.isEmpty(medicalBillDetails.drugs) ? (
-                      <Empty
-                        description={
-                          <Text className="text-tertiary">
-                            Empty. Click <b>Add</b> to attach a medication.
-                          </Text>
-                        }
-                        className="mt-16"
-                        image={Empty.PRESENTED_IMAGE_SIMPLE}
-                      />
+                    {_.isEmpty(billDetail.drugDetails) ? (
+                      <EmptyDrugs />
                     ) : (
                       <>
-                        {_.map(medicalBillDetails.drugs, (drug, index) => (
+                        {_.map(billDetail.drugDetails, (drug, index) => (
                           <EditableDrugRow
                             key={index}
                             currentIndex={index}
-                            medicalBillId={medicalBillDetails!.id}
-                            drug={drug}
-                            durgs={medicalBillDetails!.drugs}
+                            medicalBillId={billDetail!.id}
+                            medicalBillDrug={drug}
+                            medicalBillDurgs={billDetail!.drugDetails}
                           />
                         ))}
                       </>
@@ -333,14 +328,14 @@ function MedicalBillDetailsPageContainer({ title, loading, doGetMedicalBillDetai
                     className={classNames(
                       'h-16 w-full absolute bottom-0 bg-gradient-to-t from-stone-300 to-transparent',
                       {
-                        hidden: isMedicationsExpanded || medicalBillDetails.drugs.length < 5,
+                        hidden: isMedicationsExpanded || billDetail.drugDetails.length < 5,
                       },
                     )}
                   />
                   <div className="flex items-center w-full absolute bottom-0 transform translate-y-4 z-50">
                     <div className="h-px bg-brd flex-1" />
                     <IconButton
-                      disabled={medicalBillDetails.drugs.length < 5}
+                      disabled={billDetail.drugDetails.length < 5}
                       icon={
                         isMedicationsExpanded ? (
                           <UpOutlined className="text-sm" />
@@ -353,68 +348,50 @@ function MedicalBillDetailsPageContainer({ title, loading, doGetMedicalBillDetai
                     <div className="h-px bg-brd flex-1" />
                   </div>
                 </div>
-              </section>
+              </DetailSection>
 
-              <section className="mt-10">
-                <Heading level={3} className="mb-0">
-                  Actions and Payments
-                </Heading>
-                <Text type="secondary">Where you can start or finish this medical bill.</Text>
+              <DetailSection
+                title="Actions and Payments"
+                subTitle="Where you can start or finish this medical bill."
+              >
                 <div className="px-5 mt-4">
                   <Row gutter={24} className="py-3">
                     <Col span={5}>
                       <Text>Fee:</Text>
                     </Col>
-                    <Col span={5}>$49</Col>
+                    <Col span={5}>$0</Col>
                   </Row>
                   <Row gutter={24} className="py-3">
                     <Col span={5}>
-                      <Text>Medications: </Text>
+                      <Text>Medications:</Text>
                     </Col>
-                    <Col span={5}>$5</Col>
+                    <Col span={5}>${totalPrice}</Col>
                   </Row>
                   <Row gutter={24} className="py-3">
                     <Col span={5}>
-                      <Text>Total: </Text>
+                      <Text>Total:</Text>
                     </Col>
-                    <Col span={5}>$5</Col>
+                    <Col span={5}>${totalPrice}</Col>
                   </Row>
                 </div>
-                <div className="mt-4">
-                  <PrimaryButton>Start medical bill</PrimaryButton>
+                <div className="flex items-center gap-4 mt-4 bg-opacity-5 bg-black py-5 px-5">
+                  <PrimaryButton className="px-10">Start</PrimaryButton>
+                  <SecondaryButton
+                    disabled={billDetail.status !== 'pending'}
+                    className={'flex items-center disabled:cursor-not-allowed'}
+                    onClick={onClickDelete}
+                  >
+                    {billDetail.status === 'pending' ? (
+                      <Text>Delete This Medical Bill</Text>
+                    ) : (
+                      <>
+                        <WarningOutlined className="flex items-center justify-center" />
+                        <Text className="ml-2">Cannot delete this medical bill</Text>
+                      </>
+                    )}
+                  </SecondaryButton>
                 </div>
-              </section>
-
-              <section className="mt-20">
-                <Heading level={3} className="mb-0">
-                  Others
-                </Heading>
-                <Text type="secondary" className="block">
-                  More actions on this medical bill.
-                </Text>
-                <button
-                  disabled={medicalBillDetails.status !== 'pending'}
-                  className={classNames(
-                    'px-2 py-1 mt-4 flex items-center transition-all duration-100 disabled:cursor-default',
-                    {
-                      'text-button-pri hover:bg-black hover:bg-opacity-5':
-                        medicalBillDetails.status === 'pending',
-                      'text-yellow-500 hover:bg-transparent':
-                        medicalBillDetails.status !== 'pending',
-                    },
-                  )}
-                  onClick={onClickDelete}
-                >
-                  {medicalBillDetails.status === 'pending' ? (
-                    'Delete this medical bill'
-                  ) : (
-                    <>
-                      <WarningOutlined />
-                      <Text className="ml-2">Cannot delete this medical bill</Text>
-                    </>
-                  )}
-                </button>
-              </section>
+              </DetailSection>
             </>
           ) : (
             <Text type="danger" className="text-base">
@@ -437,7 +414,4 @@ const mapDispatch = (dispatch: RootDispatch) => ({
 
 type PropsFromStore = ReturnType<typeof mapState> & ReturnType<typeof mapDispatch>;
 
-export const MedicalBillDetailsPage = connect(
-  mapState,
-  mapDispatch,
-)(MedicalBillDetailsPageContainer);
+export const MedicalBillDetailPage = connect(mapState, mapDispatch)(MedicalBillDetailPageContainer);

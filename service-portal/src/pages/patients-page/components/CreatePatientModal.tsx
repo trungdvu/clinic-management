@@ -20,6 +20,7 @@ interface Props extends PropsFromStore, ModalProps {
 function CreatePatientModalContainer({
   className,
   loading,
+  currentUser,
   doCreatePatient,
   onCancel,
   ...props
@@ -31,6 +32,7 @@ function CreatePatientModalContainer({
       const payload: CreatePatientPayload = {
         ...values,
         dayOfBirth: moment(values.dayOfBirth).toISOString(),
+        creatorId: currentUser!.id,
       };
       const result = await doCreatePatient(payload);
 
@@ -47,7 +49,7 @@ function CreatePatientModalContainer({
         notification.error({ message: 'Ops! Something went wrong.' });
       }
     },
-    [doCreatePatient, form, onCancel],
+    [currentUser, doCreatePatient, form, onCancel],
   );
 
   const _onCancel = useCallback(
@@ -130,6 +132,7 @@ function CreatePatientModalContainer({
             <DatePicker
               placeholder="No default"
               format="DD MMM YYYY"
+              disabledDate={(current: any) => current && current > moment().add(3, 'd').endOf('d')}
               className="py-2 w-full font-normal"
             />
           </Item>
@@ -148,7 +151,7 @@ function CreatePatientModalContainer({
             maxLength={15}
             minLength={9}
             placeholder="0987674314"
-            className="text-sm w-full"
+            className="text-sm w-full h-10"
           />
         </Item>
 
@@ -173,6 +176,7 @@ function CreatePatientModalContainer({
 
 const mapState = (state: RootState) => ({
   loading: state.loading.effects.patientModel,
+  currentUser: state.authModel.currentUser,
 });
 
 const mapDispatch = (dispatch: RootDispatch) => ({
