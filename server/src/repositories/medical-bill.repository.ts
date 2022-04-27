@@ -30,10 +30,11 @@ export class MedicalBillRepository {
         : undefined;
 
       return await MedicalBill.findAll({
-        where: {
-          creatorId: userId,
-          patientId: patientId ?? undefined,
-        },
+        where: patientId
+          ? {
+              patientId,
+            }
+          : undefined,
         include: {
           model: Patient,
           attributes: ["fullName"],

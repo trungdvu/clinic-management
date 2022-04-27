@@ -16,7 +16,7 @@ import {
 import { PAGE_ROUTES } from 'consts';
 import { motion } from 'framer-motion';
 import { useTitle } from 'hooks';
-import { MedicalBillDetail } from 'interfaces';
+import { MedicalBillDetail, UpdateMedicalBillPayload } from 'interfaces';
 import _ from 'lodash';
 import moment from 'moment';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -42,7 +42,12 @@ for (let i = 10; i < 36; i++) {
   children.push(<Option key={i.toString(36) + i}>{i.toString(36) + i}</Option>);
 }
 
-function MedicalBillDetailPageContainer({ title, loading, doGetMedicalBillDetails }: Props) {
+function MedicalBillDetailPageContainer({
+  title,
+  loading,
+  doGetMedicalBillDetails,
+  doUpdateMedicalBill,
+}: Props) {
   const [isConfirmDeleteModalVisible, setIsConfirmDeleteModalVisible] = useState(false);
   const [isMedicationsExpanded, setIsMedicationsExpanded] = useState(false);
   const [billDetail, setMedicalBillDetail] = useState<MedicalBillDetail>();
@@ -100,6 +105,53 @@ function MedicalBillDetailPageContainer({ title, loading, doGetMedicalBillDetail
       addDrugForm.resetFields();
     },
     [addDrugForm],
+  );
+
+  const onSavePrediction = useCallback(
+    async (text: string) => {
+      const oldPrediction = billDetail?.prediction;
+      const updatedBillDetail = { ...billDetail, prediction: text } as any;
+
+      setMedicalBillDetail(updatedBillDetail);
+
+      const payload: UpdateMedicalBillPayload = {
+        id: params.id!,
+        body: { prediction: text },
+      };
+      const result = await doUpdateMedicalBill(payload);
+      if (!result) {
+        notification.error({
+          message: 'Failed',
+          description: 'Ops! Updated the preidction failed',
+        });
+        // rollback old prediction
+        setMedicalBillDetail({ ...billDetail, prediction: oldPrediction } as any);
+      }
+    },
+    [billDetail, doUpdateMedicalBill, params.id],
+  );
+
+  const onSaveSymtoms = useCallback(
+    async (text: string) => {
+      const oldSymptomDescription = billDetail!.symptomDescription;
+      const updatedBillDetail = { ...billDetail!, symptomDescription: text };
+
+      setMedicalBillDetail(updatedBillDetail);
+
+      const payload: UpdateMedicalBillPayload = {
+        id: params.id!,
+        body: { symptomDescription: text },
+      };
+      const result = await doUpdateMedicalBill(payload);
+      if (!result) {
+        notification.error({
+          message: 'Failed',
+          description: 'Ops! Something went wrong',
+        });
+        setMedicalBillDetail({ ...billDetail!, symptomDescription: oldSymptomDescription });
+      }
+    },
+    [billDetail, doUpdateMedicalBill, params.id],
   );
 
   return (
@@ -182,7 +234,7 @@ function MedicalBillDetailPageContainer({ title, loading, doGetMedicalBillDetail
                     <Col span={12}>
                       <EditableParagrahp
                         text={billDetail.symptomDescription}
-                        onSave={async () => {}}
+                        onSave={onSaveSymtoms}
                       />
                     </Col>
                   </Row>
@@ -193,7 +245,11 @@ function MedicalBillDetailPageContainer({ title, loading, doGetMedicalBillDetail
                       </Text>
                     </Col>
                     <Col span={12}>
-                      <EditableParagrahp text={billDetail.prediction} onSave={async () => {}} />
+                      <EditableParagrahp
+                        text={billDetail.prediction}
+                        placeholder="Not set"
+                        onSave={onSavePrediction}
+                      />
                     </Col>
                   </Row>
                   <Row gutter={24} align="top" className="mt-4">
@@ -213,7 +269,7 @@ function MedicalBillDetailPageContainer({ title, loading, doGetMedicalBillDetail
                   <Row gutter={24} align="top" className="mt-4">
                     <Col span={6} className="mt-1">
                       <Text type="secondary" className="font-medium">
-                        ACTUAL RESULT
+                        TEST EDITABLE SELECT
                       </Text>
                     </Col>
                     <Col span={12}>
@@ -410,6 +466,7 @@ const mapState = (state: RootState) => ({
 
 const mapDispatch = (dispatch: RootDispatch) => ({
   doGetMedicalBillDetails: dispatch.medicalBillModel.doGetMedicalBillDetails,
+  doUpdateMedicalBill: dispatch.medicalBillModel.doUpdateMedicalBill,
 });
 
 type PropsFromStore = ReturnType<typeof mapState> & ReturnType<typeof mapDispatch>;

@@ -11,6 +11,16 @@ export interface NewMedicalBillPayload {
   systomDescription: string;
   prediction?: string;
   diseaseTypeId?: string;
+  creatorId?: string;
+}
+
+export interface UpdateMedicalBillPayload {
+  id: string;
+  body: {
+    symptomDescription?: string;
+    prediction?: string;
+    status?: MedicalBillStatus;
+  };
 }
 
 export interface MedicalBillSumary {

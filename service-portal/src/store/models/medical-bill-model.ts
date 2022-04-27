@@ -1,12 +1,17 @@
 import { createModel } from '@rematch/core';
 import { API } from 'consts';
-import { MedicalBillDetail, MedicalBillSumary, NewMedicalBillPayload } from 'interfaces';
+import {
+  MedicalBillDetail,
+  MedicalBillSumary,
+  NewMedicalBillPayload,
+  UpdateMedicalBillPayload,
+} from 'interfaces';
 import _ from 'lodash';
 import { HttpService } from 'services';
 import { RootModel } from '.';
 
 type Page = 'allMedicalBillSummariesPage';
-type HasMore = 'allMedicalBillSummariesHasMore';
+type HasMoreKey = 'allMedicalBillSummariesHasMore';
 
 interface MedicalBillState {
   medicalBillSummaries: MedicalBillSumary[];
@@ -40,7 +45,7 @@ export const medicalBillModel = createModel<RootModel>()({
       ...state,
       [payload]: 0,
     }),
-    setHasMore: (state, payload: { key: HasMore; value: boolean }) => ({
+    setHasMore: (state, payload: { key: HasMoreKey; value: boolean }) => ({
       ...state,
       [payload.key]: payload.value,
     }),
@@ -143,6 +148,17 @@ export const medicalBillModel = createModel<RootModel>()({
         }
       } catch (error) {
         console.log('doDeleteMedicalBill', error);
+        return false;
+      }
+    },
+
+    async doUpdateMedicalBill(payload: UpdateMedicalBillPayload) {
+      try {
+        const endpoint = API.MEDICAL_BILLS_ID(payload.id);
+        const { status } = await HttpService.put(endpoint, payload.body);
+        return status === 200;
+      } catch (error) {
+        console.log('doUpdateMedicalBill', error);
         return false;
       }
     },

@@ -2,6 +2,7 @@ import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import TextArea, { TextAreaRef } from 'antd/lib/input/TextArea';
 import classNames from 'classnames';
 import { IconButton } from 'components/buttons';
+import { useClickOutside } from 'hooks';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
 
 interface Props {
@@ -12,8 +13,13 @@ interface Props {
 
 export const EditableParagrahp = memo(({ text, placeholder, onSave }: Props) => {
   const [editing, setEditing] = useState(false);
-  const [value, setValue] = useState(text);
+  const [value, setValue] = useState('');
   const textAreaRef = useRef<TextAreaRef>(null);
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    setValue(text);
+  }, [text]);
 
   useEffect(() => {
     if (editing) {
@@ -21,8 +27,10 @@ export const EditableParagrahp = memo(({ text, placeholder, onSave }: Props) => 
     }
   }, [editing]);
 
-  const toggleEdit = useCallback(() => {
-    setEditing((pre) => !pre);
+  useClickOutside(containerRef, () => setEditing(false));
+
+  const onClick = useCallback(() => {
+    setEditing(true);
   }, []);
 
   const onChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -30,9 +38,9 @@ export const EditableParagrahp = memo(({ text, placeholder, onSave }: Props) => 
   }, []);
 
   const _onSave = useCallback(() => {
-    toggleEdit();
     onSave(value);
-  }, [onSave, toggleEdit, value]);
+    setEditing(false);
+  }, [onSave, value]);
 
   const onCancel = useCallback(() => {
     setValue(text);
@@ -40,17 +48,16 @@ export const EditableParagrahp = memo(({ text, placeholder, onSave }: Props) => 
   }, [text]);
 
   return (
-    <div className="relative">
+    <div ref={containerRef} className="relative">
       <TextArea
         placeholder={placeholder}
         readOnly={!editing}
         ref={textAreaRef}
-        defaultValue={value}
+        value={value}
         autoSize={{ minRows: 3 }}
         onChange={onChange}
-        onClick={toggleEdit}
+        onClick={onClick}
         onPressEnter={_onSave}
-        onBlur={_onSave}
         className={classNames('border-transparent px-3 transition-all duration-150', {
           'shadow-none hover:bg-black hover:bg-opacity-5': !editing,
           'bg-white bg-opacity-100 shadow-current': editing,

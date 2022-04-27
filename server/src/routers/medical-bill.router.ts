@@ -6,7 +6,7 @@ const router = Router();
 router.get("/", MedicalBillController.findAll);
 router.get("/:id", MedicalBillController.findById);
 router.post("/", MedicalBillController.create);
-router.patch("/:id", MedicalBillController.update);
+router.put("/:id", MedicalBillController.update);
 router.delete("/:id", MedicalBillController.delete);
 
 export default router;

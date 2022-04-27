@@ -25,6 +25,7 @@ interface Props extends PropsFromStores, ModalProps {
 function NewMedicalBillModalContainer({
   className,
   loading,
+  currentUser,
   doGetPatients,
   doCreateMedicalBill,
   onCancel,
@@ -36,6 +37,7 @@ function NewMedicalBillModalContainer({
     async (values: any) => {
       const payload: NewMedicalBillPayload = {
         ...values,
+        creatorId: currentUser!.id,
       };
       const result = await doCreateMedicalBill(payload);
 
@@ -55,7 +57,7 @@ function NewMedicalBillModalContainer({
         });
       }
     },
-    [doCreateMedicalBill, form, onCancel],
+    [currentUser, doCreateMedicalBill, form, onCancel],
   );
 
   const _onCancel = useCallback(
@@ -162,6 +164,7 @@ function NewMedicalBillModalContainer({
 
 const mapState = (state: RootState) => ({
   loading: state.loading.effects.medicalBillModel,
+  currentUser: state.authModel.currentUser,
 });
 
 const mapDispatch = (dispatch: RootDispatch) => ({
