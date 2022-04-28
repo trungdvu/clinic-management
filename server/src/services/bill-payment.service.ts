@@ -1,5 +1,7 @@
 import { CreateBillPaymentDto } from "../dtos";
-import { MedicalBill, MedicalBillDetail, Patient } from "../models";
+import { BillPaymentSummaryResponse } from "../dtos/bill-payment/bill-payment-summary.response";
+import { FindBillPaymentsQueryParams } from "../dtos/bill-payment/find-bill-payment.query";
+import { BillPayment, MedicalBill, MedicalBillDetail, Patient } from "../models";
 import {
   BillPaymentRepository,
   DrugPriceRepository,
@@ -13,8 +15,63 @@ import {
   CheckerCollections,
   ErrorHandler,
 } from "../shared";
+import { TokenService } from "./token.service";
+import { RedisService } from "./redis.service";
 
 export class BillPaymentService {
+  static async findMany(
+    query: FindBillPaymentsQueryParams
+  ): Promise<BillPaymentSummaryResponse[]> {
+    const { userId } = await TokenService.decode(
+      TokenService.getCurrentToken()
+    );
+    try {
+      const isExistedKey = await RedisService.has("bill-payments" + userId);
+      if (isExistedKey) {
+        const cachedData = await RedisService.get("bill-payments" + userId);
+        return JSON.parse(cachedData) as BillPaymentSummaryResponse[];
+      } else {
+        const { patientId, medicalBillId } = query;
+        if (patientId) {
+          const isNotExistedPatientId = await this.isNotExistedPatientId(
+            patientId
+          );
+          if (isNotExistedPatientId) {
+            throw new BadRequestError("Patient Id Query Param Not existed");
+          }
+        }
+        if (medicalBillId) {
+          const isNotExistedMedicallBillId = await this.isNotExistedMedicalBillId(
+            medicalBillId
+          );
+          if (isNotExistedMedicallBillId) {
+            throw new BadRequestError("Medical Bill Id Query Param Not existed");
+          }
+        }
+
+        const BillPaymentRecords: BillPayment[] = await BillPaymentRepository.findMany(
+          userId,
+          query
+        );
+
+      }
+    } catch (error) {
+      
+    }
+    const responses: BillPaymentSummaryResponse[] = [];
+    return responses
+  }
+
+  static async isNotExistedPatientId(patientId: string): Promise<boolean> {
+    const patientFounded = await PatientRepository.findById(patientId);
+    return patientFounded ? false : true;
+  }
+
+  static async isNotExistedMedicalBillId(medicalBillId: string): Promise<boolean> {
+    const medicalBillFounded = await MedicalBillRepository.findById(medicalBillId);
+    return medicalBillFounded ? false : true;
+  }
+
   static async create(dto: CreateBillPaymentDto): Promise<void> {
     try {
       const { medicalBillId, patientId, medicalExamCost, totalDrugCost } = dto;
