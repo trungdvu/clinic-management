@@ -6,3 +6,5 @@ export * from "./token.service";
 export * from "./bill-payment.service";
 export * from "./redis.service";
 export * from "./disease-type.service";
+export * from "./drug.service";
+export * from "./unit.service";

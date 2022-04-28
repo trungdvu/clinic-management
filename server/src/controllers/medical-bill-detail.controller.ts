@@ -7,7 +7,7 @@ import {
   UpdateMedicalBillDetailDto,
 } from "../dtos";
 import { MedicalBillDetailService, MedicalBillService } from "../services";
-import { BodyResponse, ErrorResponseHandler } from "../shared";
+import { BodyResponse, ErrorResponseHandler, HttpStatusCode } from "../shared";
 
 export class MedicalBillDetailController {
   static async findAll(req: Request, res: Response): Promise<void> {
@@ -20,7 +20,7 @@ export class MedicalBillDetailController {
       const bodyResponse: BodyResponse<MedicalBillSummaryResponse[]> = {
         message: "Execute Successfully",
         data: medicalBillSummaryResponses,
-        statusCode: 200,
+        statusCode: HttpStatusCode.OK,
       };
 
       res.status(bodyResponse.statusCode).json(bodyResponse);
@@ -37,7 +37,7 @@ export class MedicalBillDetailController {
       const bodyResponse: BodyResponse<MedicalBillResponse> = {
         message: "Execute Successfully",
         data: medicalBillFounded,
-        statusCode: 200,
+        statusCode: HttpStatusCode.OK,
       };
 
       res.status(bodyResponse.statusCode).json(bodyResponse);
@@ -55,7 +55,7 @@ export class MedicalBillDetailController {
 
       const bodyResponse: BodyResponse<void> = {
         message: "Execute Successfully",
-        statusCode: 200,
+        statusCode: HttpStatusCode.OK,
       };
 
       res.status(bodyResponse.statusCode).json(bodyResponse);
@@ -73,7 +73,7 @@ export class MedicalBillDetailController {
 
       const bodyResponse: BodyResponse<void> = {
         message: "Execute Successfully",
-        statusCode: 200,
+        statusCode: HttpStatusCode.OK,
       };
 
       res.status(bodyResponse.statusCode).json(bodyResponse);
@@ -90,7 +90,7 @@ export class MedicalBillDetailController {
 
       const bodyResponse: BodyResponse<void> = {
         message: "Execute Successfully",
-        statusCode: 200,
+        statusCode: HttpStatusCode.OK,
       };
 
       res.status(bodyResponse.statusCode).json(bodyResponse);

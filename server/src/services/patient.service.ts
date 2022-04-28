@@ -9,6 +9,7 @@ import {
   Checker,
   CheckerCollections,
   ErrorHandler,
+  NotFoundError,
 } from "../shared";
 import { IdentityRepository, PatientRepository } from "../repositories";
 import { Patient } from "../models";
@@ -133,16 +134,31 @@ export class PatientService {
     return creatorFounded ? false : true;
   }
 
-  static async update(id: string, dto: UpdatePatientDto): Promise<string> {
+  static async update(id: string, dto: UpdatePatientDto): Promise<void> {
     try {
-      return await PatientRepository.update(id, dto);
+      const patientFounded = await PatientRepository.findById(id);
+      if (!patientFounded) {
+        throw new NotFoundError(`Medical bill id: ${id} was not existed`);
+      }
+
+      await PatientRepository.update(id, dto);
     } catch (error) {
       ErrorHandler(error);
     }
   }
 
+  static async isNotExistedPatientId(patientId: string): Promise<boolean> {
+    const patientFounded = await PatientRepository.findById(patientId);
+    return patientFounded ? false : true;
+  }
+
   static async delete(id: string): Promise<void> {
     try {
+      const patientFounded = await PatientRepository.findById(id);
+      if (!patientFounded) {
+        throw new NotFoundError(`Medical bill id: ${id} was not existed`);
+      }
+
       const { userId } = await TokenService.decode(
         TokenService.getCurrentToken()
       );

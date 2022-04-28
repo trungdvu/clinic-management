@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { IdentityService } from "../services";
 import { BodyResponse } from "../shared";
+import { HttpStatusCode } from "../shared/error/http-status-code";
 
 const getBearerToken = (req: Request) => {
   const authorizationHeader = req.headers["authorization"];
@@ -17,18 +18,18 @@ export const verifyUserMiddleware = async (
   if (!authorizationHeader) {
     const bodyResponse: BodyResponse<void> = {
       message: "Token was not provided",
-      statusCode: 400,
+      statusCode: HttpStatusCode.NotFound,
     };
-    res.status(403).json(bodyResponse);
+    res.status(bodyResponse.statusCode).json(bodyResponse);
     return;
   }
   const bearerToken = authorizationHeader.split(" ")[1];
   if (!bearerToken) {
     const bodyResponse: BodyResponse<void> = {
       message: "Unauthorized",
-      statusCode: 401,
+      statusCode: HttpStatusCode.Unauthorized,
     };
-    res.status(401).json(bodyResponse);
+    res.status(bodyResponse.statusCode).json(bodyResponse);
     return;
   }
 
@@ -36,9 +37,9 @@ export const verifyUserMiddleware = async (
   if (!isValidToken) {
     const bodyResponse: BodyResponse<void> = {
       message: "Forbidden",
-      statusCode: 403,
+      statusCode: HttpStatusCode.Forbidden,
     };
-    res.status(403).json(bodyResponse);
+    res.status(bodyResponse.statusCode).json(bodyResponse);
     return;
   }
 

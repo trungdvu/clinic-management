@@ -38,17 +38,17 @@ export class PatientRepository {
     }
   }
 
-  static async create(dto: CreatePatientDto): Promise<Patient> {
+  static async create(dto: CreatePatientDto): Promise<void> {
     try {
-      return await Patient.create(dto);
+      await Patient.create(dto);
     } catch (error) {
       throw new Error(error);
     }
   }
 
-  static async update(id: string, dto: UpdatePatientDto): Promise<any> {
+  static async update(id: string, dto: UpdatePatientDto): Promise<void> {
     try {
-      return await Patient.update(dto, {
+      await Patient.update(dto, {
         where: {
           id,
         },
@@ -58,9 +58,9 @@ export class PatientRepository {
     }
   }
 
-  static async delete(id: string): Promise<number> {
+  static async delete(id: string): Promise<void> {
     try {
-      return await Patient.destroy({
+      await Patient.destroy({
         where: {
           id,
         },

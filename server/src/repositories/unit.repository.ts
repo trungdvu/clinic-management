@@ -21,15 +21,16 @@ export class UnitRepository {
 
   static async create(dto: CreateUnitDto): Promise<Unit> {
     try {
-      return await Unit.create(dto);
+      const response: Unit = await Unit.create(dto);
+      return response;
     } catch (error) {
       throw new InternalServerError(error.message);
     }
   }
 
-  static async update(id: string, dto: UpdateUnitDto): Promise<any> {
+  static async update(id: string, dto: UpdateUnitDto): Promise<void> {
     try {
-      return await Unit.update(dto, {
+      await Unit.update(dto, {
         where: {
           id,
         },
@@ -39,9 +40,9 @@ export class UnitRepository {
     }
   }
 
-  static async delete(id: string): Promise<number> {
+  static async delete(id: string): Promise<void> {
     try {
-      return await Unit.destroy({
+      await Unit.destroy({
         where: {
           id,
         },

@@ -5,7 +5,8 @@ import { InternalServerError } from "../shared";
 export class DrugRepository {
   static async findMany(): Promise<Drug[]> {
     try {
-      return await Drug.findAll();
+      const records: Drug[] = await Drug.findAll();
+      return records;
     } catch (error) {
       throw new InternalServerError(error.message);
     }
@@ -13,7 +14,8 @@ export class DrugRepository {
 
   static async findById(id: string): Promise<Drug> {
     try {
-      return await Drug.findByPk(id);
+      const record: Drug = await Drug.findByPk(id);
+      return record;
     } catch (error) {
       throw new InternalServerError(error.message);
     }
@@ -21,15 +23,16 @@ export class DrugRepository {
 
   static async create(dto: CreateDrugDto): Promise<Drug> {
     try {
-      return await Drug.create(dto);
+      const response: Drug = await Drug.create(dto);
+      return response;
     } catch (error) {
       throw new InternalServerError(error.message);
     }
   }
 
-  static async update(id: string, dto: UpdateDrugDto): Promise<any> {
+  static async update(id: string, dto: UpdateDrugDto): Promise<void> {
     try {
-      return await Drug.update(dto, {
+      await Drug.update(dto, {
         where: {
           id,
         },
@@ -39,9 +42,9 @@ export class DrugRepository {
     }
   }
 
-  static async delete(id: string): Promise<number> {
+  static async delete(id: string): Promise<void> {
     try {
-      return await Drug.destroy({
+      await Drug.destroy({
         where: {
           id,
         },

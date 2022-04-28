@@ -52,7 +52,8 @@ export class MedicalBillRepository {
 
   static async findById(id: string): Promise<MedicalBill> {
     try {
-      return await MedicalBill.findByPk(id);
+      const record: MedicalBill = await MedicalBill.findByPk(id);
+      return record;
     } catch (error) {
       throw new InternalServerError(error.message);
     }
@@ -60,7 +61,9 @@ export class MedicalBillRepository {
 
   static async create(dto: CreateMedicalBillDto): Promise<MedicalBill> {
     try {
-      return await MedicalBill.create(dto);
+      const medicalBillResponse: MedicalBill = await MedicalBill.create(dto);
+
+      return medicalBillResponse;
     } catch (error) {
       throw new InternalServerError(error.message);
     }
