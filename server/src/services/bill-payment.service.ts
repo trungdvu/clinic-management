@@ -1,4 +1,4 @@
-import { CreateBillPaymentDto } from "../dtos";
+import { CreateBillPaymentDto, MedicalBillDetailResponse, MedicalBillResponse, PatientResponse } from "../dtos";
 import { BillPaymentSummaryResponse } from "../dtos/bill-payment/bill-payment-summary.response";
 import { FindBillPaymentsQueryParams } from "../dtos/bill-payment/find-bill-payment.query";
 import { BillPayment, MedicalBill, MedicalBillDetail, Patient } from "../models";
@@ -17,6 +17,10 @@ import {
 } from "../shared";
 import { TokenService } from "./token.service";
 import { RedisService } from "./redis.service";
+import { BillPaymentResponse } from "../dtos/bill-payment/bill-payment.response";
+import { PatientService } from "./patient.service";
+import { MedicalBillService } from "./medical-bill.service";
+import { MedicalBillDetailService } from "./medical-bill-detail.service";
 
 export class BillPaymentService {
   static async findMany(
@@ -60,6 +64,24 @@ export class BillPaymentService {
     }
     const responses: BillPaymentSummaryResponse[] = [];
     return responses
+  }
+
+  static async findById(id: string): Promise<BillPaymentResponse> {
+    try {
+      const billPayment: BillPayment = await BillPaymentRepository.findById(id);
+      const patient: PatientResponse = await PatientService.findById(billPayment.patientId)
+      const medicalBillDetail: MedicalBillDetailResponse[] = await MedicalBillDetailService.findMany(billPayment.medicalBillId)
+
+      return {
+        id: billPayment.id,
+        patient: patient,
+        medicalExamCost: billPayment.medicalExamCost,
+        drugDetails: medicalBillDetail,
+        totalDrugCost: billPayment.totalDrugCost
+      } as BillPaymentResponse;
+    } catch (error) {
+      ErrorHandler(error);
+    }
   }
 
   static async isNotExistedPatientId(patientId: string): Promise<boolean> {
@@ -151,4 +173,17 @@ export class BillPaymentService {
     const patientFounded: Patient = await PatientRepository.findById(patientId);
     return patientFounded ? false : true;
   }
+
+  static async delete(id: string): Promise<void> {
+    try {
+      const { userId } = await TokenService.decode(
+        TokenService.getCurrentToken()
+      );
+      await BillPaymentRepository.delete(id);
+      await RedisService.remove("bill-payments" + userId);
+    } catch (error) {
+      ErrorHandler(error);
+    }
+  }
+
 }
