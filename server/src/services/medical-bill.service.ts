@@ -38,7 +38,7 @@ export class MedicalBillService {
 
     try {
       const isExistedKey = await RedisService.has("medical-bills" + userId);
-      if (isExistedKey) {
+      if (isExistedKey && !query) {
         const cachedData = await RedisService.get("medical-bills" + userId);
 
         return JSON.parse(cachedData) as MedicalBillSummaryResponse[];
@@ -212,9 +212,10 @@ export class MedicalBillService {
             medicalBillResult.id,
             diseaseTypeId
           );
-          await RedisService.remove("medical-bills" + userId);
         }
       }
+
+      await RedisService.remove("medical-bills" + userId);
     } catch (error) {
       if (transaction) {
         transaction.rollback();

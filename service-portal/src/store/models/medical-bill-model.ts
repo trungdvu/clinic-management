@@ -55,11 +55,15 @@ export const medicalBillModel = createModel<RootModel>()({
     async doCreateMedicalBill(payload: NewMedicalBillPayload) {
       try {
         const endpoint = API.MEDICAL_BILLS;
-        const response = await HttpService.post(endpoint, payload);
-
-        return response.status === 200;
+        const { status } = await HttpService.post(endpoint, payload);
+        console.log('🚀 ~ status', status);
+        if (status === 200) {
+          await dispatch.medicalBillModel.doGetMoreMedicalBillSummaries(undefined);
+          return true;
+        }
       } catch (error) {
         console.log('doCreateMedicalBill', error);
+      } finally {
         return false;
       }
     },
@@ -101,13 +105,14 @@ export const medicalBillModel = createModel<RootModel>()({
 
     async doGetMoreMedicalBillSummaries(__: undefined, state) {
       try {
-        const { medicalBillSummaries, allMedicalBillSummariesPage: medicalBillSummariesPage } =
-          state.medicalBillModel;
+        const { medicalBillSummaries, allMedicalBillSummariesPage } = state.medicalBillModel;
         const endpoint = API.MEDICAL_BILLS_PARAMS({
-          page: medicalBillSummariesPage,
+          page: allMedicalBillSummariesPage,
           limit: 20,
         });
+        console.log('🚀 ~ endpoint', endpoint);
         const { data, status } = await HttpService.get(endpoint);
+        console.log('🚀 ~ data', data);
 
         if (status === 200 && !_.isEmpty(data.data)) {
           const moreMedicalBillSummaries = data.data;
@@ -136,6 +141,8 @@ export const medicalBillModel = createModel<RootModel>()({
       try {
         const endpoint = API.MEDICAL_BILLS_ID(payload);
         const { status } = await HttpService.delete(endpoint);
+        console.log('🚀 ~ status', status);
+
         if (status === 200) {
           const medicalBillSummaries = _.filter(
             state.medicalBillModel.medicalBillSummaries,
@@ -143,11 +150,10 @@ export const medicalBillModel = createModel<RootModel>()({
           );
           dispatch.medicalBillModel.setMedicalBillSummaries(medicalBillSummaries);
           return true;
-        } else {
-          return false;
         }
       } catch (error) {
         console.log('doDeleteMedicalBill', error);
+      } finally {
         return false;
       }
     },

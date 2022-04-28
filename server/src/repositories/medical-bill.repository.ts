@@ -22,6 +22,8 @@ export class MedicalBillRepository {
   ): Promise<MedicalBill[]> {
     try {
       const { patientId, page, limit } = query;
+      console.log("🚀 ~ limit", limit);
+      console.log("🚀 ~ page", page);
 
       const defaultItemPerPage = 10;
       const defaultLimit: number | undefined = limit ? limit : undefined;
@@ -29,12 +31,10 @@ export class MedicalBillRepository {
         ? page * (limit ? limit : defaultItemPerPage)
         : undefined;
 
-      return await MedicalBill.findAll({
-        where: patientId
-          ? {
-              patientId,
-            }
-          : undefined,
+      console.log("🚀 ~ defaultLimit", defaultLimit);
+      console.log("🚀 ~ defaultOffset", defaultOffset);
+
+      const result = await MedicalBill.findAll({
         include: {
           model: Patient,
           attributes: ["fullName"],
@@ -42,6 +42,9 @@ export class MedicalBillRepository {
         limit: defaultLimit,
         offset: defaultOffset,
       });
+      console.log("🚀 ~ result", result);
+
+      return result;
     } catch (error) {
       throw new InternalServerError(error.message);
     }
