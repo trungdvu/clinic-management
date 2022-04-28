@@ -5,6 +5,7 @@ import MedicalBillDetailRouter from "./medical-bill-detail.router";
 import MedicalBillRouter from "./medical-bill.router";
 import PatientRouter from "./patient.router";
 import BillPaymentRouter from "./bill-payment.router";
+import DiseaseTypeRouter from "./disease-type.router";
 
 const router = Router();
 
@@ -17,5 +18,7 @@ router.use(
   MedicalBillDetailRouter
 );
 router.use("/bill-payments", verifyUserMiddleware, BillPaymentRouter);
+
+router.use("/disease-types", verifyUserMiddleware, DiseaseTypeRouter);
 
 export default router;

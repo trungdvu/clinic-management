@@ -27,6 +27,7 @@ import { PatientService } from "./patient.service";
 import { RedisService } from "./redis.service";
 import { TokenService } from "./token.service";
 import { IdentityRepository } from "../repositories/identity.repository";
+import _ from "lodash";
 
 export class MedicalBillService {
   static async findMany(
@@ -38,7 +39,7 @@ export class MedicalBillService {
 
     try {
       const isExistedKey = await RedisService.has("medical-bills" + userId);
-      if (isExistedKey) {
+      if (isExistedKey && _.isEmpty(query)) {
         const cachedData = await RedisService.get("medical-bills" + userId);
 
         return JSON.parse(cachedData) as MedicalBillSummaryResponse[];
@@ -212,9 +213,10 @@ export class MedicalBillService {
             medicalBillResult.id,
             diseaseTypeId
           );
-          await RedisService.remove("medical-bills" + userId);
         }
       }
+
+      await RedisService.remove("medical-bills" + userId);
     } catch (error) {
       if (transaction) {
         transaction.rollback();

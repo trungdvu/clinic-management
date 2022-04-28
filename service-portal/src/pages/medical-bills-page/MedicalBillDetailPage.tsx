@@ -21,7 +21,7 @@ import _ from 'lodash';
 import moment from 'moment';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { connect } from 'react-redux';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { RootDispatch, RootState } from 'store';
 import { generateFadeInFadeOut, regExpNumber } from 'utils';
 import {} from '../../components/layouts/DetailSection';
@@ -47,6 +47,7 @@ function MedicalBillDetailPageContainer({
   loading,
   doGetMedicalBillDetails,
   doUpdateMedicalBill,
+  doDeleteMedicalBill,
 }: Props) {
   const [isConfirmDeleteModalVisible, setIsConfirmDeleteModalVisible] = useState(false);
   const [isMedicationsExpanded, setIsMedicationsExpanded] = useState(false);
@@ -54,6 +55,7 @@ function MedicalBillDetailPageContainer({
 
   const [addDrugForm] = useForm();
   const params = useParams();
+  const navigate = useNavigate();
 
   useTitle(title);
 
@@ -88,7 +90,21 @@ function MedicalBillDetailPageContainer({
     setIsConfirmDeleteModalVisible(true);
   }, []);
 
-  const onClickOkDelete = useCallback(async () => {}, []);
+  const onClickOkDelete = useCallback(async () => {
+    const result = await doDeleteMedicalBill(params.id!);
+    if (result) {
+      notification.success({
+        message: 'Deleted',
+        description: "You've successfully deleted a medical bill",
+      });
+      setTimeout(() => navigate(PAGE_ROUTES.MEDICAL_BILLS.PATH), 200);
+    } else {
+      notification.error({
+        message: 'Failed',
+        description: "Can't delete this medical bill",
+      });
+    }
+  }, [doDeleteMedicalBill, navigate, params.id]);
 
   const onClickCancelDelete = useCallback(() => {
     setIsConfirmDeleteModalVisible(false);
@@ -467,6 +483,7 @@ const mapState = (state: RootState) => ({
 const mapDispatch = (dispatch: RootDispatch) => ({
   doGetMedicalBillDetails: dispatch.medicalBillModel.doGetMedicalBillDetails,
   doUpdateMedicalBill: dispatch.medicalBillModel.doUpdateMedicalBill,
+  doDeleteMedicalBill: dispatch.medicalBillModel.doDeleteMedicalBill,
 });
 
 type PropsFromStore = ReturnType<typeof mapState> & ReturnType<typeof mapDispatch>;

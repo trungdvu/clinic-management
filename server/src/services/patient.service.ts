@@ -14,6 +14,7 @@ import { IdentityRepository, PatientRepository } from "../repositories";
 import { Patient } from "../models";
 import { RedisService } from "./redis.service";
 import { TokenService } from "./token.service";
+import _ from "lodash";
 
 export class PatientService {
   static async findMany(query: FindPatientsQuery): Promise<PatientResponse[]> {
@@ -23,7 +24,7 @@ export class PatientService {
       );
 
       const isExistedKey = await RedisService.has("patients" + userId);
-      if (isExistedKey) {
+      if (isExistedKey && _.isEmpty(query)) {
         const cachedData = await RedisService.get("patients" + userId);
 
         return JSON.parse(cachedData) as PatientResponse[];
