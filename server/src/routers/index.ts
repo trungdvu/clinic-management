@@ -13,16 +13,15 @@ const router = Router();
 
 router.use("/identities", IdentityRouter);
 router.use("/patients", verifyUserMiddleware, PatientRouter);
-router.use("/medical-bills", MedicalBillRouter);
+router.use("/medical-bills", verifyUserMiddleware, MedicalBillRouter);
 router.use(
   "/medical-bill-detail",
   verifyUserMiddleware,
   MedicalBillDetailRouter
 );
 router.use("/bill-payments", verifyUserMiddleware, BillPaymentRouter);
-router.use("/drugs", DrugRouter);
-router.use("/units", UnitRouter);
-
+router.use("/drugs", verifyUserMiddleware, DrugRouter);
+router.use("/units", verifyUserMiddleware, UnitRouter);
 router.use("/disease-types", verifyUserMiddleware, DiseaseTypeRouter);
 
 export default router;

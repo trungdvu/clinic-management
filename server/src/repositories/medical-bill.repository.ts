@@ -22,19 +22,17 @@ export class MedicalBillRepository {
   ): Promise<MedicalBill[]> {
     try {
       const { patientId, page, limit } = query;
-      console.log("🚀 ~ limit", limit);
-      console.log("🚀 ~ page", page);
-
       const defaultItemPerPage = 10;
       const defaultLimit: number | undefined = limit ? limit : undefined;
       const defaultOffset: number | undefined = page
         ? page * (limit ? limit : defaultItemPerPage)
         : undefined;
 
-      console.log("🚀 ~ defaultLimit", defaultLimit);
-      console.log("🚀 ~ defaultOffset", defaultOffset);
-
-      const result = await MedicalBill.findAll({
+      const records = await MedicalBill.findAll({
+        where: {
+          creatorId: userId,
+          patientId: patientId ?? undefined,
+        },
         include: {
           model: Patient,
           attributes: ["fullName"],
@@ -42,9 +40,8 @@ export class MedicalBillRepository {
         limit: defaultLimit,
         offset: defaultOffset,
       });
-      console.log("🚀 ~ result", result);
 
-      return result;
+      return records;
     } catch (error) {
       throw new InternalServerError(error.message);
     }
