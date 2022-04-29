@@ -19,7 +19,6 @@ export class PatientRepository {
 
       return await Patient.findAll({
         where: {
-          creatorId: userId,
           fullName: { [Op.like]: `%${text || ""}%` },
         },
         limit: defaultLimit,
