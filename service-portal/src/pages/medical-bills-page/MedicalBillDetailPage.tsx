@@ -16,7 +16,7 @@ import {
 import { PAGE_ROUTES } from 'consts';
 import { motion } from 'framer-motion';
 import { useTitle } from 'hooks';
-import { MedicalBillDetail, UpdateMedicalBillPayload } from 'interfaces';
+import { DiseaseType, MedicalBillDetail, UpdateMedicalBillPayload } from 'interfaces';
 import _ from 'lodash';
 import moment from 'moment';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -28,6 +28,7 @@ import {} from '../../components/layouts/DetailSection';
 import { EditableDrugRow } from './components/EditTableDrugRow';
 import { EmptyDrugs } from './components/EmptyDrug';
 import { StatusTimeLine } from './components/StatusTimeLine';
+import './styles/MedicalBillDetailPage.css';
 
 const { Option } = Select;
 
@@ -37,21 +38,20 @@ interface Props extends PropsFromStore {
   title?: string;
 }
 
-const children: any = [];
-for (let i = 10; i < 36; i++) {
-  children.push(<Option key={i.toString(36) + i}>{i.toString(36) + i}</Option>);
-}
-
 function MedicalBillDetailPageContainer({
   title,
   loading,
   doGetMedicalBillDetails,
   doUpdateMedicalBill,
   doDeleteMedicalBill,
+  doGetDrugs,
+  doGetDiseaseTypes,
 }: Props) {
   const [isConfirmDeleteModalVisible, setIsConfirmDeleteModalVisible] = useState(false);
   const [isMedicationsExpanded, setIsMedicationsExpanded] = useState(false);
   const [billDetail, setMedicalBillDetail] = useState<MedicalBillDetail>();
+  const [diseaseTypes, setDiseaseTypes] = useState<DiseaseType[]>([]);
+  const [isStarting, setIsStarting] = useState(false);
 
   const [addDrugForm] = useForm();
   const params = useParams();
@@ -60,21 +60,33 @@ function MedicalBillDetailPageContainer({
   useTitle(title);
 
   useEffect(() => {
-    doGetMedicalBillDetails(params.id || '').then((res) => {
-      if (res === false) {
-        notification.error({
-          message: 'Failed',
-          description: 'Not founded the medical bill details.',
-        });
-      } else {
-        setMedicalBillDetail(res);
-      }
-    });
-  }, [doGetMedicalBillDetails, params]);
+    fetchData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     setIsMedicationsExpanded(false);
   }, [billDetail]);
+
+  const fetchData = useCallback(async () => {
+    const result = await doGetMedicalBillDetails(params.id || '');
+    if (result === false) {
+      notification.error({
+        message: 'Failed',
+        description: 'Not founded the medical bill details.',
+      });
+    } else {
+      setMedicalBillDetail(result);
+
+      const diseaseTypes = await doGetDiseaseTypes();
+      diseaseTypes === false
+        ? notification.error({
+            message: 'Failed',
+            description: 'Not founded disease type',
+          })
+        : setDiseaseTypes(diseaseTypes);
+    }
+  }, [doGetDiseaseTypes, doGetMedicalBillDetails, params.id]);
 
   const totalPrice = useMemo(() => {
     return _.reduce(
@@ -85,6 +97,8 @@ function MedicalBillDetailPageContainer({
       0,
     );
   }, [billDetail?.drugDetails]);
+
+  const drugsObj = useMemo(() => _.keyBy(diseaseTypes, 'id'), [diseaseTypes]);
 
   const onClickDelete = useCallback(() => {
     setIsConfirmDeleteModalVisible(true);
@@ -170,6 +184,61 @@ function MedicalBillDetailPageContainer({
     [billDetail, doUpdateMedicalBill, params.id],
   );
 
+  const onSaveActualResults = useCallback(
+    async (values: string[]) => {
+      const oldDiseaseTypeIds = billDetail!.diseaseTypes;
+      const updatedBillDetail = {
+        ...billDetail!,
+        diseaseTypes: _.map(values, (value) => ({
+          id: value,
+          description: drugsObj[value].description,
+        })),
+      };
+
+      setMedicalBillDetail(updatedBillDetail);
+
+      const payload: UpdateMedicalBillPayload = {
+        id: params.id!,
+        body: { diseaseTypeIds: values },
+      };
+
+      const result = await doUpdateMedicalBill(payload);
+      if (!result) {
+        notification.error({
+          message: 'Failed',
+          description: 'Ops! Something went wrong',
+        });
+        setMedicalBillDetail({ ...billDetail!, diseaseTypes: oldDiseaseTypeIds });
+      }
+    },
+    [billDetail, doUpdateMedicalBill, drugsObj, params.id],
+  );
+
+  const onClickStart = useCallback(async () => {
+    setIsStarting(true);
+
+    const result = await doUpdateMedicalBill({
+      id: params.id!,
+      body: {
+        status: 'active',
+      },
+    });
+    if (result) {
+      notification.success({
+        message: 'Started',
+        description: 'The medical bill has been started',
+      });
+      setMedicalBillDetail({ ...billDetail!, status: 'active' });
+    } else {
+      notification.error({
+        message: 'Failed',
+        description: 'Ops! Something went wrong',
+      });
+    }
+
+    setIsStarting(false);
+  }, [billDetail, doUpdateMedicalBill, params.id]);
+
   return (
     <motion.div
       variants={generateFadeInFadeOut()}
@@ -201,7 +270,7 @@ function MedicalBillDetailPageContainer({
         <>
           {billDetail ? (
             <>
-              <StatusTimeLine status="pending" />
+              <StatusTimeLine status={billDetail.status} />
               <Row gutter={24} align="top" className="mt-8">
                 <Col span={4}>
                   <Image
@@ -247,7 +316,7 @@ function MedicalBillDetailPageContainer({
                         SYSTOMS
                       </Text>
                     </Col>
-                    <Col span={12}>
+                    <Col span={16}>
                       <EditableParagrahp
                         text={billDetail.symptomDescription}
                         onSave={onSaveSymtoms}
@@ -260,7 +329,7 @@ function MedicalBillDetailPageContainer({
                         PREDICTION
                       </Text>
                     </Col>
-                    <Col span={12}>
+                    <Col span={16}>
                       <EditableParagrahp
                         text={billDetail.prediction}
                         placeholder="Not set"
@@ -271,31 +340,24 @@ function MedicalBillDetailPageContainer({
                   <Row gutter={24} align="top" className="mt-4">
                     <Col span={6} className="mt-1">
                       <Text type="secondary" className="font-medium">
-                        ACTUAL RESULT
+                        ACTUAL RESULTS
                       </Text>
                     </Col>
-                    <Col span={12}>
-                      <EditableParagrahp
-                        text={_.map(billDetail.diseaseTypes, (d) => d.description).join(', ')}
-                        placeholder="Not set"
-                        onSave={async () => {}}
-                      />
-                    </Col>
-                  </Row>
-                  <Row gutter={24} align="top" className="mt-4">
-                    <Col span={6} className="mt-1">
-                      <Text type="secondary" className="font-medium">
-                        TEST EDITABLE SELECT
-                      </Text>
-                    </Col>
-                    <Col span={12}>
+                    <Col span={16}>
                       <EditableSelect
+                        value={_.map(billDetail.diseaseTypes, (d) => d.id)}
+                        showSearch={false}
                         mode="multiple"
                         size="large"
                         placeholder="Select diseases"
-                        className="w-full"
+                        className="w-full select-disease"
+                        onSave={onSaveActualResults}
                       >
-                        {children}
+                        {_.map(diseaseTypes, (d) => (
+                          <Option key={d.id}>
+                            <Text className="text-sm">{d.description}</Text>
+                          </Option>
+                        ))}
                       </EditableSelect>
                     </Col>
                   </Row>
@@ -447,7 +509,9 @@ function MedicalBillDetailPageContainer({
                   </Row>
                 </div>
                 <div className="flex items-center gap-4 mt-4 bg-opacity-5 bg-black py-5 px-5">
-                  <PrimaryButton className="px-10">Start</PrimaryButton>
+                  <PrimaryButton className="px-10" onClick={onClickStart} loading={isStarting}>
+                    {billDetail.status === 'pending' ? 'Start' : 'Finish'}
+                  </PrimaryButton>
                   <SecondaryButton
                     disabled={billDetail.status !== 'pending'}
                     className={'flex items-center disabled:cursor-not-allowed'}
@@ -484,6 +548,8 @@ const mapDispatch = (dispatch: RootDispatch) => ({
   doGetMedicalBillDetails: dispatch.medicalBillModel.doGetMedicalBillDetails,
   doUpdateMedicalBill: dispatch.medicalBillModel.doUpdateMedicalBill,
   doDeleteMedicalBill: dispatch.medicalBillModel.doDeleteMedicalBill,
+  doGetDrugs: dispatch.drugModel.doGetDrugs,
+  doGetDiseaseTypes: dispatch.diseaseTypeModel.doGetDiseaseTypes,
 });
 
 type PropsFromStore = ReturnType<typeof mapState> & ReturnType<typeof mapDispatch>;

@@ -17,6 +17,7 @@ export interface NewMedicalBillPayload {
 export interface UpdateMedicalBillPayload {
   id: string;
   body: {
+    diseaseTypeIds?: string[];
     symptomDescription?: string;
     prediction?: string;
     status?: MedicalBillStatus;

@@ -1,0 +1,4 @@
+.select-disease .ant-select-selection-item-content {
+  display: flex !important;
+  align-items: center !important;
+}

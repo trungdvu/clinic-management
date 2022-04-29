@@ -2,12 +2,14 @@ import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import { Select } from 'antd';
 import { SelectProps } from 'antd/es/select';
 import classNames from 'classnames';
+import { useClickOutside } from 'hooks';
+import _ from 'lodash';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { IconButton } from '../buttons';
 import './EditableSelect.css';
 
 interface Props<ValueType = any> extends SelectProps<ValueType> {
-  onSave?: (value: any) => Promise<void>;
+  onSave?: (value: any) => void | Promise<void>;
 }
 
 export function EditableSelect<
@@ -25,6 +27,8 @@ export function EditableSelect<
     }
   }, [editing]);
 
+  useClickOutside(containerRef, () => onCancel());
+
   const onClick = useCallback(() => {
     setEditing(true);
   }, []);
@@ -39,13 +43,21 @@ export function EditableSelect<
   }, [onSave, value]);
 
   const onCancel = useCallback(() => {
+    setValue(defaultValue);
     setEditing(false);
-  }, []);
+  }, [defaultValue]);
 
   const onFilterOption = useCallback(
     (input: string, option: any) =>
       option.children.toLowerCase().indexOf(input.trim().toLowerCase()) >= 0,
     [],
+  );
+
+  const onDeselect = useCallback(
+    (preDeletedValue: any) => {
+      !editing && onSave?.(_.filter(value, (v) => v !== preDeletedValue));
+    },
+    [editing, onSave, value],
   );
 
   return (
@@ -63,6 +75,7 @@ export function EditableSelect<
         onChange={onChange}
         onClick={onClick}
         onBlur={_onSave}
+        onDeselect={onDeselect}
         className={classNames(
           'editable-select transition-all duration-150',
           {

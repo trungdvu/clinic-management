@@ -9,7 +9,6 @@ import { RootDispatch, RootState } from 'store';
 import { defaultLayoutVariants } from 'utils';
 import { MedicalBillSummaries } from './components/MedicalBillSummaries';
 import { NewMedicalBillModal } from './components/NewMedicalBillModal';
-import './MedicalBillsPage.css';
 
 const { Search } = Input;
 const { TabPane } = Tabs;
@@ -74,9 +73,8 @@ const MedicalBillPageContainer = ({ title, setHasMore, doGetMoreMedicalBillSumma
                 allowClear={false}
                 format={'d MMMM'}
                 suffixIcon={<DownOutlined className="text-tertiary" />}
-                className="border-transparent bg-link bg-opacity-10"
               />
-              <Search placeholder="Patient name" className="w-80 bg-opacity-5" />
+              <Search placeholder="Patient name" className="w-80" />
             </div>
 
             <div className="h-px bg-brd" />
