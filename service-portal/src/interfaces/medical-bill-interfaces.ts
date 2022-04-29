@@ -23,6 +23,11 @@ export interface UpdateMedicalBillPayload {
   };
 }
 
+export interface GetMoreMedicalBillSummariesPayload {
+  page?: number;
+  limit?: number;
+}
+
 export interface MedicalBillSumary {
   id: string;
   diseaseTypeId: string;

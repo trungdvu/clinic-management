@@ -19,20 +19,14 @@ interface Props extends PropsFromStore {
   title?: string;
 }
 
-const MedicalBillPageContainer = ({
-  title,
-  loading,
-  setHasMore,
-  doGetMedicalBillSumarries,
-  doGetMoreMedicalBillSummaries,
-}: Props) => {
+const MedicalBillPageContainer = ({ title, setHasMore, doGetMoreMedicalBillSummaries }: Props) => {
   const [isCreateMedicalBillVisible, setIsCreateMedicalBillVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     setIsLoading(true);
     setHasMore({ key: 'allMedicalBillSummariesHasMore', value: true });
-    doGetMoreMedicalBillSummaries(undefined).then(() => setIsLoading(false));
+    doGetMoreMedicalBillSummaries({}).then(() => setIsLoading(false));
   }, [doGetMoreMedicalBillSummaries, setHasMore]);
 
   useTitle(title);
@@ -94,13 +88,10 @@ const MedicalBillPageContainer = ({
   );
 };
 
-const mapState = (state: RootState) => ({
-  loading: state.loading.effects.medicalBillModel,
-});
+const mapState = (state: RootState) => ({});
 
 const mapDispatch = (dispatch: RootDispatch) => ({
   setHasMore: dispatch.medicalBillModel.setHasMore,
-  doGetMedicalBillSumarries: dispatch.medicalBillModel.doGetMedicalBillSummaries,
   doGetMoreMedicalBillSummaries: dispatch.medicalBillModel.doGetMoreMedicalBillSummaries,
 });
 

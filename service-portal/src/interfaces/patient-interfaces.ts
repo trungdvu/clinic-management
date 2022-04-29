@@ -17,3 +17,9 @@ export interface CreatePatientPayload {
   address?: string;
   creatorId: string;
 }
+
+export interface GetMorePatientPayload {
+  page?: number;
+  text?: number;
+  limit?: number;
+}
