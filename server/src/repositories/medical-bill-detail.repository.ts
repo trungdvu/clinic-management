@@ -15,6 +15,7 @@ export class MedicalBillDetailRepository {
         where: {
           medicalBillId,
         },
+        order: [["createdAt", "DESC"]],
       });
     } catch (error) {
       throw new InternalServerError(error.message);

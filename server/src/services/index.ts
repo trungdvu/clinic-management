@@ -8,3 +8,4 @@ export * from "./redis.service";
 export * from "./disease-type.service";
 export * from "./drug.service";
 export * from "./unit.service";
+export * from "./usage.service";

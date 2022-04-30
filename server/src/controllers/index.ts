@@ -6,3 +6,4 @@ export * from "./bill-payment.controller";
 export * from "./disease-type.controller";
 export * from "./drug.controller";
 export * from "./unit.controller";
+export * from "./usage.controller";
