@@ -239,23 +239,19 @@ export class MedicalBillService {
       const { diseaseTypeIds } = dto;
 
       if (diseaseTypeIds) {
-        const isDeleteAllDiseaseType: boolean = await MedicalBillDiseaseTypeRepository.deleteByMedicalBillId(
-          id
-        );
-        console.log("isDeleteAllDiseaseType", isDeleteAllDiseaseType);
-        if (isDeleteAllDiseaseType) {
-          for (const diseaseTypeId of diseaseTypeIds) {
-            const diseaseTypeIdNotExisted = await this.isDiseaseTypeNotExisted(
-              diseaseTypeId
-            );
-            if (diseaseTypeIdNotExisted) {
-              throw new BadRequestError(
-                `DiseaseType id: ${diseaseTypeId} was not existed`
-              );
-            }
+        await MedicalBillDiseaseTypeRepository.deleteByMedicalBillId(id);
 
-            await MedicalBillDiseaseTypeRepository.create(id, diseaseTypeId);
+        for (const diseaseTypeId of diseaseTypeIds) {
+          const diseaseTypeIdNotExisted = await this.isDiseaseTypeNotExisted(
+            diseaseTypeId
+          );
+          if (diseaseTypeIdNotExisted) {
+            throw new BadRequestError(
+              `DiseaseType id: ${diseaseTypeId} was not existed`
+            );
           }
+
+          await MedicalBillDiseaseTypeRepository.create(id, diseaseTypeId);
         }
       }
 
