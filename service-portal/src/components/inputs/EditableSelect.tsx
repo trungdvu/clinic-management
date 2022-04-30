@@ -2,7 +2,6 @@ import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import { Select } from 'antd';
 import { SelectProps } from 'antd/es/select';
 import classNames from 'classnames';
-import { useClickOutside } from 'hooks';
 import _ from 'lodash';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { IconButton } from '../buttons';
@@ -15,19 +14,16 @@ interface Props<ValueType = any> extends SelectProps<ValueType> {
 export function EditableSelect<
   ValueType extends { key?: string; label: string | JSX.Element; value: string | number } = any,
 >({ value: defaultValue, className, children, onSave, ...props }: Props) {
+  const [isBlurable, setIsBlurable] = useState(true);
   const [editing, setEditing] = useState(false);
   const [value, setValue] = useState(defaultValue);
   const selectRef = useRef<any>(null);
-  const containerRef = useRef<any>(null);
 
   useEffect(() => {
     if (editing) {
       selectRef.current?.focus?.();
-      containerRef.current?.focus?.();
     }
   }, [editing]);
-
-  useClickOutside(containerRef, () => onCancel());
 
   const onClick = useCallback(() => {
     setEditing(true);
@@ -60,9 +56,12 @@ export function EditableSelect<
     [editing, onSave, value],
   );
 
+  const onBlur = useCallback(() => {
+    isBlurable && onCancel();
+  }, [isBlurable, onCancel]);
+
   return (
     <div
-      ref={containerRef}
       className={classNames('relative w-full rounded-sm', {
         'bg-black bg-opacity-5': editing,
       })}
@@ -75,12 +74,13 @@ export function EditableSelect<
         filterOption={onFilterOption}
         onChange={onChange}
         onClick={onClick}
+        onBlur={onBlur}
         onDeselect={onDeselect}
         className={classNames(
           'editable-select transition-all duration-150',
           {
             'shadow-none hover:bg-black hover:bg-opacity-5': !editing,
-            'bg-white bg-opacity-100 shadow-current': editing,
+            'bg-white bg-opacity-100 rounded-sm': editing,
           },
           className,
         )}
@@ -89,6 +89,8 @@ export function EditableSelect<
         {children}
       </Select>
       <div
+        onMouseEnter={() => setIsBlurable(false)}
+        onMouseLeave={() => setIsBlurable(true)}
         className={classNames(
           'absolute transition-opacity duration-150 flex items-center gap-1 -mt-2 top-0 right-0 transform -translate-y-full',
           {
@@ -101,13 +103,13 @@ export function EditableSelect<
           shape="default"
           icon={<CheckOutlined />}
           className="rounded shadow"
-          onClick={_onSave}
+          onMouseDown={_onSave}
         />
         <IconButton
           shape="default"
           icon={<CloseOutlined />}
           className="rounded shadow"
-          onClick={onCancel}
+          onMouseDown={onCancel}
         />
       </div>
     </div>

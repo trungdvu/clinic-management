@@ -2,7 +2,7 @@ import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import Input, { InputRef } from 'antd/lib/input';
 import classNames from 'classnames';
 import { IconButton } from 'components/buttons';
-import { useClickOutside } from 'hooks';
+import { useOnClickOutside } from 'hooks';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
 
 interface Props {
@@ -26,7 +26,7 @@ export const EditableText = memo(({ text, onSave }: Props) => {
     }
   }, [editing]);
 
-  useClickOutside(containerRef, () => onCancel());
+  useOnClickOutside(containerRef, () => onCancel());
 
   const onClick = useCallback(() => {
     setEditing(true);

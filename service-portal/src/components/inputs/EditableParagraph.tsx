@@ -2,7 +2,7 @@ import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import TextArea, { TextAreaRef } from 'antd/lib/input/TextArea';
 import classNames from 'classnames';
 import { IconButton } from 'components/buttons';
-import { useClickOutside } from 'hooks';
+import { useOnClickOutside } from 'hooks';
 import { memo, useCallback, useEffect, useRef, useState } from 'react';
 
 interface Props {
@@ -27,7 +27,7 @@ export const EditableParagrahp = memo(({ text, placeholder, onSave }: Props) => 
     }
   }, [editing]);
 
-  useClickOutside(containerRef, () => onCancel());
+  useOnClickOutside(containerRef, () => onCancel());
 
   const onClick = useCallback(() => {
     setEditing(true);

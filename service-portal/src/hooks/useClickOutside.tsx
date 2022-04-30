@@ -1,22 +1,19 @@
 import { useEffect } from 'react';
 
-export function useClickOutside(ref: any, cb: Function) {
+export function useOnClickOutside(ref: any, handler: any) {
   useEffect(() => {
-    function handleClickOutside(event: any) {
-      const className = event.toElement?.className;
-
-      if (
-        ref.current &&
-        !ref.current.contains(event.target) &&
-        !className?.contains('ant-select-item-option')
-      ) {
-        cb();
+    const listener = (event: any) => {
+      if (!ref.current || ref.current.contains?.(event.target)) {
+        return;
       }
-    }
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      handler(event);
     };
-  }, [cb, ref]);
+    document.addEventListener('mousedown', listener);
+    document.addEventListener('touchstart', listener);
+
+    return () => {
+      document.removeEventListener('mousedown', listener);
+      document.removeEventListener('touchstart', listener);
+    };
+  }, [ref, handler]);
 }
