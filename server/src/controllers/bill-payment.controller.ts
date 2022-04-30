@@ -1,10 +1,11 @@
 import { Request, Response } from "express";
 import { CreateBillPaymentDto } from "../dtos";
+import { BillPaymentSummaryResponse } from "../dtos/bill-payment/bill-payment-summary.response";
 import { BillPaymentResponse } from "../dtos/bill-payment/bill-payment.response";
 import { FindBillPaymentsQueryParams } from "../dtos/bill-payment/find-bill-payment.query";
 import { UpdateBillPaymentDto } from "../dtos/bill-payment/update.dto";
 import { BillPaymentService } from "../services";
-import { BodyResponse, ErrorResponseHandler } from "../shared";
+import { BodyResponse, ErrorResponseHandler, HttpStatusCode } from "../shared";
 
 export class BillPaymentController {
   static async findById(req: Request, res: Response): Promise<void> {
@@ -29,6 +30,13 @@ export class BillPaymentController {
       const billPaymentSummaryResponses = await BillPaymentService.findMany(
         query
       );
+      const bodyResponse: BodyResponse<BillPaymentSummaryResponse[]> = {
+        message: "Execute Successfully",
+        data: billPaymentSummaryResponses,
+        statusCode: HttpStatusCode.OK,
+      };
+
+      res.status(bodyResponse.statusCode).json(bodyResponse);
     } catch (error) {
       ErrorResponseHandler(error, res);
     }
