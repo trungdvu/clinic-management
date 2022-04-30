@@ -32,7 +32,7 @@ export class MedicalBillDetailService {
       const medicalBillDetailResponses: MedicalBillDetailResponse[] = [];
 
       for (const record of medicalBillDetailRecords) {
-        const availableUnits: UnitResponse[] = await this.findAvailableUnits(
+        const availableUnits: UnitResponse[] = await this.findAvailableUnitResponses(
           record.drugId
         );
 
@@ -74,7 +74,9 @@ export class MedicalBillDetailService {
     }
   }
 
-  static async findAvailableUnits(drugId: string): Promise<UnitResponse[]> {
+  static async findAvailableUnitResponses(
+    drugId: string
+  ): Promise<UnitResponse[]> {
     const drugTypes: DrugType[] = await DrugTypeRepository.findManyByDrugId(
       drugId
     );

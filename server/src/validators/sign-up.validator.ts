@@ -1,6 +1,6 @@
 import joi, { ObjectSchema } from "@hapi/joi";
 import { NextFunction, Request, Response } from "express";
-import { BodyResponse } from "../shared";
+import { BodyResponse, HttpStatusCode } from "../shared";
 
 interface SignUpValidationSchema {
   email: string;
@@ -66,7 +66,7 @@ export const signUpRequestValidatorMiddleware = (
   if (error) {
     const bodyResponse: BodyResponse<void> = {
       message: error.message,
-      statusCode: 400,
+      statusCode: HttpStatusCode.BadRequest,
     };
 
     res.status(bodyResponse.statusCode).json(bodyResponse);

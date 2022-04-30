@@ -8,6 +8,12 @@ export function toParamsUrl(params: any) {
   return url;
 }
 
+export function uniqueBy<T>(arr: T[], attribute: keyof T) {
+  return arr.filter(function (this: any, item: any) {
+    return !this.has(item[attribute]) && this.add(item[attribute]);
+  }, new Set());
+}
+
 export const regExpNumber = new RegExp(
   /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
 );

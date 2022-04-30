@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { CreateBillPaymentDto } from "../dtos";
 import { BillPaymentResponse } from "../dtos/bill-payment/bill-payment.response";
 import { FindBillPaymentsQueryParams } from "../dtos/bill-payment/find-bill-payment.query";
+import { UpdateBillPaymentDto } from "../dtos/bill-payment/update.dto";
 import { BillPaymentService } from "../services";
 import { BodyResponse, ErrorResponseHandler } from "../shared";
 
@@ -48,6 +49,25 @@ export class BillPaymentController {
       ErrorResponseHandler(error, res);
     }
   }
+
+  static async update(req: Request, res: Response): Promise<void> {
+    try {
+      const { id } = req.params;
+      const body: UpdateBillPaymentDto = req.body;
+
+      await BillPaymentService.update(id, body);
+
+      const bodyResponse: BodyResponse<void> = {
+        message: "Execute Successfully",
+        statusCode: 200,
+      };
+
+      res.status(bodyResponse.statusCode).json(bodyResponse);
+    } catch (error) {
+      ErrorResponseHandler(error, res);
+    }
+  }
+
   static async delete(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;

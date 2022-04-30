@@ -8,7 +8,7 @@ import { memo, useCallback, useEffect, useRef, useState } from 'react';
 interface Props {
   text: string;
   placeholder?: string;
-  onSave: (text: string) => Promise<void>;
+  onSave: (text: string) => void | Promise<void>;
 }
 
 export const EditableParagrahp = memo(({ text, placeholder, onSave }: Props) => {
@@ -27,7 +27,7 @@ export const EditableParagrahp = memo(({ text, placeholder, onSave }: Props) => 
     }
   }, [editing]);
 
-  useClickOutside(containerRef, () => setEditing(false));
+  useClickOutside(containerRef, () => onCancel());
 
   const onClick = useCallback(() => {
     setEditing(true);

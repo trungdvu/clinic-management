@@ -8,3 +8,5 @@ export * from "./unit";
 export * from "./usage";
 export * from "./disease-type";
 export * from "./bill-payment";
+export * from "./reports";
+export * from "./input";

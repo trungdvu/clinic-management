@@ -24,7 +24,8 @@ export class BillPaymentRepository {
   }
   static async create(dto: CreateBillPaymentDto): Promise<BillPayment> {
     try {
-      return await BillPayment.create(dto);
+      const record: BillPayment = await BillPayment.create(dto);
+      return record;
     } catch (error) {
       throw new InternalServerError(error.message);
     }

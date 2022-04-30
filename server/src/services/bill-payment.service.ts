@@ -19,8 +19,8 @@ import { TokenService } from "./token.service";
 import { RedisService } from "./redis.service";
 import { BillPaymentResponse } from "../dtos/bill-payment/bill-payment.response";
 import { PatientService } from "./patient.service";
-import { MedicalBillService } from "./medical-bill.service";
 import { MedicalBillDetailService } from "./medical-bill-detail.service";
+import { UpdateBillPaymentDto } from "../dtos/bill-payment/update.dto";
 
 export class BillPaymentService {
   static async findMany(
@@ -64,6 +64,14 @@ export class BillPaymentService {
     }
     const responses: BillPaymentSummaryResponse[] = [];
     return responses
+  }
+
+  static async update(id: string, dto: UpdateBillPaymentDto): Promise<string> {
+    try {
+      return await BillPaymentRepository.update(id, dto);
+    } catch (error) {
+      ErrorHandler(error);
+    }
   }
 
   static async findById(id: string): Promise<BillPaymentResponse> {

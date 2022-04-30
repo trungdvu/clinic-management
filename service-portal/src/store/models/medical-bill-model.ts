@@ -1,6 +1,7 @@
 import { createModel } from '@rematch/core';
 import { API } from 'consts';
 import {
+  GetMoreMedicalBillSummariesPayload,
   MedicalBillDetail,
   MedicalBillSumary,
   NewMedicalBillPayload,
@@ -8,6 +9,7 @@ import {
 } from 'interfaces';
 import _ from 'lodash';
 import { HttpService } from 'services';
+import { uniqueBy } from 'utils';
 import { RootModel } from '.';
 
 type Page = 'allMedicalBillSummariesPage';
@@ -37,6 +39,10 @@ export const medicalBillModel = createModel<RootModel>()({
       ...state,
       selectedMedicalBillId: payload,
     }),
+    setPage: (state, payload: { key: Page; value: number }) => ({
+      ...state,
+      [payload.key]: payload.value,
+    }),
     increasePage: (state, payload: Page) => ({
       ...state,
       [payload]: state[payload] + 1,
@@ -52,12 +58,31 @@ export const medicalBillModel = createModel<RootModel>()({
   },
 
   effects: (dispatch) => ({
-    async doCreateMedicalBill(payload: NewMedicalBillPayload) {
+    async doCreateMedicalBill(payload: NewMedicalBillPayload, state) {
       try {
-        const endpoint = API.MEDICAL_BILLS;
-        const response = await HttpService.post(endpoint, payload);
+        const { allMedicalBillSummariesPage } = state.medicalBillModel;
+        const page =
+          allMedicalBillSummariesPage > 0
+            ? allMedicalBillSummariesPage - 1
+            : allMedicalBillSummariesPage;
 
-        return response.status === 200;
+        dispatch.medicalBillModel.setPage({
+          key: 'allMedicalBillSummariesPage',
+          value: page,
+        });
+        dispatch.medicalBillModel.setHasMore({
+          key: 'allMedicalBillSummariesHasMore',
+          value: true,
+        });
+
+        const endpoint = API.MEDICAL_BILLS;
+        const { status } = await HttpService.post(endpoint, payload);
+
+        if (status === 200) {
+          await dispatch.medicalBillModel.doGetMoreMedicalBillSummaries({ page });
+          return true;
+        }
+        return false;
       } catch (error) {
         console.log('doCreateMedicalBill', error);
         return false;
@@ -90,34 +115,30 @@ export const medicalBillModel = createModel<RootModel>()({
           const medicalBills = data.data;
           dispatch.medicalBillModel.setMedicalBillSummaries(medicalBills);
           return medicalBills;
-        } else {
-          return false;
         }
+        return false;
       } catch (error) {
-        console.log('doGetMedicalBill', error);
+        console.log('doGetMedicalBillSummaries', error);
         return false;
       }
     },
 
-    async doGetMoreMedicalBillSummaries(__: undefined, state) {
+    async doGetMoreMedicalBillSummaries(payload: GetMoreMedicalBillSummariesPayload, state) {
       try {
-        const { medicalBillSummaries, allMedicalBillSummariesPage: medicalBillSummariesPage } =
-          state.medicalBillModel;
+        const { medicalBillSummaries, allMedicalBillSummariesPage } = state.medicalBillModel;
         const endpoint = API.MEDICAL_BILLS_PARAMS({
-          page: medicalBillSummariesPage,
-          limit: 20,
+          page: payload.page ?? allMedicalBillSummariesPage,
+          limit: payload.limit ?? 20,
         });
         const { data, status } = await HttpService.get(endpoint);
 
         if (status === 200 && !_.isEmpty(data.data)) {
-          const moreMedicalBillSummaries = data.data;
+          const moreMedicalBillSummaries: MedicalBillSumary[] = data.data;
 
-          dispatch.medicalBillModel.setMedicalBillSummaries([
-            ...medicalBillSummaries,
-            ...moreMedicalBillSummaries,
-          ]);
+          dispatch.medicalBillModel.setMedicalBillSummaries(
+            uniqueBy([...medicalBillSummaries, ...moreMedicalBillSummaries], 'id'),
+          );
           dispatch.medicalBillModel.increasePage('allMedicalBillSummariesPage');
-
           return moreMedicalBillSummaries;
         } else {
           dispatch.medicalBillModel.setHasMore({
@@ -136,6 +157,7 @@ export const medicalBillModel = createModel<RootModel>()({
       try {
         const endpoint = API.MEDICAL_BILLS_ID(payload);
         const { status } = await HttpService.delete(endpoint);
+
         if (status === 200) {
           const medicalBillSummaries = _.filter(
             state.medicalBillModel.medicalBillSummaries,
@@ -143,9 +165,8 @@ export const medicalBillModel = createModel<RootModel>()({
           );
           dispatch.medicalBillModel.setMedicalBillSummaries(medicalBillSummaries);
           return true;
-        } else {
-          return false;
         }
+        return false;
       } catch (error) {
         console.log('doDeleteMedicalBill', error);
         return false;

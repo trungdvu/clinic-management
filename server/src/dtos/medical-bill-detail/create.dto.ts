@@ -1,4 +1,5 @@
 export interface DrugInformation {
+  id: string;
   drugId: string;
   unitId: string;
   usageId: string;

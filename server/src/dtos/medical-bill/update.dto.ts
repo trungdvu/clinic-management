@@ -1,8 +1,8 @@
+import { MedicalBillStatus } from "../../models";
+
 export interface UpdateMedicalBillDto {
-  diseaseTypeId?: string;
+  diseaseTypeIds?: string[];
   symptomDescription?: string;
   prediction?: string;
-  drugId?: string;
-  unitId?: string;
-  quantity?: number;
+  status?: MedicalBillStatus;
 }

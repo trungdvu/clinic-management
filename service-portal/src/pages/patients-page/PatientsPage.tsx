@@ -21,6 +21,7 @@ interface Props extends PropsFromStore {
 function PatientsPageContainer({
   title,
   patients,
+  allPatientsPage,
   allPatientsHasMore,
   setHasMore,
   doGetMorePatients,
@@ -35,7 +36,7 @@ function PatientsPageContainer({
   useEffect(() => {
     setIsLoading(true);
     setHasMore({ key: 'allPatientsHasMore', value: true });
-    doGetMorePatients('').then(() => setIsLoading(false));
+    doGetMorePatients({}).then(() => setIsLoading(false));
   }, [doGetMorePatients, setHasMore]);
 
   const onClickCreatePatient = useCallback(() => {
@@ -58,9 +59,9 @@ function PatientsPageContainer({
       return;
     }
     setIsLoadingMore(true);
-    await doGetMorePatients(undefined);
+    await doGetMorePatients({ page: allPatientsPage });
     setIsLoadingMore(false);
-  }, [doGetMorePatients, isLoadingMore]);
+  }, [allPatientsPage, doGetMorePatients, isLoadingMore]);
 
   return (
     <motion.div
@@ -140,6 +141,7 @@ function PatientsPageContainer({
 const mapState = (state: RootState) => ({
   patients: state.patientModel.patients,
   allPatientsHasMore: state.patientModel.allPatientsHasMore,
+  allPatientsPage: state.patientModel.allPatientsPage,
   loading: state.loading.effects.patientModel,
 });
 

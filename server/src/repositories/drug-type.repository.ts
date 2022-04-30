@@ -4,7 +4,7 @@ import { InternalServerError } from "../shared";
 export class DrugTypeRepository {
   static async findManyByDrugId(drugId: string): Promise<DrugType[]> {
     try {
-      return await DrugType.findAll({
+      const records: DrugType[] = await DrugType.findAll({
         where: {
           drugId,
         },
@@ -13,6 +13,7 @@ export class DrugTypeRepository {
           attributes: ["id", "description"],
         },
       });
+      return records;
     } catch (error) {
       throw new InternalServerError(error.message);
     }

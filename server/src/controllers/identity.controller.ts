@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { SignInDto, SignInResponse, SignUpDto } from "../dtos";
 import { IdentityService } from "../services";
-import { BodyResponse, ErrorResponseHandler } from "../shared";
+import { BodyResponse, ErrorResponseHandler, HttpStatusCode } from "../shared";
 
 export class IdentityController {
   static async signIn(req: Request, res: Response): Promise<void> {
@@ -12,7 +12,7 @@ export class IdentityController {
       const bodyResponse: BodyResponse<SignInResponse> = {
         message: "Execute Successfully",
         data: response,
-        statusCode: 200,
+        statusCode: HttpStatusCode.OK,
       };
 
       res.status(bodyResponse.statusCode).json(bodyResponse);
@@ -29,7 +29,7 @@ export class IdentityController {
 
       const bodyResponse: BodyResponse<void> = {
         message: "Execute Successfully",
-        statusCode: 200,
+        statusCode: HttpStatusCode.OK,
       };
       res.status(bodyResponse.statusCode).json(bodyResponse);
     } catch (error) {

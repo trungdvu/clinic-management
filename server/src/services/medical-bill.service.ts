@@ -21,12 +21,14 @@ import {
   Checker,
   CheckerCollections,
   ErrorHandler,
+  NotFoundError,
 } from "../shared";
 import { MedicalBillDetailService } from "./medical-bill-detail.service";
 import { PatientService } from "./patient.service";
 import { RedisService } from "./redis.service";
 import { TokenService } from "./token.service";
 import { IdentityRepository } from "../repositories/identity.repository";
+import _ from "lodash";
 
 export class MedicalBillService {
   static async findMany(
@@ -38,7 +40,7 @@ export class MedicalBillService {
 
     try {
       const isExistedKey = await RedisService.has("medical-bills" + userId);
-      if (isExistedKey) {
+      if (isExistedKey && _.isEmpty(query)) {
         const cachedData = await RedisService.get("medical-bills" + userId);
 
         return JSON.parse(cachedData) as MedicalBillSummaryResponse[];
@@ -212,9 +214,10 @@ export class MedicalBillService {
             medicalBillResult.id,
             diseaseTypeId
           );
-          await RedisService.remove("medical-bills" + userId);
         }
       }
+
+      await RedisService.remove("medical-bills" + userId);
     } catch (error) {
       if (transaction) {
         transaction.rollback();
@@ -224,16 +227,69 @@ export class MedicalBillService {
     }
   }
 
-  static async update(id: string, dto: UpdateMedicalBillDto): Promise<string> {
+  static async update(id: string, dto: UpdateMedicalBillDto): Promise<void> {
     try {
-      return await MedicalBillRepository.update(id, dto);
+      const isNotExistedMedicalBillId = await this.isNotExistedMedicalBillId(
+        id
+      );
+      if (isNotExistedMedicalBillId) {
+        throw new NotFoundError(`Medical bill id: ${id} was not existed`);
+      }
+
+      const { diseaseTypeIds } = dto;
+
+      if (diseaseTypeIds) {
+        await MedicalBillDiseaseTypeRepository.deleteByMedicalBillId(id);
+
+        for (const diseaseTypeId of diseaseTypeIds) {
+          const diseaseTypeIdNotExisted = await this.isDiseaseTypeNotExisted(
+            diseaseTypeId
+          );
+          if (diseaseTypeIdNotExisted) {
+            throw new BadRequestError(
+              `DiseaseType id: ${diseaseTypeId} was not existed`
+            );
+          }
+
+          await MedicalBillDiseaseTypeRepository.create(id, diseaseTypeId);
+        }
+      }
+
+      await MedicalBillRepository.update(id, dto);
     } catch (error) {
       ErrorHandler(error);
     }
   }
 
+  static async isNotExistedMedicalBillId(
+    medicalBillId: string
+  ): Promise<boolean> {
+    const medicalBillFounded = await MedicalBillRepository.findById(
+      medicalBillId
+    );
+    return medicalBillFounded ? false : true;
+  }
+
+  static async isDiseaseTypeNotExisted(
+    diseaseTypeId: string
+  ): Promise<boolean> {
+    const diseaseTypeFounded = await DiseaseTypeRepository.findById(
+      diseaseTypeId
+    );
+    console.log("diseaseTypeFounded", diseaseTypeFounded);
+
+    return diseaseTypeFounded ? false : true;
+  }
+
   static async delete(id: string): Promise<void> {
     try {
+      const isNotExistedMedicalBillId = await this.isNotExistedMedicalBillId(
+        id
+      );
+      if (isNotExistedMedicalBillId) {
+        throw new NotFoundError(`Medical bill id: ${id} was not existed`);
+      }
+
       const { userId } = await TokenService.decode(
         TokenService.getCurrentToken()
       );
