@@ -1,5 +1,6 @@
 import { CreateBillPaymentDto } from "../dtos";
 import { FindBillPaymentsQueryParams } from "../dtos/bill-payment/find-bill-payment.query";
+import { UpdateBillPaymentDto } from "../dtos/bill-payment/update.dto";
 import { BillPayment } from "../models";
 import { InternalServerError } from "../shared";
 export class BillPaymentRepository {
@@ -28,6 +29,19 @@ export class BillPaymentRepository {
       throw new InternalServerError(error.message);
     }
   }
+
+  static async update(id: string, dto: UpdateBillPaymentDto): Promise<any> {
+    try {
+      return await BillPayment.update(dto, {
+        where: {
+          id,
+        },
+      });
+    } catch (error) {
+      throw new InternalServerError(error.message);
+    }
+  }
+
   static async findMany(
     userId: string,
     query: FindBillPaymentsQueryParams
