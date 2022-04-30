@@ -12,3 +12,21 @@
   display: flex !important;
   align-items: center !important;
 }
+/* 
+.ant-popover-inner-content {
+  padding: 0 !important;
+}
+.ant-popover-inner {
+  box-shadow: none !important;
+  background-color: transparent !important;
+}
+.ant-popover {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  padding-bottom: 4px !important;
+  padding-top: 0 !important;
+} */
+
+/* .ant-popover-placement-top, .ant-popover-placement-topLeft, .ant-popover-placement-topRight {
+  padding-bottom: 8px;
+} */

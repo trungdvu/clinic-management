@@ -62,6 +62,7 @@ export function EditableSelect<
 
   return (
     <div
+      ref={containerRef}
       className={classNames('relative w-full rounded-sm', {
         'bg-black bg-opacity-5': editing,
       })}
@@ -74,7 +75,6 @@ export function EditableSelect<
         filterOption={onFilterOption}
         onChange={onChange}
         onClick={onClick}
-        onBlur={_onSave}
         onDeselect={onDeselect}
         className={classNames(
           'editable-select transition-all duration-150',

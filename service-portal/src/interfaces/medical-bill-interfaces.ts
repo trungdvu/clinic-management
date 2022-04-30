@@ -29,6 +29,27 @@ export interface GetMoreMedicalBillSummariesPayload {
   limit?: number;
 }
 
+export interface AddMedicationPayload {
+  medicalBillId: string;
+  drugInformation: {
+    id: string;
+    drugId: string;
+    unitId: string;
+    usageId: string;
+    quantity: number;
+  };
+}
+
+export interface UpdateMedicalBillDetailPayload {
+  id: string;
+  body: {
+    drugId?: string;
+    unitId?: string;
+    usageId?: string;
+    quantity?: number;
+  };
+}
+
 export interface MedicalBillSumary {
   id: string;
   diseaseTypeId: string;

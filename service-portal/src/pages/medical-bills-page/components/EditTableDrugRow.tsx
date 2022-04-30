@@ -1,141 +1,188 @@
-import { Col, Form, Input, InputNumber, InputRef, notification, Row } from 'antd';
+import { Col, InputNumber, notification, Row, Select } from 'antd';
 import classNames from 'classnames';
-import { Text } from 'components';
-import { MedicalBillDrug } from 'interfaces';
+import { EditableSelect, Text } from 'components';
+import { MedicalBillDrug, UpdateMedicalBillDetailPayload, Usage } from 'interfaces';
 import _ from 'lodash';
-import { memo, useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { RootDispatch } from 'store';
+import { RootDispatch, RootState } from 'store';
 
-const { useForm, Item } = Form;
+const { Option } = Select;
 
 interface Props extends PropsFromStore {
-  medicalBillId: string;
   currentIndex: number;
+  availableUsages: Usage[];
   medicalBillDrug: MedicalBillDrug;
-  medicalBillDurgs: MedicalBillDrug[];
+  onPreRemove?: (index: number) => void;
 }
 
-// eslint-disable-next-line no-empty-pattern
 const EditTableDrugRowContainer = ({
-  medicalBillId,
   currentIndex,
+  availableUsages,
   medicalBillDrug,
-  medicalBillDurgs,
+  selectedMedicalBillDetail,
+  setSelectedMedicalBillDetail,
+  doUpdateMedicalBillDetail,
+  doRemoveMedicalBillDetail,
+  onPreRemove,
 }: Props) => {
-  const [editing, setEditing] = useState(false);
-  const inputRef = useRef<InputRef>(null);
-  const [form] = useForm();
+  const [rowData, setRowData] = useState(medicalBillDrug);
+  const debounceTimeout = useRef<any>(null);
 
   useEffect(() => {
-    if (editing) {
-      inputRef.current?.focus();
-    }
-  }, [editing]);
+    setRowData(medicalBillDrug);
+  }, [medicalBillDrug]);
 
-  useEffect(() => {
-    form.setFieldsValue({
-      usage: medicalBillDrug.usage,
-      unit: medicalBillDrug.unit.description,
-      quantity: medicalBillDrug.quantity,
-    });
-  }, [medicalBillDrug, form]);
+  const availableUsagesObj = useMemo(() => _.keyBy(availableUsages, 'id'), [availableUsages]);
+  const availableUnisObj = useMemo(
+    () => _.keyBy(medicalBillDrug.availableUnits, 'id'),
+    [medicalBillDrug.availableUnits],
+  );
 
-  const toggleEdit = useCallback(() => {
-    setEditing((pre) => !pre);
-  }, []);
+  const save = useCallback(
+    async (data: MedicalBillDrug) => {
+      const payload: UpdateMedicalBillDetailPayload = {
+        id: medicalBillDrug.id,
+        body: {
+          drugId: data.drug.id,
+          unitId: data.unit.id,
+          usageId: data.usage.id,
+          quantity: data.quantity,
+        },
+      };
 
-  const save = useCallback(async () => {
-    try {
-      const values = await form.validateFields();
-      console.log('🚀 ~ values', values);
+      const result = await doUpdateMedicalBillDetail(payload);
+      !result && setRowData(medicalBillDrug);
+    },
+    [doUpdateMedicalBillDetail, medicalBillDrug],
+  );
 
-      toggleEdit();
-      // handle save here
-    } catch (error: any) {
-      const { errorFields } = error;
-      let description = '';
+  const onSaveUsage = useCallback(
+    async (value: string) => {
+      const updatedRowData = {
+        ...rowData,
+        usage: availableUsagesObj[value],
+      };
+      setRowData(updatedRowData);
+      await save(updatedRowData);
+    },
+    [availableUsagesObj, rowData, save],
+  );
 
-      _.forEach(errorFields, (errorField) => {
-        description += _.join(errorField.errors, '; ');
-      });
+  const onSaveUnit = useCallback(
+    async (value: string) => {
+      const updatedRowData = {
+        ...rowData,
+        usage: availableUnisObj[value],
+      };
+      setRowData(updatedRowData);
+      await save(updatedRowData);
+    },
+    [availableUnisObj, rowData, save],
+  );
+
+  const onSaveQuatity = useCallback(
+    (value: number) => {
+      if (value < 1) return;
+
+      const pricePerUnit = parseInt(`${rowData.price / rowData.quantity}`);
+      const updatedRowData = {
+        ...rowData,
+        quantity: value,
+        price: pricePerUnit * value,
+      };
+      if (debounceTimeout?.current) {
+        clearTimeout(debounceTimeout.current);
+      }
+      debounceTimeout.current = setTimeout(() => {
+        save(updatedRowData).then(() => {
+          const drugDetails = _.map(selectedMedicalBillDetail!.drugDetails, (d) =>
+            d.id === updatedRowData.id ? updatedRowData : d,
+          );
+          setRowData(updatedRowData);
+          setSelectedMedicalBillDetail({ ...selectedMedicalBillDetail!, drugDetails });
+        });
+      }, 300);
+    },
+    [rowData, save, selectedMedicalBillDetail, setSelectedMedicalBillDetail],
+  );
+
+  const onRemove = useCallback(async () => {
+    onPreRemove?.(currentIndex);
+    const result = await doRemoveMedicalBillDetail(medicalBillDrug.id);
+    !result &&
       notification.error({
-        message: 'Save failed',
-        description,
+        message: 'Failed to remove',
+        description: 'Please reload the page',
       });
-      form.setFieldsValue({
-        usage: medicalBillDrug.usage,
-        unit: medicalBillDrug.unit.description,
-        quantity: medicalBillDrug.quantity,
-      });
-    }
-  }, [medicalBillDrug, form, toggleEdit]);
+  }, [currentIndex, doRemoveMedicalBillDetail, medicalBillDrug.id, onPreRemove]);
 
   return (
-    <Form form={form}>
-      <Row
-        gutter={24}
-        className={classNames('py-3 text-primary flex items-center', {
-          'bg-black bg-opacity-[2.5%]': currentIndex % 2 !== 0,
-        })}
-      >
-        <Col span={1}>
-          <Text className="whitespace-nowrap">{medicalBillDurgs.length - currentIndex}</Text>
-        </Col>
-        <Col span={5} className="pl-6">
-          <Link to={'#drug details'}>{medicalBillDrug.drug.description}</Link>
-        </Col>
-        <Col span={7} className="pl-6">
-          <Item name="usage" rules={[{ required: true, message: 'Medication usage is required' }]}>
-            <Input
-              autoComplete="off"
-              className="border-transparent hover:border transition-all duration-100"
-              onPressEnter={save}
-              onBlur={save}
-            />
-          </Item>
-        </Col>
-        <Col span={3} className="pl-6">
-          <Item name="unit" rules={[{ required: true, message: 'Unit is required' }]}>
-            <Input
-              autoComplete="off"
-              className="border-transparent hover:border transition-all duration-100"
-              onPressEnter={save}
-              onBlur={save}
-            />
-          </Item>
-        </Col>
-        <Col span={3} className="pl-6">
-          <Item
-            name="quantity"
-            rules={[{ required: true, message: 'Quantity must greater than 1' }]}
-          >
-            <InputNumber
-              min={1}
-              autoComplete="off"
-              className="border-transparent hover:border transition-all duration-100 "
-              onPressEnter={save}
-              onBlur={save}
-            />
-          </Item>
-        </Col>
-        <Col span={3} className="pl-6 text-right">
-          $10246.99
-        </Col>
-        <Col span={2} className="flex justify-end">
-          <button className="px-3 text-center text-button-pri transition-all duration-100 hover:bg-black hover:bg-opacity-5">
-            Remove
-          </button>
-        </Col>
-      </Row>
-      <Row></Row>
-    </Form>
+    <Row
+      gutter={24}
+      className={classNames('relative py-3 text-primary flex items-center', {
+        'bg-black bg-opacity-[2.5%]': currentIndex % 2 !== 0,
+      })}
+    >
+      <Col span={1}>
+        <Text className="whitespace-nowrap">{currentIndex + 1}</Text>
+      </Col>
+
+      <Col span={5} className="pl-6">
+        <Link to={'#to_drug_detail'}>{medicalBillDrug.drug.description}</Link>
+      </Col>
+
+      <Col span={7} className="pl-6">
+        <EditableSelect value={medicalBillDrug.usage.id} className="w-full" onSave={onSaveUsage}>
+          {_.map(availableUsages, (usage) => (
+            <Option key={usage.id}>
+              <Text className="font-sm">{usage.description}</Text>
+            </Option>
+          ))}
+        </EditableSelect>
+      </Col>
+
+      <Col span={3} className="pl-6">
+        <EditableSelect value={medicalBillDrug.unit.id} className="w-full" onSave={onSaveUnit}>
+          {_.map(rowData.availableUnits, (unit) => (
+            <Option key={unit.id}>
+              <Text className="font-sm">{unit.description}</Text>
+            </Option>
+          ))}
+        </EditableSelect>
+      </Col>
+
+      <Col span={3} className="pl-6">
+        <InputNumber value={rowData.quantity} min={1} autoComplete="off" onChange={onSaveQuatity} />
+      </Col>
+
+      <Col span={3} className="pl-6 text-right">
+        VND {rowData.price}
+      </Col>
+
+      <Col span={2} className="flex justify-end">
+        <button
+          className="px-3 text-center text-button-pri transition-all duration-100 hover:bg-black hover:bg-opacity-5"
+          onClick={onRemove}
+        >
+          Remove
+        </button>
+      </Col>
+    </Row>
   );
 };
 
-const mapDispatch = (dispatch: RootDispatch) => ({});
+const mapState = (state: RootState) => ({
+  selectedMedicalBillDetail: state.medicalBillModel.selectedMedicalBillDetail,
+});
 
-type PropsFromStore = ReturnType<typeof mapDispatch>;
+const mapDispatch = (dispatch: RootDispatch) => ({
+  setSelectedMedicalBillDetail: dispatch.medicalBillModel.setSelectedMedicalBillDetail,
+  doUpdateMedicalBillDetail: dispatch.medicalBillModel.doUpdateMedicalBillDetail,
+  doRemoveMedicalBillDetail: dispatch.medicalBillModel.doRemoveMedicalBillDetail,
+});
 
-export const EditableDrugRow = connect(null, mapDispatch)(memo(EditTableDrugRowContainer));
+type PropsFromStore = ReturnType<typeof mapDispatch> & ReturnType<typeof mapState>;
+
+export const EditableDrugRow = connect(mapState, mapDispatch)(EditTableDrugRowContainer);

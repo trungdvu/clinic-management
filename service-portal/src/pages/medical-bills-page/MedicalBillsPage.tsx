@@ -78,6 +78,7 @@ const MedicalBillPageContainer = ({ title, setHasMore, doGetMoreMedicalBillSumma
             </div>
 
             <div className="h-px bg-brd" />
+
             <MedicalBillSummaries />
           </TabPane>
         </Tabs>

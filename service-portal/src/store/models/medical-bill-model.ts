@@ -1,10 +1,12 @@
 import { createModel } from '@rematch/core';
 import { API } from 'consts';
 import {
+  AddMedicationPayload,
   GetMoreMedicalBillSummariesPayload,
   MedicalBillDetail,
   MedicalBillSumary,
   NewMedicalBillPayload,
+  UpdateMedicalBillDetailPayload,
   UpdateMedicalBillPayload,
 } from 'interfaces';
 import _ from 'lodash';
@@ -20,6 +22,7 @@ interface MedicalBillState {
   selectedMedicalBillId: string;
   allMedicalBillSummariesHasMore: boolean;
   allMedicalBillSummariesPage: number;
+  selectedMedicalBillDetail?: MedicalBillDetail;
 }
 
 export const medicalBillModel = createModel<RootModel>()({
@@ -28,6 +31,7 @@ export const medicalBillModel = createModel<RootModel>()({
     selectedMedicalBillId: '',
     allMedicalBillSummariesPage: 0,
     allMedicalBillSummariesHasMore: true,
+    selectedMedicalBillDetail: undefined,
   } as MedicalBillState,
 
   reducers: {
@@ -54,6 +58,10 @@ export const medicalBillModel = createModel<RootModel>()({
     setHasMore: (state, payload: { key: HasMoreKey; value: boolean }) => ({
       ...state,
       [payload.key]: payload.value,
+    }),
+    setSelectedMedicalBillDetail: (state, payload: MedicalBillDetail) => ({
+      ...state,
+      selectedMedicalBillDetail: payload,
     }),
   },
 
@@ -89,17 +97,15 @@ export const medicalBillModel = createModel<RootModel>()({
       }
     },
 
-    async doGetMedicalBillDetails(payload: string) {
+    async doGetMedicalBillDetail(payload: string) {
       try {
         const endpoint = API.MEDICAL_BILLS_ID(payload);
         const { data, status } = await HttpService.get(endpoint);
-
         if (status === 200) {
-          const medicalBill: MedicalBillDetail = data.data;
-          return medicalBill;
-        } else {
-          return false;
+          dispatch.medicalBillModel.setSelectedMedicalBillDetail(data.data);
+          return true;
         }
+        return false;
       } catch (error) {
         console.log('doGetMedicalBillDetails', error);
         return false;
@@ -180,6 +186,43 @@ export const medicalBillModel = createModel<RootModel>()({
         return status === 200;
       } catch (error) {
         console.log('doUpdateMedicalBill', error);
+        return false;
+      }
+    },
+
+    async doAddMedication(payload: AddMedicationPayload) {
+      try {
+        const endpoint = API.MEDICAL_BILLS_DETAIL;
+        const { status } = await HttpService.post(endpoint, payload);
+        if (status === 200) {
+          await dispatch.medicalBillModel.doGetMedicalBillDetail(payload.medicalBillId);
+          return true;
+        }
+        return false;
+      } catch (error) {
+        console.log('doAddMedication', error);
+        return false;
+      }
+    },
+
+    async doUpdateMedicalBillDetail(payload: UpdateMedicalBillDetailPayload) {
+      try {
+        const endpoint = API.MEDICAL_BILLS_DETAIL_ID(payload.id);
+        const { status } = await HttpService.put(endpoint, payload.body);
+        return status === 200;
+      } catch (error) {
+        console.log('doUpdateMedicalBillDetail', error);
+        return false;
+      }
+    },
+
+    async doRemoveMedicalBillDetail(payload: string) {
+      try {
+        const endpoint = API.MEDICAL_BILLS_DETAIL_ID(payload);
+        const { status } = await HttpService.delete(endpoint);
+        return status === 200;
+      } catch (error) {
+        console.log('doDeleteMedicalBillDetail', error);
         return false;
       }
     },
