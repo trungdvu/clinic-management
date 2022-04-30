@@ -86,19 +86,23 @@ function MedicalBillDetailPageContainer({
         Medical Bill Details
       </Heading>
 
-      {isLoading && <SkeletonMedicalBillDetails />}
-
-      {!isLoading && selectedMedicalBillDetail ? (
-        <>
-          <StatusTimeLine status={selectedMedicalBillDetail.status} />
-          <GeneralMedicalBillSection diseaseTypes={diseaseTypes} />
-          <MedicationsMedicalBillSection drugUsages={drugUsages} drugs={drugs} />
-          <ActionsPaymentsMedicalBillSection />
-        </>
+      {isLoading ? (
+        <SkeletonMedicalBillDetails />
       ) : (
-        <Text type="danger" className="text-base">
-          Not founded.
-        </Text>
+        <>
+          {selectedMedicalBillDetail ? (
+            <>
+              <StatusTimeLine status={selectedMedicalBillDetail.status} />
+              <GeneralMedicalBillSection diseaseTypes={diseaseTypes} />
+              <MedicationsMedicalBillSection drugUsages={drugUsages} drugs={drugs} />
+              <ActionsPaymentsMedicalBillSection />
+            </>
+          ) : (
+            <Text type="danger" className="text-base">
+              Not founded.
+            </Text>
+          )}
+        </>
       )}
     </motion.div>
   );
