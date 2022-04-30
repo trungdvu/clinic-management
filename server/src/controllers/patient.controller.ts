@@ -6,7 +6,7 @@ import {
   UpdatePatientDto,
 } from "../dtos";
 import { PatientService } from "../services";
-import { BodyResponse, ErrorResponseHandler } from "../shared";
+import { BodyResponse, ErrorResponseHandler, HttpStatusCode } from "../shared";
 
 export class PatientController {
   static async findAll(req: Request, res: Response): Promise<void> {
@@ -17,7 +17,7 @@ export class PatientController {
       const bodyResponse: BodyResponse<PatientResponse[]> = {
         message: "Execute Successfully",
         data: response,
-        statusCode: 200,
+        statusCode: HttpStatusCode.OK,
       };
 
       res.status(bodyResponse.statusCode).json(bodyResponse);
@@ -34,10 +34,10 @@ export class PatientController {
       const bodyResponse: BodyResponse<PatientResponse> = {
         message: "Execute Successfully",
         data: response,
-        statusCode: 200,
+        statusCode: HttpStatusCode.OK,
       };
 
-      res.status(200).json(bodyResponse);
+      res.status(bodyResponse.statusCode).json(bodyResponse);
     } catch (error) {
       ErrorResponseHandler(error, res);
     }
@@ -51,7 +51,7 @@ export class PatientController {
 
       const bodyResponse: BodyResponse<void> = {
         message: "Execute Successfully",
-        statusCode: 200,
+        statusCode: HttpStatusCode.OK,
       };
 
       res.status(bodyResponse.statusCode).json(bodyResponse);
@@ -64,11 +64,12 @@ export class PatientController {
     try {
       const { id } = req.params;
       const dto: UpdatePatientDto = req.body;
-      const response: string = await PatientService.update(id, dto);
+
+      await PatientService.update(id, dto);
 
       const bodyResponse: BodyResponse<void> = {
         message: "Execute Successfully",
-        statusCode: 200,
+        statusCode: HttpStatusCode.OK,
       };
 
       res.status(bodyResponse.statusCode).json(bodyResponse);
@@ -84,7 +85,7 @@ export class PatientController {
 
       const bodyResponse: BodyResponse<void> = {
         message: "Execute Successfully",
-        statusCode: 200,
+        statusCode: HttpStatusCode.OK,
       };
 
       res.status(bodyResponse.statusCode).json(bodyResponse);

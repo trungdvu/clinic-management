@@ -9,7 +9,6 @@ import { RootDispatch, RootState } from 'store';
 import { defaultLayoutVariants } from 'utils';
 import { MedicalBillSummaries } from './components/MedicalBillSummaries';
 import { NewMedicalBillModal } from './components/NewMedicalBillModal';
-import './MedicalBillsPage.css';
 
 const { Search } = Input;
 const { TabPane } = Tabs;
@@ -19,20 +18,14 @@ interface Props extends PropsFromStore {
   title?: string;
 }
 
-const MedicalBillPageContainer = ({
-  title,
-  loading,
-  setHasMore,
-  doGetMedicalBillSumarries,
-  doGetMoreMedicalBillSummaries,
-}: Props) => {
+const MedicalBillPageContainer = ({ title, setHasMore, doGetMoreMedicalBillSummaries }: Props) => {
   const [isCreateMedicalBillVisible, setIsCreateMedicalBillVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     setIsLoading(true);
     setHasMore({ key: 'allMedicalBillSummariesHasMore', value: true });
-    doGetMoreMedicalBillSummaries(undefined).then(() => setIsLoading(false));
+    doGetMoreMedicalBillSummaries({}).then(() => setIsLoading(false));
   }, [doGetMoreMedicalBillSummaries, setHasMore]);
 
   useTitle(title);
@@ -80,9 +73,8 @@ const MedicalBillPageContainer = ({
                 allowClear={false}
                 format={'d MMMM'}
                 suffixIcon={<DownOutlined className="text-tertiary" />}
-                className="border-transparent bg-link bg-opacity-10"
               />
-              <Search placeholder="Patient name" className="w-80 bg-opacity-5" />
+              <Search placeholder="Patient name" className="w-80" />
             </div>
 
             <div className="h-px bg-brd" />
@@ -94,13 +86,10 @@ const MedicalBillPageContainer = ({
   );
 };
 
-const mapState = (state: RootState) => ({
-  loading: state.loading.effects.medicalBillModel,
-});
+const mapState = (state: RootState) => ({});
 
 const mapDispatch = (dispatch: RootDispatch) => ({
   setHasMore: dispatch.medicalBillModel.setHasMore,
-  doGetMedicalBillSumarries: dispatch.medicalBillModel.doGetMedicalBillSummaries,
   doGetMoreMedicalBillSummaries: dispatch.medicalBillModel.doGetMoreMedicalBillSummaries,
 });
 

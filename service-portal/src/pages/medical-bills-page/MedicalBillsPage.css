@@ -1,7 +1,0 @@
-.ant-input-group .ant-input {
-  @apply bg-link bg-opacity-10 border-transparent;
-}
-
-.ant-input-search > .ant-input-group > .ant-input-group-addon:last-child .ant-input-search-button {
-  @apply bg-link bg-opacity-10 border-transparent border-l-brd;
-}

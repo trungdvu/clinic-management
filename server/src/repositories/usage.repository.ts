@@ -5,7 +5,8 @@ import { InternalServerError } from "../shared";
 export class UsageRepository {
   static async findMany(): Promise<Usage[]> {
     try {
-      return await Usage.findAll();
+      const records: Usage[] = await Usage.findAll();
+      return records;
     } catch (error) {
       throw new InternalServerError(error.message);
     }
@@ -13,7 +14,8 @@ export class UsageRepository {
 
   static async findById(id: string): Promise<Usage> {
     try {
-      return await Usage.findByPk(id);
+      const record: Usage = await Usage.findByPk(id);
+      return record;
     } catch (error) {
       throw new InternalServerError(error.message);
     }
@@ -21,15 +23,16 @@ export class UsageRepository {
 
   static async create(dto: CreateUsageDto): Promise<Usage> {
     try {
-      return await Usage.create(dto);
+      const response: Usage = await Usage.create(dto);
+      return response;
     } catch (error) {
       throw new InternalServerError(error.message);
     }
   }
 
-  static async update(id: string, dto: UpdateUsageDto): Promise<any> {
+  static async update(id: string, dto: UpdateUsageDto): Promise<void> {
     try {
-      return await Usage.update(dto, {
+      await Usage.update(dto, {
         where: {
           id,
         },
@@ -39,9 +42,9 @@ export class UsageRepository {
     }
   }
 
-  static async delete(id: string): Promise<number> {
+  static async delete(id: string): Promise<void> {
     try {
-      return await Usage.destroy({
+      await Usage.destroy({
         where: {
           id,
         },

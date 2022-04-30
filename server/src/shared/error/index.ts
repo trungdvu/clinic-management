@@ -5,3 +5,4 @@ export * from "./api-base.error";
 export * from "./error.handler";
 export * from "./401-unauthorize.error";
 export * from "./error.response";
+export * from "./http-status-code";

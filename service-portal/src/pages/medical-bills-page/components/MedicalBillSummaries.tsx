@@ -50,7 +50,7 @@ const MedicalBillSummariesContainer = ({
       setIsDeleteModalVisible(false);
       notification.success({
         message: 'Deleted',
-        description: 'The patient has been deleted.',
+        description: 'The medical bill has been deleted.',
       });
     } else {
       notification.error({
@@ -65,7 +65,7 @@ const MedicalBillSummariesContainer = ({
       return;
     }
     setIsLoadingMore(true);
-    await doGetMoreMedicalBillSumarries(undefined);
+    await doGetMoreMedicalBillSumarries({});
     setIsLoadingMore(false);
   }, [doGetMoreMedicalBillSumarries, isLoadingMore]);
 

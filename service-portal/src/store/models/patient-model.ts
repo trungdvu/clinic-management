@@ -1,8 +1,9 @@
 import { createModel } from '@rematch/core';
 import { API } from 'consts';
-import { CreatePatientPayload, Patient } from 'interfaces';
+import { CreatePatientPayload, GetMorePatientPayload, Patient } from 'interfaces';
 import _ from 'lodash';
 import { HttpService } from 'services';
+import { uniqueBy } from 'utils';
 import { RootModel } from '.';
 
 type Page = 'allPatientsPage';
@@ -28,6 +29,10 @@ export const patientModel = createModel<RootModel>()({
       ...state,
       [payload]: state[payload] + 1,
     }),
+    setPage: (state, payload: { key: Page; value: number }) => ({
+      ...state,
+      [payload.key]: payload.value,
+    }),
     resetPage: (state, payload: Page) => ({
       ...state,
       [payload]: 0,
@@ -39,17 +44,28 @@ export const patientModel = createModel<RootModel>()({
   },
 
   effects: (dispatch) => ({
-    async doCreatePatient(payload: CreatePatientPayload) {
+    async doCreatePatient(payload: CreatePatientPayload, state) {
       try {
+        const { allPatientsPage } = state.patientModel;
+        const page = allPatientsPage > 0 ? allPatientsPage - 1 : allPatientsPage;
+
+        dispatch.patientModel.setPage({
+          key: 'allPatientsPage',
+          value: page,
+        });
+        dispatch.patientModel.setHasMore({
+          key: 'allPatientsHasMore',
+          value: true,
+        });
+
         const endpoint = API.PATIENTS;
         const response = await HttpService.post(endpoint, payload);
 
         if (response.status === 200) {
-          dispatch.patientModel.doGetPatients();
+          await dispatch.patientModel.doGetMorePatients({ page });
           return true;
-        } else {
-          return false;
         }
+        return false;
       } catch (error) {
         console.log('doCreatePatient', error);
         return false;
@@ -65,37 +81,36 @@ export const patientModel = createModel<RootModel>()({
           const patients = response.data.data;
           dispatch.patientModel.setPatients(patients);
           return patients;
-        } else {
-          return false;
         }
+        return false;
       } catch (error) {
         console.log('doGetPatients', error);
         return false;
       }
     },
 
-    async doGetMorePatients(payload: string | undefined, state) {
+    async doGetMorePatients(payload: GetMorePatientPayload, state) {
       try {
         const { patients, allPatientsPage } = state.patientModel;
         const endpoint = API.PATIENTS_PARAMS({
-          text: payload || '',
-          page: allPatientsPage,
-          limit: 20,
+          text: payload.text ?? '',
+          page: payload.page ?? allPatientsPage,
+          limit: payload.limit ?? 2,
         });
         const response = await HttpService.get(endpoint);
 
         if (response.status === 200 && !_.isEmpty(response.data.data)) {
           const morePatients: Patient[] = response.data.data;
 
-          dispatch.patientModel.setPatients([...patients, ...morePatients]);
+          dispatch.patientModel.setPatients(uniqueBy([...patients, ...morePatients], 'id'));
           dispatch.patientModel.increasePage('allPatientsPage');
           return morePatients;
-        } else {
-          dispatch.patientModel.setHasMore({ key: 'allPatientsHasMore', value: false });
-          return false;
         }
+
+        dispatch.patientModel.setHasMore({ key: 'allPatientsHasMore', value: false });
+        return false;
       } catch (error) {
-        console.log('doGetPatients', error);
+        console.log('doGetMorePatients', error);
         return false;
       }
     },
@@ -107,7 +122,7 @@ export const patientModel = createModel<RootModel>()({
 
         return response.status === 200;
       } catch (error) {
-        console.log('doGetPatients', error);
+        console.log('doDeletePatient', error);
         return false;
       }
     },
@@ -120,9 +135,8 @@ export const patientModel = createModel<RootModel>()({
         if (status === 200) {
           const patient: Patient = data.data;
           return patient;
-        } else {
-          return false;
         }
+        return false;
       } catch (error) {
         console.log('doGetPatientDetails', error);
         return false;

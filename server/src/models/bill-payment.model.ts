@@ -40,6 +40,9 @@ export class BillPayment
   @Column(DataType.UUID)
   patientId: string;
 
+  @Column(DataType.BOOLEAN)
+  isDeleted: boolean;
+
   @Column({
     type: DataType.INTEGER,
     defaultValue: DEFAULT_MEDICAL_EXAMINATION_AMOUNT,

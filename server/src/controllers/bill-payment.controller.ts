@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { CreateBillPaymentDto } from "../dtos";
 import { FindBillPaymentsQueryParams } from "../dtos/bill-payment/find-bill-payment.query";
 import { BillPaymentService } from "../services";
-import { BodyResponse, ErrorResponseHandler } from "../shared";
+import { BodyResponse, ErrorResponseHandler, HttpStatusCode } from "../shared";
 
 export class BillPaymentController {
   static async findAll(req: Request, res: Response): Promise<void> {
@@ -23,7 +23,7 @@ export class BillPaymentController {
 
       const bodyResponse: BodyResponse<void> = {
         message: "Execute Successfully",
-        statusCode: 200,
+        statusCode: HttpStatusCode.OK,
       };
 
       res.status(bodyResponse.statusCode).json(bodyResponse);
