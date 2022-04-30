@@ -40,7 +40,6 @@ function SignInPageContainer({ title, currentUser, loading, doSignIn }: Props) {
     authLocalStorage.load();
     form.setFieldsValue({
       email: authLocalStorage.previousEmail,
-      password: 'Trung@1234',
     });
   }, [form]);
 
