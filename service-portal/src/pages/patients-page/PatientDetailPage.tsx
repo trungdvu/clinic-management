@@ -84,7 +84,7 @@ function PatientDetailPageContainer({
       variants={generateFadeInFadeOut()}
       initial="initial"
       animate="animate"
-      className="px-[8%] pb-8"
+      className="mx-[5%] bg-white px-4 pt-8 pb-20 rounded-md shadow"
     >
       <ConfirmModal
         visible={isConfirmDeleteModalVisible}
@@ -97,7 +97,7 @@ function PatientDetailPageContainer({
       />
 
       <Link to={PAGE_ROUTES.PATIENTS.PATH} className="flex items-center gap-2">
-        <LeftOutlined className="text-base flex items-center" />
+        <LeftOutlined className="flex items-center text-base" />
         <Text className="text-base select-none">Back to Listing</Text>
       </Link>
       <Heading level={2} className="mt-4">
@@ -115,24 +115,24 @@ function PatientDetailPageContainer({
                   src={require('assets/images/default_profile_3.jpeg')}
                   className="w-32 h-32 rounded-md"
                 />
-                <div className="ml-4 flex flex-col">
+                <div className="flex flex-col ml-4">
                   <Heading level={3} className="text-sky-700">
                     {patientDetails.fullName}
                   </Heading>
                   <div className="flex items-center">
                     <PhoneOutlined />
-                    <Text className="text-base ml-1">
+                    <Text className="ml-1 text-base">
                       {patientDetails.phoneNumber || 'Not set'}
                     </Text>
                   </div>
                   <div className="flex items-center">
                     <EnvironmentOutlined />
-                    <Text className="text-base ml-1">{patientDetails.address || 'Not set'}</Text>
+                    <Text className="ml-1 text-base">{patientDetails.address || 'Not set'}</Text>
                   </div>
                 </div>
               </div>
 
-              <Row gutter={24} className="mt-10 items-center flex">
+              <Row gutter={24} className="flex items-center mt-10">
                 <Col span={12} className="flex flex-col">
                   <Heading level={3} className="mb-0">
                     General Infomation
@@ -205,7 +205,7 @@ function PatientDetailPageContainer({
 
               <DetailSection title="Actions" subTitle="More action on this patient">
                 <button
-                  className="mt-4 px-2 py-1 transition duration-100 hover:bg-black hover:bg-opacity-5 text-button-pri active:bg-opacity-10"
+                  className="px-2 py-1 mt-4 transition duration-100 hover:bg-black hover:bg-opacity-5 text-button-primary active:bg-opacity-10"
                   onClick={onClickDelete}
                 >
                   Delete this patient

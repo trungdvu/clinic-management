@@ -43,7 +43,7 @@ function LoadingSignOutModalContainer({ loading, onCancel, ...props }: Props): J
         <Text type="danger">There're some error when you sign out, please try later.</Text>
       ) : (
         <div className="flex items-center justify-center w-full py-8">
-          <Spin size="large" className="text-button-pri" />
+          <Spin size="large" className="text-button-primary" />
         </div>
       )}
     </Modal>

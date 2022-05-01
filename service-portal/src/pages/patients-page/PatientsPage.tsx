@@ -68,7 +68,7 @@ function PatientsPageContainer({
       variants={defaultLayoutVariants}
       initial="initial"
       animate="animate"
-      className="pb-8 min-h-full"
+      className="px-4 py-8 bg-white rounded-md shadow"
     >
       <CreatePatientModal visible={isCreatePatientModalVisible} onCancel={onCancelCreatePatient} />
 
@@ -86,18 +86,18 @@ function PatientsPageContainer({
       ) : (
         <Tabs type="card" defaultActiveKey="1" className="pb-10">
           <Tabs.TabPane key={1} tab="All patients">
-            <Row gutter={24} className="px-5 py-3 text-tertiary font-medium">
+            <Row gutter={24} className="px-5 py-3 font-medium text-typo-tertiary">
               <Col span={4}>PATIENT NAME</Col>
               <Col span={4}>PHONE NUMBER</Col>
               <Col span={4}>DAY OF BIRTH</Col>
               <Col span={4}>GENDER</Col>
               <Col span={8}>ADDRESS</Col>
             </Row>
-            <div className="h-px bg-brd" />
+            <div className="h-px bg-line-secondary" />
             {_.isEmpty(patients) ? (
               <Empty
                 description={
-                  <Text className="text-tertiary">
+                  <Text className="text-typo-tertiary">
                     Empty. Click <b>+ New Patient</b> to create a new one.
                   </Text>
                 }

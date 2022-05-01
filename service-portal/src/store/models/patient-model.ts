@@ -95,7 +95,7 @@ export const patientModel = createModel<RootModel>()({
         const endpoint = API.PATIENTS_PARAMS({
           text: payload.text ?? '',
           page: payload.page ?? allPatientsPage,
-          limit: payload.limit ?? 2,
+          limit: payload.limit ?? 20,
         });
         const response = await HttpService.get(endpoint);
 

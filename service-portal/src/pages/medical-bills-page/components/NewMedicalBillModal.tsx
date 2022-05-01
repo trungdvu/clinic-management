@@ -83,11 +83,11 @@ function NewMedicalBillModalContainer({
         label: (
           <>
             <div className="flex items-center">
-              <UserOutlined className="text-tertiary text-lg pb-1 mr-1" />
+              <UserOutlined className="text-typo-tertiary text-lg pb-1 mr-1" />
               <Text>{patient.fullName}</Text>
             </div>
             <div className="flex items-center">
-              <PhoneOutlined className="text-tertiary text-lg pb-1 mr-1" />
+              <PhoneOutlined className="text-typo-tertiary text-lg pb-1 mr-1" />
               <Text className="font-light">{patient.phoneNumber}</Text>
             </div>
           </>
@@ -119,7 +119,7 @@ function NewMedicalBillModalContainer({
           name="patientId"
           label="PATIENT"
           rules={[{ required: true }]}
-          className="w-full text-tertiary"
+          className="w-full text-typo-tertiary"
         >
           <DebounceSelect
             size="large"

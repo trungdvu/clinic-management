@@ -121,7 +121,7 @@ const EditTableDrugRowContainer = ({
   return (
     <Row
       gutter={24}
-      className={classNames('relative py-3 text-primary flex items-center', {
+      className={classNames('relative py-3 text-typo-primary flex items-center', {
         'bg-black bg-opacity-[2.5%]': currentIndex % 2 !== 0,
       })}
     >
@@ -163,7 +163,7 @@ const EditTableDrugRowContainer = ({
 
       <Col span={2} className="flex justify-end">
         <button
-          className="px-3 text-center text-button-pri transition-all duration-100 hover:bg-black hover:bg-opacity-5"
+          className="px-3 text-center text-button-primary transition-all duration-100 hover:bg-black hover:bg-opacity-5"
           onClick={onRemove}
         >
           Remove

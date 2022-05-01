@@ -13,10 +13,10 @@ export const Text: React.FC<TextProps> = memo(
           'font-sans',
           {
             'text-inherit': !type,
-            'text-info-err': type === 'danger',
-            'text-info-suc': type === 'success',
-            'text-tertiary': type === 'secondary',
-            'text-info-war': type === 'warning',
+            'text-typo-error': type === 'danger',
+            'text-typo-success': type === 'success',
+            'text-typo-tertiary': type === 'secondary',
+            'text-typo-warning': type === 'warning',
           },
           className,
         )}

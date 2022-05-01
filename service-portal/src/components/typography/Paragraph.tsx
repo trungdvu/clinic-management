@@ -8,11 +8,11 @@ const { Paragraph: AntParagraph } = Typography;
 export const Paragraph: React.FC<ParagraphProps> = memo(
   ({ children, className, type = 'primary', ...props }): JSX.Element => {
     const colors: any = {
-      success: 'text-info-suc',
+      success: 'text-typo-success',
       secondary: 'text-sec',
-      warning: 'text-info-war',
-      danger: 'text-info-err',
-      primary: 'text-primary',
+      warning: 'text-typo-warning',
+      danger: 'text-typo-error',
+      primary: 'text-typo-primary',
     };
 
     return (

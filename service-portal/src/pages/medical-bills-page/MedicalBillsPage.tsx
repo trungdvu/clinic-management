@@ -43,7 +43,12 @@ const MedicalBillPageContainer = ({ title, setHasMore, doGetMoreMedicalBillSumma
   }, []);
 
   return (
-    <motion.div variants={defaultLayoutVariants} initial="initial" animate="animate">
+    <motion.div
+      variants={defaultLayoutVariants}
+      initial="initial"
+      animate="animate"
+      className="px-4 py-8 bg-white rounded-md shadow"
+    >
       <NewMedicalBillModal visible={isCreateMedicalBillVisible} onCancel={onCancelNewMedicalBill} />
 
       <div className="flex justify-between">
@@ -68,16 +73,16 @@ const MedicalBillPageContainer = ({ title, setHasMore, doGetMoreMedicalBillSumma
           className="pb-10"
         >
           <TabPane key={1} tab="All medical bills">
-            <div className="flex items-center mb-5 gap-4 ml-3">
+            <div className="flex items-center gap-4 mb-5 ml-3">
               <RangePicker
                 allowClear={false}
                 format={'d MMMM'}
-                suffixIcon={<DownOutlined className="text-tertiary" />}
+                suffixIcon={<DownOutlined className="text-typo-tertiary" />}
               />
               <Search placeholder="Patient name" className="w-80" />
             </div>
 
-            <div className="h-px bg-brd" />
+            <div className="h-px bg-line-secondary" />
 
             <MedicalBillSummaries />
           </TabPane>

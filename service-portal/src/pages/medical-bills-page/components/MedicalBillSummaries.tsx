@@ -81,7 +81,7 @@ const MedicalBillSummariesContainer = ({
         onClickButtonRight={onCancelDelete}
       />
 
-      <Row gutter={24} className="px-5 py-3 text-tertiary font-medium">
+      <Row gutter={24} className="px-5 py-3 font-medium text-typo-tertiary">
         <Col span={3}>BILL DATE</Col>
         <Col span={5}>PATIENT NAME</Col>
         <Col span={10}>SYSTOMS</Col>
@@ -92,7 +92,7 @@ const MedicalBillSummariesContainer = ({
       {_.isEmpty(medicalBillSummaries) ? (
         <Empty
           description={
-            <Text className="text-tertiary">
+            <Text className="text-typo-tertiary">
               No medical bills. Click <b>+ New Medical Bill</b> to create a new one.
             </Text>
           }
@@ -110,7 +110,7 @@ const MedicalBillSummariesContainer = ({
             </div>
           }
           endMessage={
-            <Divider plain className="py-3">
+            <Divider plain className="pt-3">
               <Text type="secondary">No more</Text>
             </Divider>
           }

@@ -91,7 +91,7 @@ const MedicationsMedicalBillSectionContainer = ({
       <Form
         form={form}
         onFinish={onClickAddMedication}
-        className="bg-black bg-opacity-5 pr-7 py-2 mt-4"
+        className="py-2 mt-4 pr-7 bg-gradient-to-l from-line-secondary via-gray-100 to-gray-50"
       >
         <Row gutter={24} className="px-5 py-3">
           <Col span={1}></Col>
@@ -101,7 +101,7 @@ const MedicationsMedicalBillSectionContainer = ({
                 filterOption
                 size="large"
                 placeholder="Medication name"
-                className="text-sm h-10"
+                className="h-10 text-sm"
                 onChange={onChangeSelectMedicationName}
               >
                 {_.map(drugs, (d) => (
@@ -112,7 +112,7 @@ const MedicationsMedicalBillSectionContainer = ({
           </Col>
           <Col span={7}>
             <Item rules={[{ required: true }]} name="usageId">
-              <Select size="large" placeholder="Description, usage" className="text-sm h-10">
+              <Select size="large" placeholder="Description, usage" className="h-10 text-sm">
                 {_.map(drugUsages, (usage) => (
                   <Option key={usage.id}>{usage.description}</Option>
                 ))}
@@ -124,7 +124,7 @@ const MedicationsMedicalBillSectionContainer = ({
               <Select
                 size="large"
                 placeholder="Pill, pack"
-                className="text-sm h-10"
+                className="h-10 text-sm"
                 onChange={(value) => {
                   console.log(value);
                 }}
@@ -137,7 +137,7 @@ const MedicationsMedicalBillSectionContainer = ({
           </Col>
           <Col span={3}>
             <Item rules={[{ required: true }]} name="quantity">
-              <InputNumber size="large" placeholder="1, 2, 3" className="text-sm w-full h-10" />
+              <InputNumber size="large" placeholder="1, 2, 3" className="w-full h-10 text-sm" />
             </Item>
           </Col>
           <Col span={3}>
@@ -151,7 +151,7 @@ const MedicationsMedicalBillSectionContainer = ({
       </Form>
 
       <div className="relative mb-10">
-        <Row gutter={24} className="px-5 py-3 text-tertiary font-medium">
+        <Row gutter={24} className="px-5 py-3 font-medium text-typo-tertiary">
           <Col span={1}>
             <Text className="whitespace-nowrap">NO</Text>
           </Col>
@@ -171,7 +171,7 @@ const MedicationsMedicalBillSectionContainer = ({
             AMOUNT
           </Col>
         </Row>
-        <div className="h-px bg-brd" />
+        <div className="h-px bg-line-secondary" />
 
         <div
           className={classNames('overflow-hidden min-h-[230px] py-6 px-5', {
@@ -198,14 +198,14 @@ const MedicationsMedicalBillSectionContainer = ({
 
         <div
           className={classNames(
-            'h-16 w-full absolute bottom-0 bg-gradient-to-t from-stone-300 to-transparent',
+            'h-16 w-full absolute bottom-0 bg-gradient-to-t from-line-secondary to-transparent',
             {
               hidden: isMedicationsExpanded || selectedMedicalBillDetail.drugDetails.length < 4,
             },
           )}
         />
-        <div className="flex items-center w-full absolute bottom-0 transform translate-y-4 z-50">
-          <div className="h-px bg-brd flex-1" />
+        <div className="absolute bottom-0 z-50 flex items-center w-full transform translate-y-4">
+          <div className="flex-1 h-px bg-line-secondary" />
           <IconButton
             disabled={selectedMedicalBillDetail.drugDetails.length < 4}
             icon={
@@ -217,7 +217,7 @@ const MedicationsMedicalBillSectionContainer = ({
             }
             onClick={toggleExpandedMedications}
           />
-          <div className="h-px bg-brd flex-1" />
+          <div className="flex-1 h-px bg-line-secondary" />
         </div>
       </div>
     </DetailSection>

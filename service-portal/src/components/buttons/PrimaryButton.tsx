@@ -8,14 +8,14 @@ export const PrimaryButton: React.FC<ButtonProps> = memo(
       () =>
         classNames(
           'flex justify-center items-center box box-border rounded-md min-w-[150px]',
-          'text-sm font-medium text-primary-2',
+          'text-sm font-medium text-typo-secondary',
           'transition duration-100',
-          'bg-button-pri border-button-pri',
-          'hover:bg-button-pri-hv hover:border-button-pri-hv',
-          'active:bg-button-pri active:border-button-pri',
+          'bg-button-primary border-button-primary',
+          'hover:bg-button-primary-hv hover:border-button-primary-hv',
+          'active:bg-button-primary active:border-button-primary',
           'focus:none',
           {
-            'bg-button-pri opacity-50 hover:cursor-not-allowed hover:bg-button-pri hover:border-button-pri':
+            'bg-button-primary opacity-50 hover:cursor-not-allowed hover:bg-button-primary hover:border-button-primary':
               loading,
           },
           className,

@@ -103,19 +103,19 @@ function CreatePatientModalContainer({
             <Select size="large" placeholder="No default" className="w-full text-sm">
               <Option value="Male">
                 <div className="flex items-center">
-                  <ManOutlined className="text-tertiary text-lg pb-1 mr-1" />
+                  <ManOutlined className="text-typo-tertiary text-lg pb-1 mr-1" />
                   <Text>Male</Text>
                 </div>
               </Option>
               <Option value="Female">
                 <div className="flex items-center">
-                  <WomanOutlined className="text-tertiary text-lg pb-1 mr-1" />
+                  <WomanOutlined className="text-typo-tertiary text-lg pb-1 mr-1" />
                   <Text>Female</Text>
                 </div>
               </Option>
               <Option value="Not to prefer">
                 <div className="flex items-center">
-                  <MehOutlined className="text-tertiary text-lg pb-1 mr-1" />
+                  <MehOutlined className="text-typo-tertiary text-lg pb-1 mr-1" />
                   <Text>Not to prefer</Text>
                 </div>
               </Option>
@@ -127,7 +127,7 @@ function CreatePatientModalContainer({
             label="DATE OF BIRTH"
             name="dayOfBirth"
             rules={[{ required: true }]}
-            className="w-1/2 text-tertiary text-sm"
+            className="w-1/2 text-typo-tertiary text-sm"
           >
             <DatePicker
               placeholder="No default"

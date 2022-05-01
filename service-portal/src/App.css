@@ -1,7 +1,7 @@
 @import '~antd/dist/antd.css';
 
 body {
-  @apply font-sans bg-white;
+  @apply font-sans bg-base-primary;
 }
 
 .ant-btn > span {
@@ -24,7 +24,7 @@ body {
 
 .ant-menu-item-selected a,
 .ant-menu-item-selected a:hover {
-  @apply bg-transparent text-primary;
+  @apply bg-transparent text-typo-primary;
 }
 
 .ant-menu:not(.ant-menu-horizontal) .ant-menu-item-selected {

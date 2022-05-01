@@ -23,21 +23,21 @@ export const PatientRow = memo(({ index, patient, onClick }: Props) => {
     if (gender === 'Male') {
       return (
         <>
-          <ManOutlined className="text-tertiary text-lg pb-1 mr-1" />
+          <ManOutlined className="text-typo-tertiary text-lg pb-1 mr-1" />
           <Text>Male</Text>
         </>
       );
     } else if (gender === 'Female') {
       return (
         <>
-          <WomanOutlined className="text-tertiary text-lg pb-1 mr-1" />
+          <WomanOutlined className="text-typo-tertiary text-lg pb-1 mr-1" />
           <Text>Female</Text>
         </>
       );
     } else {
       return (
         <>
-          <MehOutlined className="text-tertiary text-lg pb-1 mr-1" />
+          <MehOutlined className="text-typo-tertiary text-lg pb-1 mr-1" />
           <Text>Prefer not to say</Text>
         </>
       );
@@ -56,11 +56,11 @@ export const PatientRow = memo(({ index, patient, onClick }: Props) => {
       onClick={onClick}
     >
       <Col span={4} className="flex items-center whitespace-nowrap text-ellipsis overflow-hidden">
-        <UserOutlined className="text-tertiary text-lg pb-1 mr-1" />
+        <UserOutlined className="text-typo-tertiary text-lg pb-1 mr-1" />
         <Text>{patient.fullName}</Text>
       </Col>
       <Col span={4} className="flex items-center whitespace-nowrap text-ellipsis overflow-hidden">
-        <PhoneOutlined className="text-tertiary text-lg pb-1 mr-1" />
+        <PhoneOutlined className="text-typo-tertiary text-lg pb-1 mr-1" />
         <Text>{patient.phoneNumber}</Text>
       </Col>
       <Col span={4} className="flex items-center whitespace-nowrap text-ellipsis overflow-hidden">

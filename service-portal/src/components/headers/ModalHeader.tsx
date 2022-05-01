@@ -13,7 +13,7 @@ export const ModalHeader = memo(({ title, subTitle }: Props): JSX.Element => {
         <Heading level={3} className="mb-0">
           {title}
         </Heading>
-        <Text className="text-tertiary">{subTitle}</Text>
+        <Text className="text-typo-tertiary">{subTitle}</Text>
       </div>
     </>
   );

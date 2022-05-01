@@ -5,7 +5,7 @@ export function EmptyDrugs() {
   return (
     <Empty
       description={
-        <Text className="text-tertiary">
+        <Text className="text-typo-tertiary">
           No medications. Click <b>Add</b> to attach a medication.
         </Text>
       }

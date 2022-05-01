@@ -10,14 +10,14 @@ export const SecondaryButton: React.FC<ButtonProps> = memo(
           'flex items-center justify-center rounded-md min-w-[150px]',
           'bg-transparent',
           'transition duration-100',
-          'border-2 border-button-pri',
-          'text-sm text-button-pri font-medium',
-          'hover:border-button-pri-hv hover:text-button-pri-hv',
-          'active:bg-transparent active:text-button-pri active:border-button-pri',
-          'disabled:text-button-pri disabled:border-button-pri disabled:opacity-50',
+          'border-2 border-button-primary',
+          'text-sm text-button-primary font-medium',
+          'hover:border-button-primary-hv hover:text-button-primary-hv',
+          'active:bg-transparent active:text-button-primary active:border-button-primary',
+          'disabled:text-button-primary disabled:border-button-primary disabled:opacity-50',
           'focus:none',
           {
-            'border-opacity-30 text-button-pri hover:bg-transparent hover:text-button-pri hover:cursor-not-allowed':
+            'border-opacity-30 text-button-primary hover:bg-transparent hover:text-button-primary hover:cursor-not-allowed':
               loading,
           },
           className,

@@ -110,7 +110,7 @@ const ActionsPaymentsMedicalBillSectionContainer = ({
           <Col span={5}>${totalPrice}</Col>
         </Row>
       </div>
-      <div className="flex items-center gap-4 mt-4 bg-opacity-5 bg-black py-5 px-5">
+      <div className="flex items-center gap-4 px-5 py-5 mt-4 bg-gradient-to-r from-line-secondary via-gray-100 to-gray-50">
         <PrimaryButton className="px-10" onClick={onClickStart} loading={isStarting}>
           {selectedMedicalBillDetail.status === 'pending' ? 'Start' : 'Finish'}
         </PrimaryButton>

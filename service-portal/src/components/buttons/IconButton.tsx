@@ -8,9 +8,11 @@ export const IconButton = memo(({ className, ...props }: Props): JSX.Element => 
   const classes = useMemo(
     () =>
       classNames(
-        'text-tertiary border-brd',
+        'text-typo-tertiary',
         'transition duration-100',
-        'hover:bg-black hover:bg-opacity-5 hover:border-brd',
+        'border-line-primary',
+        'bg-transparent',
+        'hover:bg-black hover:bg-opacity-5 hover:border-typo-tertiary',
         'active:bg-opacity-[10%]',
         'disabled:bg-[#f5f5f5] disabled:cursor-not-allowed',
         'focus:none',

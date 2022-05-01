@@ -86,11 +86,13 @@ function SignInPageContainer({ title, currentUser, loading, doSignIn }: Props) {
 
       <section className="flex justify-between max-w-screen-lg mt-32">
         <motion.div variants={variants.clinicX} className="mt-10 mr-44">
-          <Heading className="m-0 leading-none text-7xl text-logo">ClinicX</Heading>
-          <Text className="text-2xl text-tertiary font-light">Our business, your comforts.</Text>
+          <Heading className="m-0 leading-none text-7xl text-typo-logo">ClinicX</Heading>
+          <Text className="text-3xl text-typo-primary text-shadow">
+            Our business, your comforts.
+          </Text>
         </motion.div>
 
-        <div className="flex flex-col items-center gap-4 p-5 bg-white rounded-md shadow-lg">
+        <div className="flex flex-col items-center gap-4 p-5 bg-white rounded-md shadow-xl">
           <Form
             form={form}
             name="login"
@@ -133,7 +135,7 @@ function SignInPageContainer({ title, currentUser, loading, doSignIn }: Props) {
             Forgotten password?
           </HyperLinkButton>
 
-          <Divider className="p-0 m-0 border-brd" />
+          <Divider className="p-0 m-0 border-line-secondary" />
 
           <SecondaryButton className="py-5 w-min" onClick={onClickCreateAccount}>
             Create New Account

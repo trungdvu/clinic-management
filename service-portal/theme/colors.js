@@ -1,46 +1,26 @@
 const colors = {
-  primary: {
-    DEFAULT: '#1c1c1c',
-    2: '#f7f3f3',
-  },
-  secondary: {
-    DEFAULT: '#f7f3f3',
-  },
-  tertiary: {
-    DEFAULT: '#737373',
-  },
-  base: {
-    pri: '#f7f7f7',
-    sec: '#30384a',
+  typo: {
+    primary: '#1c1c1c',
+    secondary: '#f7f3f3',
+    tertiary: '#737373',
+    error: '#f02849',
+    success: '#42b72a',
+    warning: '#f9e154',
+    logo: '#003054',
   },
   button: {
-    pri: {
-      DEFAULT: '#d84339',
-      hv: '#30384c',
-    },
-    sec: {
-      hv: '#d84339',
-    },
-    ter: {
-      hv: '#0000000d',
-    },
+    primary: '#d84339',
+    'primary-hv': '#30384c',
+    'secondary-hv': '#d84339',
   },
-  link: {
-    DEFAULT: '#1890FF',
+  line: {
+    primary: '#ced0d4',
+    secondary: '#f0f0f0',
   },
-  info: {
-    err: '#f02849',
-    suc: '#42b72a',
-    war: '#f9e154',
-  },
-  hr: {
-    DEFAULT: '#ced0d4',
-  },
-  brd: {
-    DEFAULT: '#e5e5e5',
-  },
-  logo: {
-    DEFAULT: '#003054',
+  link: '#1890FF',
+  base: {
+    primary: '#f0f2f5',
+    secondary: '#30384a',
   },
 };
 

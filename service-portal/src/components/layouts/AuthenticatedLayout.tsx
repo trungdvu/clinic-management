@@ -12,13 +12,12 @@ import { PAGE_ROUTES } from 'consts';
 import { motion } from 'framer-motion';
 import { useRouterLocation } from 'hooks';
 import _ from 'lodash';
-import React from 'react';
 import { connect } from 'react-redux';
 import { Link, Outlet } from 'react-router-dom';
 import { RootDispatch, RootState } from 'store';
 import { defaultPageVariants } from 'utils';
-import { Navbar } from '../views';
 import { Text } from '../typography';
+import { Navbar } from '../views';
 
 const { Content, Sider } = Layout;
 
@@ -46,11 +45,11 @@ const AuthenticatedLayoutContainer = ({ title, currentUser, ...props }: Props) =
             return (
               <Menu.Item
                 key={`${ITEM.PATH}`}
-                className="flex items-center py-6 m-0 rounded-r-md bg-button-pri"
+                className="flex items-center py-6 m-0 rounded-r-md bg-button-primary"
               >
-                <Link to={ITEM.PATH} className="flex items-center duration-75 text-primary-2">
-                  <ITEM.ICON className=" text-base flex items-center" />
-                  <Text className="text-base text-primary-2">{ITEM.TITLE_MENU}</Text>
+                <Link to={ITEM.PATH} className="flex items-center duration-75 text-typo-secondary">
+                  <ITEM.ICON className="flex items-center text-2xl" />
+                  <Text className="text-sm font-medium text-typo-secondary">{ITEM.TITLE_MENU}</Text>
                 </Link>
               </Menu.Item>
             );
@@ -60,9 +59,9 @@ const AuthenticatedLayoutContainer = ({ title, currentUser, ...props }: Props) =
                 key={`${ITEM.PATH}`}
                 className="flex items-center py-6 m-0 duration-75 rounded-r-md hover:bg-black hover:bg-opacity-5"
               >
-                <Link to={ITEM.PATH} className="flex items-center hover:text-primary">
-                  <ITEM.ICON className="text-primary text-base flex items-center" />
-                  <Text className="text-base">{ITEM.TITLE_MENU}</Text>
+                <Link to={ITEM.PATH} className="flex items-center hover:text-typo-primary">
+                  <ITEM.ICON className="flex items-center text-2xl" />
+                  <Text className="text-sm font-medium">{ITEM.TITLE_MENU}</Text>
                 </Link>
               </Menu.Item>
             );
@@ -82,7 +81,7 @@ const AuthenticatedLayoutContainer = ({ title, currentUser, ...props }: Props) =
             <Affix offsetTop={0}>
               <Sider
                 width={250}
-                className="pr-3 mr-10 overflow-auto bg-white shadow-stone-300 shadow-xl select-none"
+                className="mr-5 overflow-auto bg-white shadow select-none rounded-tr-md"
               >
                 <Menu
                   defaultSelectedKeys={[`${pathname}`]}
@@ -95,10 +94,10 @@ const AuthenticatedLayoutContainer = ({ title, currentUser, ...props }: Props) =
                   >
                     <Link
                       to={PAGE_ROUTES.SUPPORT.PATH}
-                      className="flex items-center hover:text-primary"
+                      className="flex items-center hover:text-typo-primary"
                     >
-                      <LaptopOutlined className="text-primary text-base flex items-end" />
-                      <Text className="text-base">{PAGE_ROUTES.SUPPORT.TITLE_MENU}</Text>
+                      <LaptopOutlined className="flex items-end text-2xl text-typo-primary" />
+                      <Text className="text-sm font-medium">{PAGE_ROUTES.SUPPORT.TITLE_MENU}</Text>
                     </Link>
                   </Menu.Item>
                 </Menu>
@@ -107,7 +106,7 @@ const AuthenticatedLayoutContainer = ({ title, currentUser, ...props }: Props) =
 
             {/* Page will be render through <Outlet /> */}
             <Layout>
-              <Content className="pr-10 max-w-screen-2xl pt-4">
+              <Content className="pr-10 bg-transparent max-w-screen-2x">
                 <Outlet />
               </Content>
             </Layout>

@@ -71,13 +71,13 @@ function SignUpModalContainer({
           <Item name="firstName" rules={[{ required: true }]} className="w-1/2 rounded-md">
             <Input
               placeholder="First name"
-              className="w-full py-2 text-sm font-medium rounded-md bg-brd bg-opacity-50"
+              className="w-full py-2 text-sm font-medium rounded-md bg-line-secondary bg-opacity-50"
             />
           </Item>
           <Item name="lastName" rules={[{ required: true }]} className="w-1/2 rounded-md">
             <Input
               placeholder="Surname"
-              className="w-full py-2 text-sm rounded-md font-medium bg-brd bg-opacity-50"
+              className="w-full py-2 text-sm rounded-md font-medium bg-line-secondary bg-opacity-50"
             />
           </Item>
         </div>
@@ -89,7 +89,7 @@ function SignUpModalContainer({
         >
           <Input
             placeholder="Email"
-            className="w-full py-2 text-sm font-medium rounded-md bg-brd bg-opacity-50"
+            className="w-full py-2 text-sm font-medium rounded-md bg-line-secondary bg-opacity-50"
           />
         </Item>
 
@@ -116,7 +116,7 @@ function SignUpModalContainer({
                 </Tooltip>
               </div>
             )}
-            className="w-full py-1.5 text-sm font-medium bg-opacity-50 rounded-md bg-brd"
+            className="w-full py-1.5 text-sm font-medium bg-opacity-50 rounded-md bg-line-secondary"
           />
         </Item>
 
@@ -129,11 +129,11 @@ function SignUpModalContainer({
           <Input
             maxLength={15}
             placeholder="Phone number"
-            className="w-full py-2 text-sm font-medium rounded-md bg-brd bg-opacity-50"
+            className="w-full py-2 text-sm font-medium rounded-md bg-line-secondary bg-opacity-50"
           />
         </Item>
 
-        <Text className="w-full mt-2 text-xs text-tertiary">
+        <Text className="w-full mt-2 text-xs text-typo-tertiary">
           *By clicking Sign Up, you agree to our Terms, Data Policy and Cookie Policy. You may
           receive SMS notifications from us and can opt out at any time.
         </Text>
