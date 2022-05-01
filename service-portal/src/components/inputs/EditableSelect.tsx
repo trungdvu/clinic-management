@@ -8,12 +8,13 @@ import { IconButton } from '../buttons';
 import './EditableSelect.css';
 
 interface Props<ValueType = any> extends SelectProps<ValueType> {
+  readOnly?: boolean;
   onSave?: (value: any) => void | Promise<void>;
 }
 
 export function EditableSelect<
   ValueType extends { key?: string; label: string | JSX.Element; value: string | number } = any,
->({ value: defaultValue, className, children, onSave, ...props }: Props) {
+>({ value: defaultValue, className, children, readOnly, onSave, ...props }: Props) {
   const [isBlurable, setIsBlurable] = useState(true);
   const [editing, setEditing] = useState(false);
   const [value, setValue] = useState(defaultValue);
@@ -26,8 +27,8 @@ export function EditableSelect<
   }, [editing]);
 
   const onClick = useCallback(() => {
-    setEditing(true);
-  }, []);
+    !readOnly && setEditing(true);
+  }, [readOnly]);
 
   const onChange = useCallback((value) => {
     setValue(value);
@@ -68,8 +69,9 @@ export function EditableSelect<
     >
       <Select<ValueType>
         ref={selectRef}
-        showArrow
+        disabled={readOnly}
         showSearch
+        showArrow={false}
         value={value}
         filterOption={onFilterOption}
         onChange={onChange}

@@ -7,11 +7,12 @@ import { memo, useCallback, useEffect, useRef, useState } from 'react';
 
 interface Props {
   text: string;
+  readOnly?: boolean;
   placeholder?: string;
   onSave: (text: string) => void | Promise<void>;
 }
 
-export const EditableParagrahp = memo(({ text, placeholder, onSave }: Props) => {
+export const EditableParagraph = memo(({ text, placeholder, readOnly, onSave }: Props) => {
   const [editing, setEditing] = useState(false);
   const [value, setValue] = useState('');
   const textAreaRef = useRef<TextAreaRef>(null);
@@ -30,8 +31,8 @@ export const EditableParagrahp = memo(({ text, placeholder, onSave }: Props) => 
   useOnClickOutside(containerRef, () => onCancel());
 
   const onClick = useCallback(() => {
-    setEditing(true);
-  }, []);
+    !readOnly && setEditing(true);
+  }, [readOnly]);
 
   const onChange = useCallback((e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setValue(e.currentTarget.value);

@@ -76,7 +76,7 @@ function MedicalBillDetailPageContainer({
       variants={generateFadeInFadeOut()}
       initial="initial"
       animate="animate"
-      className="mx-[5%] px-4 pt-8 pb-20 bg-white shadow rounded-md"
+      className="mx-[5%] px-4 pt-8 pb-20 bg-white shadow rounded-md min-h-screen"
     >
       <Link to={PAGE_ROUTES.MEDICAL_BILLS.PATH} className="flex items-center gap-2">
         <LeftOutlined className="flex items-center text-base" />

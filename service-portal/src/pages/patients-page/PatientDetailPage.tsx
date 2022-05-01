@@ -84,7 +84,7 @@ function PatientDetailPageContainer({
       variants={generateFadeInFadeOut()}
       initial="initial"
       animate="animate"
-      className="mx-[5%] bg-white px-4 pt-8 pb-20 rounded-md shadow"
+      className="mx-[5%] bg-white px-4 pt-8 pb-20 rounded-md shadow min-h-screen"
     >
       <ConfirmModal
         visible={isConfirmDeleteModalVisible}

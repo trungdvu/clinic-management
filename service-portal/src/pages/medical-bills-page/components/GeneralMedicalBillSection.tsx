@@ -1,5 +1,5 @@
 import { Col, Image, notification, Row, Select } from 'antd';
-import { EditableParagrahp, EditableSelect, Text } from 'components';
+import { EditableParagraph, EditableSelect, Text } from 'components';
 import { PAGE_ROUTES } from 'consts';
 import { DiseaseType, UpdateMedicalBillPayload } from 'interfaces';
 import _ from 'lodash';
@@ -49,7 +49,7 @@ const GeneralMedicalBillSectionContainer = ({
     [doUpdateMedicalBill, params.id, selectedMedicalBillDetail, setSelectedMedicalBillDetail],
   );
 
-  const onSaveSymtoms = useCallback(
+  const onSaveSymptoms = useCallback(
     async (text: string) => {
       const oldSymptomDescription = selectedMedicalBillDetail!.symptomDescription;
       const updatedBillDetail = { ...selectedMedicalBillDetail!, symptomDescription: text };
@@ -125,7 +125,7 @@ const GeneralMedicalBillSectionContainer = ({
       </Col>
       <Col span={20}>
         <Row gutter={24} align="middle">
-          <Col span={6}>
+          <Col span={5} className="text-right">
             <Text type="secondary" className="font-medium">
               PATIENT
             </Text>
@@ -140,13 +140,13 @@ const GeneralMedicalBillSectionContainer = ({
           </Col>
         </Row>
         <Row gutter={24} align="top" className="mt-4">
-          <Col span={6}>
+          <Col span={5} className="text-right">
             <Text type="secondary" className="font-medium">
               WHEN
             </Text>
           </Col>
           <Col span={12} className="flex flex-col">
-            <Text className="font-medium px-3">
+            <Text className="px-3 font-medium">
               {moment(selectedMedicalBillDetail.createdAt).format('dddd, D MMM YYYY')}
             </Text>
             <Text type="secondary" className="px-3">
@@ -155,26 +155,28 @@ const GeneralMedicalBillSectionContainer = ({
           </Col>
         </Row>
         <Row gutter={24} align="top" className="mt-4">
-          <Col span={6} className="mt-1">
+          <Col span={5} className="mt-1 text-right">
             <Text type="secondary" className="font-medium">
               SYSTOMS
             </Text>
           </Col>
           <Col span={16}>
-            <EditableParagrahp
+            <EditableParagraph
+              readOnly={selectedMedicalBillDetail.status === 'completed'}
               text={selectedMedicalBillDetail.symptomDescription}
-              onSave={onSaveSymtoms}
+              onSave={onSaveSymptoms}
             />
           </Col>
         </Row>
         <Row gutter={24} align="top" className="mt-4">
-          <Col span={6} className="mt-1">
+          <Col span={5} className="mt-1 text-right">
             <Text type="secondary" className="font-medium">
               PREDICTION
             </Text>
           </Col>
           <Col span={16}>
-            <EditableParagrahp
+            <EditableParagraph
+              readOnly={selectedMedicalBillDetail.status === 'completed'}
               text={selectedMedicalBillDetail.prediction}
               placeholder="Not set"
               onSave={onSavePrediction}
@@ -182,13 +184,14 @@ const GeneralMedicalBillSectionContainer = ({
           </Col>
         </Row>
         <Row gutter={24} align="top" className="mt-4">
-          <Col span={6} className="mt-1">
+          <Col span={5} className="mt-1 text-right">
             <Text type="secondary" className="font-medium">
               ACTUAL RESULTS
             </Text>
           </Col>
           <Col span={16}>
             <EditableSelect
+              readOnly={selectedMedicalBillDetail.status === 'completed'}
               value={_.map(selectedMedicalBillDetail.diseaseTypes, (d) => d.id)}
               showSearch={false}
               mode="multiple"

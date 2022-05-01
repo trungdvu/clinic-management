@@ -2,9 +2,10 @@ import { createModel } from '@rematch/core';
 import { API } from 'consts';
 import {
   AddMedicationPayload,
+  CreatePaymentPayload,
   GetMoreMedicalBillSummariesPayload,
   MedicalBillDetail,
-  MedicalBillSumary,
+  MedicalBillSummary,
   NewMedicalBillPayload,
   UpdateMedicalBillDetailPayload,
   UpdateMedicalBillPayload,
@@ -18,7 +19,7 @@ type Page = 'allMedicalBillSummariesPage';
 type HasMoreKey = 'allMedicalBillSummariesHasMore';
 
 interface MedicalBillState {
-  medicalBillSummaries: MedicalBillSumary[];
+  medicalBillSummaries: MedicalBillSummary[];
   selectedMedicalBillId: string;
   allMedicalBillSummariesHasMore: boolean;
   allMedicalBillSummariesPage: number;
@@ -35,7 +36,7 @@ export const medicalBillModel = createModel<RootModel>()({
   } as MedicalBillState,
 
   reducers: {
-    setMedicalBillSummaries: (state, payload: MedicalBillSumary[]) => ({
+    setMedicalBillSummaries: (state, payload: MedicalBillSummary[]) => ({
       ...state,
       medicalBillSummaries: payload,
     }),
@@ -139,7 +140,7 @@ export const medicalBillModel = createModel<RootModel>()({
         const { data, status } = await HttpService.get(endpoint);
 
         if (status === 200 && !_.isEmpty(data.data)) {
-          const moreMedicalBillSummaries: MedicalBillSumary[] = data.data;
+          const moreMedicalBillSummaries: MedicalBillSummary[] = data.data;
 
           dispatch.medicalBillModel.setMedicalBillSummaries(
             uniqueBy([...medicalBillSummaries, ...moreMedicalBillSummaries], 'id'),
@@ -223,6 +224,17 @@ export const medicalBillModel = createModel<RootModel>()({
         return status === 200;
       } catch (error) {
         console.log('doDeleteMedicalBillDetail', error);
+        return false;
+      }
+    },
+
+    async doCreatePayment(payload: CreatePaymentPayload) {
+      try {
+        const endpoint = API.BILL_PAYMENTS;
+        const { status } = await HttpService.post(endpoint, payload);
+        return status === 200;
+      } catch (error) {
+        console.log('doCreatePayment', error);
         return false;
       }
     },

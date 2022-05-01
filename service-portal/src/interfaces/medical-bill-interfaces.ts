@@ -50,7 +50,14 @@ export interface UpdateMedicalBillDetailPayload {
   };
 }
 
-export interface MedicalBillSumary {
+export interface CreatePaymentPayload {
+  medicalBillId: string;
+  patientId: string;
+  medicalExamCost?: number;
+  totalDrugCost?: number;
+}
+
+export interface MedicalBillSummary {
   id: string;
   diseaseTypeId: string;
   prediction: string;

@@ -14,6 +14,10 @@ export function uniqueBy<T>(arr: T[], attribute: keyof T) {
   }, new Set());
 }
 
+export function formatVND(amount: number) {
+  return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
+}
+
 export const regExpNumber = new RegExp(
   /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/,
 );

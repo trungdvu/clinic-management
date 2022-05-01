@@ -7,11 +7,13 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { RootDispatch, RootState } from 'store';
+import { formatVND } from 'utils/common-utils';
 
 const { Option } = Select;
 
 interface Props extends PropsFromStore {
   currentIndex: number;
+  readOnly?: boolean;
   availableUsages: Usage[];
   medicalBillDrug: MedicalBillDrug;
   onPreRemove?: (index: number) => void;
@@ -19,6 +21,7 @@ interface Props extends PropsFromStore {
 
 const EditTableDrugRowContainer = ({
   currentIndex,
+  readOnly,
   availableUsages,
   medicalBillDrug,
   selectedMedicalBillDetail,
@@ -82,7 +85,7 @@ const EditTableDrugRowContainer = ({
     [availableUnisObj, rowData, save],
   );
 
-  const onSaveQuatity = useCallback(
+  const onSaveQuantity = useCallback(
     (value: number) => {
       if (value < 1) return;
 
@@ -122,7 +125,7 @@ const EditTableDrugRowContainer = ({
     <Row
       gutter={24}
       className={classNames('relative py-3 text-typo-primary flex items-center', {
-        'bg-black bg-opacity-[2.5%]': currentIndex % 2 !== 0,
+        'border-t border-line-secondary': currentIndex !== 0,
       })}
     >
       <Col span={1}>
@@ -134,7 +137,13 @@ const EditTableDrugRowContainer = ({
       </Col>
 
       <Col span={7} className="pl-6">
-        <EditableSelect value={medicalBillDrug.usage.id} className="w-full" onSave={onSaveUsage}>
+        <EditableSelect
+          readOnly={readOnly}
+          value={medicalBillDrug.usage.id}
+          showArrow={false}
+          className="w-full"
+          onSave={onSaveUsage}
+        >
           {_.map(availableUsages, (usage) => (
             <Option key={usage.id}>
               <Text className="font-sm">{usage.description}</Text>
@@ -144,7 +153,13 @@ const EditTableDrugRowContainer = ({
       </Col>
 
       <Col span={3} className="pl-6">
-        <EditableSelect value={medicalBillDrug.unit.id} className="w-full" onSave={onSaveUnit}>
+        <EditableSelect
+          readOnly={readOnly}
+          value={medicalBillDrug.unit.id}
+          showArrow={false}
+          className="w-full"
+          onSave={onSaveUnit}
+        >
           {_.map(rowData.availableUnits, (unit) => (
             <Option key={unit.id}>
               <Text className="font-sm">{unit.description}</Text>
@@ -154,16 +169,24 @@ const EditTableDrugRowContainer = ({
       </Col>
 
       <Col span={3} className="pl-6">
-        <InputNumber value={rowData.quantity} min={1} autoComplete="off" onChange={onSaveQuatity} />
+        <InputNumber
+          min={1}
+          disabled={readOnly}
+          value={rowData.quantity}
+          autoComplete="off"
+          onChange={onSaveQuantity}
+          className="border-line-secondary"
+        />
       </Col>
 
       <Col span={3} className="pl-6 text-right">
-        VND {rowData.price}
+        {formatVND(rowData.price)}
       </Col>
 
       <Col span={2} className="flex justify-end">
         <button
-          className="px-3 text-center text-button-primary transition-all duration-100 hover:bg-black hover:bg-opacity-5"
+          disabled={readOnly}
+          className="px-3 text-center transition-all duration-100 text-button-primary hover:bg-black hover:bg-opacity-5 disabled:opacity-50"
           onClick={onRemove}
         >
           Remove

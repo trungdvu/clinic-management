@@ -3,7 +3,7 @@ import classNames from 'classnames';
 import { Button, ButtonProps } from 'antd';
 
 export const PrimaryButton: React.FC<ButtonProps> = memo(
-  ({ children, className, style, loading, ...props }) => {
+  ({ children, className, style, loading, disabled, ...props }) => {
     const classes = useMemo(
       () =>
         classNames(
@@ -16,11 +16,11 @@ export const PrimaryButton: React.FC<ButtonProps> = memo(
           'focus:none',
           {
             'bg-button-primary opacity-50 hover:cursor-not-allowed hover:bg-button-primary hover:border-button-primary':
-              loading,
+              loading || disabled,
           },
           className,
         ),
-      [className, loading],
+      [className, disabled, loading],
     );
 
     const styles = useMemo(
@@ -31,7 +31,14 @@ export const PrimaryButton: React.FC<ButtonProps> = memo(
     );
 
     return (
-      <Button size="large" loading={loading} className={classes} style={styles} {...props}>
+      <Button
+        size="large"
+        disabled={disabled}
+        loading={loading}
+        className={classes}
+        style={styles}
+        {...props}
+      >
         {children}
       </Button>
     );

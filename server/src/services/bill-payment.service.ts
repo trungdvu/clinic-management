@@ -1,5 +1,11 @@
+import _ from "lodash";
 import { CreateBillPaymentDto } from "../dtos";
-import { MedicalBill, MedicalBillDetail, Patient } from "../models";
+import {
+  MedicalBill,
+  MedicalBillDetail,
+  MedicalBillStatus,
+  Patient,
+} from "../models";
 import {
   BillPaymentRepository,
   DrugPriceRepository,
@@ -57,7 +63,13 @@ export class BillPaymentService {
         totalDrugCost: totalDrugCost ?? drugsCost,
       };
 
-      await BillPaymentRepository.create(defaultDto);
+      const result = await BillPaymentRepository.create(defaultDto);
+
+      if (result) {
+        await MedicalBillRepository.update(medicalBillId, {
+          status: MedicalBillStatus.Completed,
+        });
+      }
     } catch (error) {
       ErrorHandler(error);
     }

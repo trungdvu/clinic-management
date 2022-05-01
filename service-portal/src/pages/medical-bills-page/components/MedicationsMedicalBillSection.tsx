@@ -91,7 +91,7 @@ const MedicationsMedicalBillSectionContainer = ({
       <Form
         form={form}
         onFinish={onClickAddMedication}
-        className="py-2 mt-4 pr-7 bg-gradient-to-l from-line-secondary via-gray-100 to-gray-50"
+        className="py-2 mt-4 pr-7 bg-gradient-to-r from-line-secondary via-gray-100 to-gray-50"
       >
         <Row gutter={24} className="px-5 py-3">
           <Col span={1}></Col>
@@ -100,7 +100,7 @@ const MedicationsMedicalBillSectionContainer = ({
               <Select
                 filterOption
                 size="large"
-                placeholder="Medication name"
+                placeholder="medication name..."
                 className="h-10 text-sm"
                 onChange={onChangeSelectMedicationName}
               >
@@ -112,7 +112,7 @@ const MedicationsMedicalBillSectionContainer = ({
           </Col>
           <Col span={7}>
             <Item rules={[{ required: true }]} name="usageId">
-              <Select size="large" placeholder="Description, usage" className="h-10 text-sm">
+              <Select size="large" placeholder="description, usage..." className="h-10 text-sm">
                 {_.map(drugUsages, (usage) => (
                   <Option key={usage.id}>{usage.description}</Option>
                 ))}
@@ -123,7 +123,7 @@ const MedicationsMedicalBillSectionContainer = ({
             <Item rules={[{ required: true }]} name="unitId">
               <Select
                 size="large"
-                placeholder="Pill, pack"
+                placeholder="mililiter, pack..."
                 className="h-10 text-sm"
                 onChange={(value) => {
                   console.log(value);
@@ -137,12 +137,22 @@ const MedicationsMedicalBillSectionContainer = ({
           </Col>
           <Col span={3}>
             <Item rules={[{ required: true }]} name="quantity">
-              <InputNumber size="large" placeholder="1, 2, 3" className="w-full h-10 text-sm" />
+              <InputNumber
+                min={1}
+                size="large"
+                placeholder="1, 2, 3"
+                className="w-full h-10 text-sm"
+              />
             </Item>
           </Col>
           <Col span={3}>
             <Item>
-              <PrimaryButton htmlType="submit" loading={isAddingMedication} className="px-10">
+              <PrimaryButton
+                disabled={selectedMedicalBillDetail.status === 'completed'}
+                htmlType="submit"
+                loading={isAddingMedication}
+                className="px-10"
+              >
                 Add
               </PrimaryButton>
             </Item>
@@ -185,6 +195,7 @@ const MedicationsMedicalBillSectionContainer = ({
             <>
               {_.map(selectedMedicalBillDetail.drugDetails, (drug, index) => (
                 <EditableDrugRow
+                  readOnly={selectedMedicalBillDetail.status === 'completed'}
                   key={index}
                   currentIndex={index}
                   availableUsages={drugUsages}
@@ -198,14 +209,14 @@ const MedicationsMedicalBillSectionContainer = ({
 
         <div
           className={classNames(
-            'h-16 w-full absolute bottom-0 bg-gradient-to-t from-line-secondary to-transparent',
+            'h-20 w-full absolute bottom-0 bg-gradient-to-t from-line-secondary',
             {
               hidden: isMedicationsExpanded || selectedMedicalBillDetail.drugDetails.length < 4,
             },
           )}
         />
         <div className="absolute bottom-0 z-50 flex items-center w-full transform translate-y-4">
-          <div className="flex-1 h-px bg-line-secondary" />
+          <div className="flex-1 h-px bg-line-primary" />
           <IconButton
             disabled={selectedMedicalBillDetail.drugDetails.length < 4}
             icon={
@@ -217,7 +228,7 @@ const MedicationsMedicalBillSectionContainer = ({
             }
             onClick={toggleExpandedMedications}
           />
-          <div className="flex-1 h-px bg-line-secondary" />
+          <div className="flex-1 h-px bg-line-primary" />
         </div>
       </div>
     </DetailSection>

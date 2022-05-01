@@ -23,4 +23,6 @@ export const API = {
   UNITS_PARAMS: (params: any) => `/${VERSION}/units${toParamsUrl(params)}`,
 
   USAGES: `/${VERSION}/usages`,
+
+  BILL_PAYMENTS: `/${VERSION}/bill-payments`,
 };

@@ -1,5 +1,5 @@
 import { WarningOutlined } from '@ant-design/icons';
-import { Col, notification, Row } from 'antd';
+import { notification } from 'antd';
 import { ConfirmModal, DetailSection, PrimaryButton, SecondaryButton, Text } from 'components';
 import { PAGE_ROUTES } from 'consts';
 import _ from 'lodash';
@@ -7,6 +7,9 @@ import { useCallback, useMemo, useState } from 'react';
 import { connect } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 import { RootDispatch, RootState } from 'store';
+import { sleep } from 'utils/async-utils';
+import { formatVND } from 'utils/common-utils';
+import { FinishMedicalBillModal } from './FinishMedicalBillModal';
 
 interface Props extends PropsFromStore {}
 
@@ -18,14 +21,20 @@ const ActionsPaymentsMedicalBillSectionContainer = ({
 }: Props) => {
   const [isStarting, setIsStarting] = useState(false);
   const [isConfirmDeleteModalVisible, setIsConfirmDeleteModalVisible] = useState(false);
+  const [isFinishMedicalBillModalVisible, setIsFinishMedicalBillModalVisible] = useState(false);
+
+  const { drugDetails, status, id, patient } = selectedMedicalBillDetail;
+  const feeCost = 159000;
 
   const params = useParams();
   const navigate = useNavigate();
 
-  const totalPrice = useMemo(
-    () => _.reduce(selectedMedicalBillDetail?.drugDetails, (acc, drug) => acc + drug.price, 0),
-    [selectedMedicalBillDetail?.drugDetails],
+  const medicationCost = useMemo(
+    () => _.reduce(drugDetails, (acc, drug) => acc + drug.price, 0),
+    [drugDetails],
   );
+
+  const totalCost = useMemo(() => medicationCost + feeCost, [medicationCost]);
 
   const onClickDelete = useCallback(() => {
     setIsConfirmDeleteModalVisible(true);
@@ -65,7 +74,7 @@ const ActionsPaymentsMedicalBillSectionContainer = ({
         message: 'Started',
         description: 'The medical bill has been started',
       });
-      setSelectedMedicalBillDetail({ ...selectedMedicalBillDetail!, status: 'active' });
+      setSelectedMedicalBillDetail({ ...selectedMedicalBillDetail, status: 'active' });
     } else {
       notification.error({
         message: 'Failed',
@@ -75,6 +84,15 @@ const ActionsPaymentsMedicalBillSectionContainer = ({
 
     setIsStarting(false);
   }, [doUpdateMedicalBill, params.id, selectedMedicalBillDetail, setSelectedMedicalBillDetail]);
+
+  const onClickFinish = useCallback(async () => {
+    setIsFinishMedicalBillModalVisible(true);
+    await sleep(3000);
+  }, []);
+
+  const onCloseFinish = useCallback(() => {
+    setIsFinishMedicalBillModalVisible(false);
+  }, []);
 
   return (
     <DetailSection
@@ -90,41 +108,57 @@ const ActionsPaymentsMedicalBillSectionContainer = ({
         onClickButtonLeft={onClickOkDelete}
         onClickButtonRight={onClickCancelDelete}
       />
-      <div className="px-5 mt-4">
-        <Row gutter={24} className="py-3">
-          <Col span={5}>
-            <Text>Fee:</Text>
-          </Col>
-          <Col span={5}>$0</Col>
-        </Row>
-        <Row gutter={24} className="py-3">
-          <Col span={5}>
-            <Text>Medications:</Text>
-          </Col>
-          <Col span={5}>${totalPrice}</Col>
-        </Row>
-        <Row gutter={24} className="py-3">
-          <Col span={5}>
-            <Text>Total:</Text>
-          </Col>
-          <Col span={5}>${totalPrice}</Col>
-        </Row>
+
+      <FinishMedicalBillModal
+        visible={isFinishMedicalBillModalVisible}
+        medicalBillId={id}
+        medicalExamCost={feeCost}
+        patientId={patient.id}
+        totalDrugCost={medicationCost}
+        onClose={onCloseFinish}
+      />
+
+      <div className="px-5 mt-4 bg-gradient-to-r from-line-secondary via-gray-100 to-gray-50 w-80">
+        <div className="flex items-center justify-between py-3">
+          <Text className="text-right w-min">Medications:</Text>
+          <Text>{formatVND(medicationCost)}</Text>
+        </div>
+        <div className="flex items-center justify-between py-3">
+          <Text className="text-right w-min">Fee:</Text>
+          <Text>{formatVND(feeCost)}</Text>
+        </div>
+        <div className="flex items-center justify-between py-3">
+          <Text className="text-right w-min">Total:</Text>
+          <Text>{formatVND(totalCost)}</Text>
+        </div>
       </div>
+
       <div className="flex items-center gap-4 px-5 py-5 mt-4 bg-gradient-to-r from-line-secondary via-gray-100 to-gray-50">
-        <PrimaryButton className="px-10" onClick={onClickStart} loading={isStarting}>
-          {selectedMedicalBillDetail.status === 'pending' ? 'Start' : 'Finish'}
-        </PrimaryButton>
+        {status === 'pending' ? (
+          <PrimaryButton className="px-10" onClick={onClickStart} loading={isStarting}>
+            Start
+          </PrimaryButton>
+        ) : status === 'active' ? (
+          <PrimaryButton className="px-10" onClick={onClickFinish}>
+            Finish
+          </PrimaryButton>
+        ) : (
+          <PrimaryButton disabled className="px-10">
+            Finished
+          </PrimaryButton>
+        )}
+
         <SecondaryButton
-          disabled={selectedMedicalBillDetail.status !== 'pending'}
+          disabled={status !== 'pending'}
           className={'flex items-center disabled:cursor-not-allowed'}
           onClick={onClickDelete}
         >
-          {selectedMedicalBillDetail.status === 'pending' ? (
+          {status === 'pending' ? (
             <Text>Delete This Medical Bill</Text>
           ) : (
             <>
               <WarningOutlined className="flex items-center justify-center" />
-              <Text className="ml-2">Cannot delete this medical bill</Text>
+              <Text className="ml-2">Cannot Delete This Medical Bill</Text>
             </>
           )}
         </SecondaryButton>
