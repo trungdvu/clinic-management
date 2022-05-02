@@ -6,7 +6,7 @@ import { Text } from '../typography';
 export const NonAuthFooter = memo((): JSX.Element => {
   return (
     <div className="w-screen mt-20 bg-base-secondary text-typo-secondary">
-      <div className="flex justify-between max-w-5xl px-5 py-12 mx-auto">
+      <div className="flex items-center justify-between max-w-5xl px-5 mx-auto h-14">
         <Link
           to={PAGE_ROUTES.HELP_CENTER.PATH}
           className="text-xs hover:underline text-typo-secondary"

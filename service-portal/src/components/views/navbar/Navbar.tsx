@@ -10,12 +10,14 @@ interface Props extends PropsFromStore {}
 
 function NavbarContainer({ currentUser, doSignOut }: Props) {
   return (
-    <div className="flex items-center justify-between w-full h-14 px-10 bg-white shadow">
-      <Link to={'/'} className="flex items-center">
-        <Image src={require('assets/images/logo.png')} preview={false} className="h-9" />
-        <Heading className="mb-0 ml-1 select-none text-typo-logo">ClinicX</Heading>
-      </Link>
-      <ProfileDropdown currentUser={currentUser!} onSignOutClick={doSignOut} />
+    <div>
+      <div className="flex items-center justify-between w-full px-10 bg-white shadow h-14">
+        <Link to={'/'} className="flex items-center">
+          <Image src={require('assets/images/logo.png')} preview={false} className="h-9" />
+          <Heading className="mb-0 ml-1 select-none text-typo-logo">ClinicX</Heading>
+        </Link>
+        <ProfileDropdown currentUser={currentUser!} onSignOutClick={doSignOut} />
+      </div>
     </div>
   );
 }

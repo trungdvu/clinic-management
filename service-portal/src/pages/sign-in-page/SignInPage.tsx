@@ -18,7 +18,7 @@ import { connect } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { authLocalStorage, ErrorModel } from 'shared';
 import { RootDispatch, RootState } from 'store';
-import { defailtEase, defaultPageVariants } from 'utils';
+import { defaultEase, defaultPageVariants } from 'utils';
 import { SignUpModel } from './SignUpModal';
 
 const { useForm, Item } = Form;
@@ -153,12 +153,12 @@ const variants = {
     initial: {
       x: 25,
       opacity: 0,
-      transition: { duration: 0.6, ease: defailtEase },
+      transition: { duration: 0.6, ease: defaultEase },
     },
     animate: {
       x: 0,
       opacity: 1,
-      transition: { duration: 0.6, delay: 0.3, ease: defailtEase },
+      transition: { duration: 0.6, delay: 0.3, ease: defaultEase },
     },
   } as Variants,
 };

@@ -1,4 +1,4 @@
-import { ErrorBoundary } from 'components';
+import { ErrorBoundary, NetworkStatus } from 'components';
 import { PAGE_ROUTES } from 'consts';
 import _ from 'lodash';
 import { useEffect } from 'react';
@@ -30,6 +30,7 @@ const AppContainer = ({ currentUser, setCurrentUser }: Props) => {
   return (
     <ErrorBoundary>
       <MainRoutes />
+      <NetworkStatus />
     </ErrorBoundary>
   );
 };
