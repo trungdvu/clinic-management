@@ -17,7 +17,7 @@ import { Link, Outlet } from 'react-router-dom';
 import { RootDispatch, RootState } from 'store';
 import { defaultPageVariants } from 'utils';
 import { Text } from '../typography';
-import { Navbar } from '../views';
+import { Navbar, NetworkStatus } from '../views';
 
 const { Content, Sider } = Layout;
 
@@ -108,6 +108,7 @@ const AuthenticatedLayoutContainer = ({ title, currentUser, ...props }: Props) =
             <Layout>
               <Content className="pr-10 bg-transparent max-w-screen-2x">
                 <Outlet />
+                <NetworkStatus />
               </Content>
             </Layout>
           </Layout>

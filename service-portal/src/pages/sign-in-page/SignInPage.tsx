@@ -3,6 +3,7 @@ import { Divider, Form, Input, notification } from 'antd';
 import {
   Heading,
   HyperLinkButton,
+  NetworkStatus,
   NonAuthFooter,
   PrimaryButton,
   SecondaryButton,
@@ -82,6 +83,7 @@ function SignInPageContainer({ title, currentUser, loading, doSignIn }: Props) {
       animate="animate"
       className="flex flex-col items-center justify-between min-h-screen mx-auto"
     >
+      <NetworkStatus className="top-0 h-10" />
       <SignUpModel visible={isSignInModalVisible} onCancel={onCancelSignUpModal} />
 
       <section className="flex justify-between max-w-screen-lg mt-32">

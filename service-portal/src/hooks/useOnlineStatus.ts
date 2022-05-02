@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { RootDispatch } from 'store/index';
 
-const ONLINE_POLLING_INTERVAL = 10000;
+const ONLINE_POLLING_INTERVAL = 5000;
 
 export function useOnlineStatus() {
   const [onlineStatus, setOnlineStatus] = useState(true);
