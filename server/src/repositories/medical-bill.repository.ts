@@ -1,4 +1,5 @@
-import { Transaction } from "sequelize";
+import moment from "moment";
+import { Op } from "sequelize";
 import {
   CreateMedicalBillDto,
   FindMedicalBillsQueryParams,
@@ -81,6 +82,26 @@ export class MedicalBillRepository {
           id,
         },
       });
+    } catch (error) {
+      throw new InternalServerError(error.message);
+    }
+  }
+
+  static async findManyToday(): Promise<MedicalBill[]> {
+    try {
+      const records = await MedicalBill.findAll({
+        where: {
+          createdAt: {
+            [Op.gte]: moment().startOf("day").toDate(),
+          },
+        },
+        include: {
+          model: Patient,
+          attributes: ["fullName", "id"],
+        },
+      });
+
+      return records;
     } catch (error) {
       throw new InternalServerError(error.message);
     }

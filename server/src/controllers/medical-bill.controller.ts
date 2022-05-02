@@ -5,6 +5,7 @@ import {
   MedicalBillResponse,
   MedicalBillSummaryResponse,
   UpdateMedicalBillDto,
+  ViewDashboardSummaryTodayResponse,
 } from "../dtos";
 import { MedicalBillService } from "../services";
 import { BodyResponse, ErrorResponseHandler, HttpStatusCode } from "../shared";
@@ -90,6 +91,25 @@ export class MedicalBillController {
 
       const bodyResponse: BodyResponse<void> = {
         message: "Execute Successfully",
+        statusCode: HttpStatusCode.OK,
+      };
+
+      res.status(bodyResponse.statusCode).json(bodyResponse);
+    } catch (error) {
+      ErrorResponseHandler(error, res);
+    }
+  }
+
+  static async viewDashboardTodaySummary(
+    req: Request,
+    res: Response
+  ): Promise<void> {
+    try {
+      const summaryToday = await MedicalBillService.viewDashboardSummary();
+
+      const bodyResponse: BodyResponse<ViewDashboardSummaryTodayResponse> = {
+        message: "Execute Successfully",
+        data: summaryToday,
         statusCode: HttpStatusCode.OK,
       };
 

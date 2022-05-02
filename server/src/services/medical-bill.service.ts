@@ -1,5 +1,7 @@
+import _ from "lodash";
 import {
   CreateMedicalBillDto,
+  DashboardMedicalBillSummaryResponse,
   DiseaseTypeResponse,
   FindMedicalBillsQueryParams,
   MedicalBillDetailResponse,
@@ -7,8 +9,9 @@ import {
   MedicalBillSummaryResponse,
   PatientResponse,
   UpdateMedicalBillDto,
+  ViewDashboardSummaryTodayResponse,
 } from "../dtos";
-import { MedicalBill, sequelize } from "../models";
+import { MedicalBill, MedicalBillStatus, sequelize } from "../models";
 import { MedicalBillDiseaseType } from "../models/medical-bill-disease-type.model";
 import {
   DiseaseTypeRepository,
@@ -16,6 +19,7 @@ import {
   MedicalBillRepository,
   PatientRepository,
 } from "../repositories";
+import { IdentityRepository } from "../repositories/identity.repository";
 import {
   BadRequestError,
   Checker,
@@ -27,8 +31,6 @@ import { MedicalBillDetailService } from "./medical-bill-detail.service";
 import { PatientService } from "./patient.service";
 import { RedisService } from "./redis.service";
 import { TokenService } from "./token.service";
-import { IdentityRepository } from "../repositories/identity.repository";
-import _ from "lodash";
 
 export class MedicalBillService {
   static async findMany(
@@ -295,6 +297,53 @@ export class MedicalBillService {
       );
       await MedicalBillRepository.delete(id);
       await RedisService.remove("medical-bills" + userId);
+    } catch (error) {
+      ErrorHandler(error);
+    }
+  }
+
+  static async viewDashboardSummary(): Promise<ViewDashboardSummaryTodayResponse> {
+    try {
+      const { userId } = await TokenService.decode(
+        TokenService.getCurrentToken()
+      );
+
+      const medicalBills = await MedicalBillRepository.findManyToday();
+
+      let activeCount = 0;
+      let pendingCount = 0;
+      let completedCount = 0;
+      const myMedicalBills = _.chain(medicalBills)
+        .filter((d) => {
+          if (d.status === MedicalBillStatus.Active) {
+            activeCount++;
+          } else if (d.status === MedicalBillStatus.Pending) {
+            pendingCount++;
+          } else if (d.status === MedicalBillStatus.Completed) {
+            completedCount++;
+          }
+
+          return d.creatorId === userId;
+        })
+        .map(
+          (d): DashboardMedicalBillSummaryResponse => ({
+            id: d.id,
+            patientId: d.patient.id,
+            symptomDescription: d.symptomDescription,
+            patientFullName: d.patient.fullName,
+            createdAt: d.createdAt,
+          })
+        )
+        .value();
+
+      const response: ViewDashboardSummaryTodayResponse = {
+        activeCount,
+        pendingCount,
+        completedCount,
+        myMedicalBills,
+      };
+
+      return response;
     } catch (error) {
       ErrorHandler(error);
     }
