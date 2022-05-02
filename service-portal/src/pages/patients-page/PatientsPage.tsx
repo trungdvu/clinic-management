@@ -68,7 +68,7 @@ function PatientsPageContainer({
       variants={defaultLayoutVariants}
       initial="initial"
       animate="animate"
-      className="px-4 py-8 bg-white rounded-md shadow"
+      className="min-h-screen px-4 py-8 bg-white rounded-md shadow"
     >
       <CreatePatientModal visible={isCreatePatientModalVisible} onCancel={onCancelCreatePatient} />
 

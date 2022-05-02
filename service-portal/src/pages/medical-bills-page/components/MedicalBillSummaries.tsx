@@ -13,11 +13,11 @@ interface Props extends PropsFromStore {}
 
 const MedicalBillSummariesContainer = ({
   medicalBillSummaries,
-  seletedMedicalBillId,
+  selectedMedicalBillId,
   allMedicalBillSummariesHasMore,
-  setSelectedMedicalbillId,
+  setSelectedMedicalBillId,
   doDeleteMedicalBill,
-  doGetMoreMedicalBillSumarries,
+  doGetMoreMedicalBillSummaries,
 }: Props) => {
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
@@ -33,19 +33,19 @@ const MedicalBillSummariesContainer = ({
 
   const onClickDeleteMedicalBill = useCallback(
     (id: string) => () => {
-      setSelectedMedicalbillId(id);
+      setSelectedMedicalBillId(id);
       setIsDeleteModalVisible(true);
     },
-    [setSelectedMedicalbillId],
+    [setSelectedMedicalBillId],
   );
 
   const onCancelDelete = useCallback(() => {
     setIsDeleteModalVisible(false);
-    setSelectedMedicalbillId('');
-  }, [setSelectedMedicalbillId]);
+    setSelectedMedicalBillId('');
+  }, [setSelectedMedicalBillId]);
 
-  const onOkDelele = useCallback(async () => {
-    const result = await doDeleteMedicalBill(seletedMedicalBillId);
+  const onOkDelete = useCallback(async () => {
+    const result = await doDeleteMedicalBill(selectedMedicalBillId);
     if (result) {
       setIsDeleteModalVisible(false);
       notification.success({
@@ -58,16 +58,16 @@ const MedicalBillSummariesContainer = ({
         description: 'Ops, Something went wrong.',
       });
     }
-  }, [doDeleteMedicalBill, seletedMedicalBillId]);
+  }, [doDeleteMedicalBill, selectedMedicalBillId]);
 
   const _doGetMoreMedicalBillSummaries = useCallback(async () => {
     if (isLoadingMore) {
       return;
     }
     setIsLoadingMore(true);
-    await doGetMoreMedicalBillSumarries({});
+    await doGetMoreMedicalBillSummaries({});
     setIsLoadingMore(false);
-  }, [doGetMoreMedicalBillSumarries, isLoadingMore]);
+  }, [doGetMoreMedicalBillSummaries, isLoadingMore]);
 
   return (
     <>
@@ -77,7 +77,7 @@ const MedicalBillSummariesContainer = ({
         buttonLeftTitle="Delete"
         buttonRightTitle="Cancel"
         visible={isDeleteModalVisible}
-        onClickButtonLeft={onOkDelele}
+        onClickButtonLeft={onOkDelete}
         onClickButtonRight={onCancelDelete}
       />
 
@@ -133,13 +133,13 @@ const MedicalBillSummariesContainer = ({
 
 const mapState = (state: RootState) => ({
   medicalBillSummaries: state.medicalBillModel.medicalBillSummaries,
-  seletedMedicalBillId: state.medicalBillModel.selectedMedicalBillId,
+  selectedMedicalBillId: state.medicalBillModel.selectedMedicalBillId,
   allMedicalBillSummariesHasMore: state.medicalBillModel.allMedicalBillSummariesHasMore,
 });
 
 const mapDispatch = (dispatch: RootDispatch) => ({
-  setSelectedMedicalbillId: dispatch.medicalBillModel.setSelectedMedicalBillId,
-  doGetMoreMedicalBillSumarries: dispatch.medicalBillModel.doGetMoreMedicalBillSummaries,
+  setSelectedMedicalBillId: dispatch.medicalBillModel.setSelectedMedicalBillId,
+  doGetMoreMedicalBillSummaries: dispatch.medicalBillModel.doGetMoreMedicalBillSummaries,
   doDeleteMedicalBill: dispatch.medicalBillModel.doDeleteMedicalBill,
 });
 

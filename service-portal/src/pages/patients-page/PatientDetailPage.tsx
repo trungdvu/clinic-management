@@ -23,8 +23,8 @@ function PatientDetailPageContainer({
   doDeletePatient,
   doGetPatientDetail,
 }: Props) {
-  const [isConfirmDeleteModalVisible, setIsConfirmDeleteModalVisible] = useState(false);
-  const [patientDetails, setPatientsDetails] = useState<Patient>();
+  const [confirmDeleteModalVisible, setConfirmDeleteModalVisible] = useState(false);
+  const [patient, setPatient] = useState<Patient>();
 
   const params = useParams();
   const navigate = useNavigate();
@@ -34,14 +34,12 @@ function PatientDetailPageContainer({
   useEffect(() => {
     if (params.id) {
       doGetPatientDetail(params.id).then((res) => {
-        if (res === false) {
-          notification.error({
-            message: 'Failed',
-            description: 'Not found patient details.',
-          });
-        } else {
-          setPatientsDetails(res);
-        }
+        res === false
+          ? notification.error({
+              message: 'Failed',
+              description: 'Not found patient details.',
+            })
+          : setPatient(res);
       });
     }
   }, [doGetPatientDetail, params.id]);
@@ -53,7 +51,7 @@ function PatientDetailPageContainer({
   }, []);
 
   const onClickDelete = useCallback(() => {
-    setIsConfirmDeleteModalVisible(true);
+    setConfirmDeleteModalVisible(true);
   }, []);
 
   const onClickOkDelete = useCallback(
@@ -76,7 +74,7 @@ function PatientDetailPageContainer({
   );
 
   const onClickCancelDelete = useCallback(() => {
-    setIsConfirmDeleteModalVisible(false);
+    setConfirmDeleteModalVisible(false);
   }, []);
 
   return (
@@ -87,12 +85,12 @@ function PatientDetailPageContainer({
       className="mx-[5%] bg-white px-4 pt-8 pb-20 rounded-md shadow min-h-screen"
     >
       <ConfirmModal
-        visible={isConfirmDeleteModalVisible}
+        visible={confirmDeleteModalVisible}
         title="Delete patient"
         messages={['This action cannot undo', 'Are you sure?']}
         buttonLeftTitle="Delete"
         buttonRightTitle="Cancel"
-        onClickButtonLeft={onClickOkDelete(patientDetails?.id || '')}
+        onClickButtonLeft={onClickOkDelete(patient?.id || '')}
         onClickButtonRight={onClickCancelDelete}
       />
 
@@ -108,7 +106,7 @@ function PatientDetailPageContainer({
         <SkeletonPatientDetails />
       ) : (
         <>
-          {patientDetails ? (
+          {patient ? (
             <>
               <div className="flex">
                 <Image
@@ -117,17 +115,15 @@ function PatientDetailPageContainer({
                 />
                 <div className="flex flex-col ml-4">
                   <Heading level={3} className="text-sky-700">
-                    {patientDetails.fullName}
+                    {patient.fullName}
                   </Heading>
                   <div className="flex items-center">
                     <PhoneOutlined />
-                    <Text className="ml-1 text-base">
-                      {patientDetails.phoneNumber || 'Not set'}
-                    </Text>
+                    <Text className="ml-1 text-base">{patient.phoneNumber || 'Not set'}</Text>
                   </div>
                   <div className="flex items-center">
                     <EnvironmentOutlined />
-                    <Text className="ml-1 text-base">{patientDetails.address || 'Not set'}</Text>
+                    <Text className="ml-1 text-base">{patient.address || 'Not set'}</Text>
                   </div>
                 </div>
               </div>
@@ -156,9 +152,7 @@ function PatientDetailPageContainer({
                     JOINED DATE
                   </Text>
                   <Text>
-                    {patientDetails.createdAt
-                      ? moment(patientDetails.createdAt).format('D MMM YYYY')
-                      : 'Not set'}
+                    {patient.createdAt ? moment(patient.createdAt).format('D MMM YYYY') : 'Not set'}
                   </Text>
                 </Col>
                 <Col span={12} className="flex flex-col">
@@ -174,15 +168,15 @@ function PatientDetailPageContainer({
                   <Text type="secondary" className="font-medium">
                     CONTACT NUMBER
                   </Text>
-                  <Text>{patientDetails.phoneNumber || 'Not set'}</Text>
+                  <Text>{patient.phoneNumber || 'Not set'}</Text>
                 </Col>
                 <Col span={12} className="flex flex-col">
                   <Text type="secondary" className="font-medium">
                     DATE OF BIRTH
                   </Text>
                   <Text>
-                    {patientDetails.dayOfBirth
-                      ? moment(patientDetails.dayOfBirth).format('DD MMM YYYY')
+                    {patient.dayOfBirth
+                      ? moment(patient.dayOfBirth).format('DD MMM YYYY')
                       : 'Not set'}
                   </Text>
                 </Col>
@@ -193,13 +187,13 @@ function PatientDetailPageContainer({
                   <Text type="secondary" className="font-medium">
                     ADDRESS
                   </Text>
-                  <Text>{patientDetails.address || 'Not set'}</Text>
+                  <Text>{patient.address || 'Not set'}</Text>
                 </Col>
                 <Col span={12} className="flex flex-col">
                   <Text type="secondary" className="font-medium">
                     GENDER
                   </Text>
-                  <Text>{patientDetails.gender || 'Not set'}</Text>
+                  <Text>{patient.gender || 'Not set'}</Text>
                 </Col>
               </Row>
 

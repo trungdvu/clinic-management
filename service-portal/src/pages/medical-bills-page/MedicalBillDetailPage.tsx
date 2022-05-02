@@ -23,6 +23,7 @@ interface Props extends PropsFromStore {
 function MedicalBillDetailPageContainer({
   title,
   selectedMedicalBillDetail,
+  setSelectedMedicalBillDetail,
   doGetMedicalBillDetail,
   doGetDrugs,
   doGetDrugUsages,
@@ -43,6 +44,7 @@ function MedicalBillDetailPageContainer({
 
   const fetchData = useCallback(async () => {
     setIsLoading(true);
+    setSelectedMedicalBillDetail(undefined);
 
     const result = await doGetMedicalBillDetail(params.id || '');
 
@@ -69,7 +71,14 @@ function MedicalBillDetailPageContainer({
     }
 
     setIsLoading(false);
-  }, [doGetDiseaseTypes, doGetDrugUsages, doGetDrugs, doGetMedicalBillDetail, params.id]);
+  }, [
+    doGetDiseaseTypes,
+    doGetDrugUsages,
+    doGetDrugs,
+    doGetMedicalBillDetail,
+    params.id,
+    setSelectedMedicalBillDetail,
+  ]);
 
   return (
     <motion.div
@@ -113,6 +122,7 @@ const mapState = (state: RootState) => ({
 });
 
 const mapDispatch = (dispatch: RootDispatch) => ({
+  setSelectedMedicalBillDetail: dispatch.medicalBillModel.setSelectedMedicalBillDetail,
   doGetMedicalBillDetail: dispatch.medicalBillModel.doGetMedicalBillDetail,
   doGetDrugs: dispatch.drugModel.doGetDrugs,
   doGetDrugUsages: dispatch.drugModel.doGetDrugUsages,

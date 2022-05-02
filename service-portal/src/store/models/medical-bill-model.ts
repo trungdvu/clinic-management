@@ -60,7 +60,7 @@ export const medicalBillModel = createModel<RootModel>()({
       ...state,
       [payload.key]: payload.value,
     }),
-    setSelectedMedicalBillDetail: (state, payload: MedicalBillDetail) => ({
+    setSelectedMedicalBillDetail: (state, payload?: MedicalBillDetail) => ({
       ...state,
       selectedMedicalBillDetail: payload,
     }),
