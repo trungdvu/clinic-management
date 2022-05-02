@@ -6,3 +6,4 @@ export * from './drug-interfaces';
 export * from './disease-interfaces';
 export * from './unit-interfaces';
 export * from './usage-interfaces';
+export * from './dashboard-interfaces';

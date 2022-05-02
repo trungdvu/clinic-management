@@ -11,6 +11,7 @@ export const API = {
   PATIENTS_PARAMS: (params: any) => `/${VERSION}/patients${toParamsUrl(params)}`,
 
   MEDICAL_BILLS: `/${VERSION}/medical-bills`,
+  MEDICAL_BILLS_DASHBOARD_SUMMARY_TODAY: `/${VERSION}/medical-bills/dashboard/summary-today`,
   MEDICAL_BILLS_ID: (id: string) => `/${VERSION}/medical-bills/${id}`,
   MEDICAL_BILLS_PARAMS: (params: any) => `/${VERSION}/medical-bills${toParamsUrl(params)}`,
   MEDICAL_BILLS_DETAIL: `/${VERSION}/medical-bill-detail`,

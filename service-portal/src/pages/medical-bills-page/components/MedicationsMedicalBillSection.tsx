@@ -87,7 +87,7 @@ const MedicationsMedicalBillSectionContainer = ({
   };
 
   return (
-    <DetailSection title="Medications" subTitle="Medicines, durgs that for this medical bill.l">
+    <DetailSection title="Medications" subTitle="Medicines, drugs that for this medical bill.">
       <Form
         form={form}
         onFinish={onClickAddMedication}
