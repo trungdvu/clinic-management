@@ -1,5 +1,6 @@
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { tokenConfig } from "../config";
+import { InternalServerError } from "../shared";
 
 export class TokenService {
   private static currentToken: string;
@@ -13,7 +14,7 @@ export class TokenService {
 
       return this.currentToken;
     } catch (error) {
-      throw new Error(error as string);
+      throw new InternalServerError(error as string);
     }
   }
 
@@ -24,11 +25,20 @@ export class TokenService {
         tokenConfig.secretKey
       )) as JwtPayload;
     } catch (error) {
-      throw new Error(error as string);
+      throw new InternalServerError(error as string);
     }
   }
 
   static getCurrentToken(): string {
     return this.currentToken;
+  }
+
+  static async extractDataFromToken(): Promise<any> {
+    try {
+      const data = this.decode(this.currentToken);
+      return data;
+    } catch (error) {
+      throw new InternalServerError(error as string);
+    }
   }
 }

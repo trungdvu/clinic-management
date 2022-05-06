@@ -29,24 +29,15 @@ import {
 } from "../shared";
 import { MedicalBillDetailService } from "./medical-bill-detail.service";
 import { PatientService } from "./patient.service";
-import { RedisService } from "./redis.service";
 import { TokenService } from "./token.service";
 
 export class MedicalBillService {
   static async findMany(
     query: FindMedicalBillsQueryParams
   ): Promise<MedicalBillSummaryResponse[]> {
-    const { userId } = await TokenService.decode(
-      TokenService.getCurrentToken()
-    );
+    const { userId } = await TokenService.extractDataFromToken();
 
     try {
-      const isExistedKey = await RedisService.has("medical-bills" + userId);
-      if (isExistedKey && _.isEmpty(query)) {
-        const cachedData = await RedisService.get("medical-bills" + userId);
-
-        return JSON.parse(cachedData) as MedicalBillSummaryResponse[];
-      } else {
         const { patientId } = query;
         if (patientId) {
           const isNotExistedPatientId = await this.isNotExistedPatientId(
@@ -83,12 +74,7 @@ export class MedicalBillService {
           responses.push(medicalBillResponse);
         }
 
-        await RedisService.set(
-          "medical-bills" + userId,
-          JSON.stringify(responses)
-        );
         return responses;
-      }
     } catch (error) {
       ErrorHandler(error);
     }
@@ -119,6 +105,10 @@ export class MedicalBillService {
   static async findById(id: string): Promise<MedicalBillResponse> {
     try {
       const medicalBill: MedicalBill = await MedicalBillRepository.findById(id);
+      if (!medicalBill) {
+        throw new NotFoundError(`MedicalBill Id: ${id} was not found`);
+      }
+
       const medicalBillDetails: MedicalBillDetailResponse[] = await MedicalBillDetailService.findMany(
         id
       );
@@ -146,10 +136,7 @@ export class MedicalBillService {
 
   static async create(dto: CreateMedicalBillDto): Promise<void> {
     const transaction = await sequelize.transaction();
-    // TODO: Refactor this duplicate line
-    const { userId } = await TokenService.decode(
-      TokenService.getCurrentToken()
-    );
+    const { userId } = await TokenService.extractDataFromToken();
 
     try {
       const {
@@ -218,8 +205,6 @@ export class MedicalBillService {
           );
         }
       }
-
-      await RedisService.remove("medical-bills" + userId);
     } catch (error) {
       if (transaction) {
         transaction.rollback();
@@ -285,6 +270,7 @@ export class MedicalBillService {
 
   static async delete(id: string): Promise<void> {
     try {
+      const { userId } = await TokenService.extractDataFromToken();
       const isNotExistedMedicalBillId = await this.isNotExistedMedicalBillId(
         id
       );
@@ -292,11 +278,7 @@ export class MedicalBillService {
         throw new NotFoundError(`Medical bill id: ${id} was not existed`);
       }
 
-      const { userId } = await TokenService.decode(
-        TokenService.getCurrentToken()
-      );
       await MedicalBillRepository.delete(id);
-      await RedisService.remove("medical-bills" + userId);
     } catch (error) {
       ErrorHandler(error);
     }

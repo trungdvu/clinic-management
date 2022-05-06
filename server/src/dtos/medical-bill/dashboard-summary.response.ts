@@ -1,5 +1,3 @@
-import { MedicalBillSummaryResponse } from "./medical-bill-summary.response";
-
 export interface DashboardMedicalBillSummaryResponse {
   id: string;
   patientId: string;

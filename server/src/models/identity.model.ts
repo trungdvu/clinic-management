@@ -6,6 +6,7 @@ import {
   PrimaryKey,
   Table,
 } from "sequelize-typescript";
+import { BillPayment } from "./bill-payment.model";
 import { MedicalBill } from "./medical-bill.model";
 import { Patient } from "./patient.model";
 
@@ -56,4 +57,7 @@ export class Identity extends Model<Identity> {
 
   @HasMany(() => MedicalBill)
   medicalBills: MedicalBill[];
+
+  @HasMany(() => BillPayment)
+  billPayments: BillPayment[];
 }

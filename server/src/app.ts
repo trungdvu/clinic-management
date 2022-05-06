@@ -29,7 +29,7 @@ app.use(`/${apiVersion}`, apiRouters);
 app.listen(port, async () => {
   try {
     await sequelize.sync();
-    startRedisServer();
+    // startRedisServer();
     console.log("Database sync");
     console.log("Server running ..");
   } catch (error) {

@@ -1,15 +1,14 @@
-import { MedicalBillDetailResponse } from "../medical-bill-detail";
 import { PatientResponse } from "../patient";
 
-export interface BillPaymentResponse {
+export interface BillPaymentSummaryResponse {
   id: string;
   patient: PatientResponse;
   medicalExamCost: number;
-  drugDetails: MedicalBillDetailResponse[];
-  status: string;
   totalDrugCost: number;
-  createdAt: string;
+  status: string;
   createdBy: string;
+  createdAt: string;
+  updatedAt: string;
   barCode?: string;
   qrCode?: string;
 }

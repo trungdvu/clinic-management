@@ -20,16 +20,8 @@ import _ from "lodash";
 export class PatientService {
   static async findMany(query: FindPatientsQuery): Promise<PatientResponse[]> {
     try {
-      const { userId } = await TokenService.decode(
-        TokenService.getCurrentToken()
-      );
+      const { userId } = await TokenService.extractDataFromToken();
 
-      const isExistedKey = await RedisService.has("patients" + userId);
-      if (isExistedKey && _.isEmpty(query)) {
-        const cachedData = await RedisService.get("patients" + userId);
-
-        return JSON.parse(cachedData) as PatientResponse[];
-      } else {
         const records: Patient[] = await PatientRepository.findMany(
           userId,
           query
@@ -47,10 +39,8 @@ export class PatientService {
           } as PatientResponse;
         });
 
-        await RedisService.set("patients" + userId, JSON.stringify(responses));
         const defaultResponse = responses ?? [];
         return defaultResponse;
-      }
     } catch (error) {
       ErrorHandler(error);
     }
@@ -59,6 +49,9 @@ export class PatientService {
   static async findById(id: string): Promise<PatientResponse> {
     try {
       const record: Patient = await PatientRepository.findById(id);
+      if(!record) {
+        throw new NotFoundError(`Patient Id: ${id} was not found`)
+      }
 
       return {
         id: record.id,
@@ -75,9 +68,7 @@ export class PatientService {
 
   static async create(dto: CreatePatientDto): Promise<void> {
     try {
-      const { userId } = await TokenService.decode(
-        TokenService.getCurrentToken()
-      );
+      const { userId } = await TokenService.extractDataFromToken();
       const {
         fullName,
         phoneNumber,
@@ -124,7 +115,6 @@ export class PatientService {
       };
 
       await PatientRepository.create(defaultProps);
-      await RedisService.remove("patients" + userId);
     } catch (error) {
       ErrorHandler(error);
     }
@@ -155,16 +145,13 @@ export class PatientService {
 
   static async delete(id: string): Promise<void> {
     try {
+      const { userId } = await TokenService.extractDataFromToken();
       const patientFounded = await PatientRepository.findById(id);
       if (!patientFounded) {
         throw new NotFoundError(`Medical bill id: ${id} was not existed`);
       }
 
-      const { userId } = await TokenService.decode(
-        TokenService.getCurrentToken()
-      );
       await PatientRepository.delete(id);
-      await RedisService.remove("patients" + userId);
     } catch (error) {
       ErrorHandler(error);
     }

@@ -3,7 +3,6 @@ import {
   Column,
   DataType,
   ForeignKey,
-  HasOne,
   Model,
   PrimaryKey,
   Table,
@@ -11,11 +10,17 @@ import {
 import { MedicalBill } from "./medical-bill.model";
 import { Patient } from "./patient.model";
 import { DEFAULT_MEDICAL_EXAMINATION_AMOUNT } from "../constants";
+import { Identity } from "./identity.model";
 
+export enum BillPaymentStatus {
+  Active = "active",
+  Completed = "completed",
+}
 export interface BillPaymentAttributes {
   id: string;
   medicalBillId: string;
   medicalExamCost: number;
+  status: BillPaymentStatus;
   totalDrugCost: number;
   patientId: string;
 }
@@ -40,8 +45,12 @@ export class BillPayment
   @Column(DataType.UUID)
   patientId: string;
 
-  @Column(DataType.BOOLEAN)
-  isDeleted: boolean;
+  @ForeignKey(() => Identity)
+  @Column(DataType.UUID)
+  createdBy: string;
+
+  @Column({ type: DataType.STRING, defaultValue: BillPaymentStatus.Active })
+  status: BillPaymentStatus;
 
   @Column({
     type: DataType.INTEGER,
@@ -58,4 +67,7 @@ export class BillPayment
 
   @BelongsTo(() => Patient)
   patient: Patient;
+
+  @BelongsTo(() => Identity)
+  creator: Identity;
 }
