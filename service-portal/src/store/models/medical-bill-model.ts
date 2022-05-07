@@ -27,6 +27,8 @@ interface MedicalBillState {
 }
 
 export const medicalBillModel = createModel<RootModel>()({
+  name: 'medicalBillModel',
+
   state: {
     medicalBillSummaries: [],
     selectedMedicalBillId: '',
@@ -34,6 +36,24 @@ export const medicalBillModel = createModel<RootModel>()({
     allMedicalBillSummariesHasMore: true,
     selectedMedicalBillDetail: undefined,
   } as MedicalBillState,
+
+  selectors: (slice, createSelector, hasProps) => ({
+    activeMedicalBillSummaries() {
+      return slice((medicalBillModel) =>
+        medicalBillModel.medicalBillSummaries.filter((m) => m.status === 'active'),
+      );
+    },
+    pendingMedicalBillSummaries() {
+      return slice((medicalBillModel) =>
+        medicalBillModel.medicalBillSummaries.filter((m) => m.status === 'pending'),
+      );
+    },
+    completedMedicalBillSummaries() {
+      return slice((medicalBillModel) =>
+        medicalBillModel.medicalBillSummaries.filter((m) => m.status === 'completed'),
+      );
+    },
+  }),
 
   reducers: {
     setMedicalBillSummaries: (state, payload: MedicalBillSummary[]) => ({

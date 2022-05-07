@@ -1,6 +1,7 @@
 import { Col, Divider, Empty, notification, Row, Spin } from 'antd';
 import { ConfirmModal, Text } from 'components';
 import { PAGE_ROUTES } from 'consts';
+import { MedicalBillSummary as IMedicalBillSummary } from 'interfaces/medical-bill-interfaces';
 import _ from 'lodash';
 import { memo, useCallback, useState } from 'react';
 import InfiniteScroll from 'react-infinite-scroll-component';
@@ -9,7 +10,9 @@ import { useNavigate } from 'react-router-dom';
 import { RootDispatch, RootState } from 'store';
 import { MedicalBillSummary } from './MedicalBillSummary';
 
-interface Props extends PropsFromStore {}
+interface Props extends PropsFromStore {
+  medicalBillSummaries: IMedicalBillSummary[];
+}
 
 const MedicalBillSummariesContainer = ({
   medicalBillSummaries,
@@ -132,7 +135,6 @@ const MedicalBillSummariesContainer = ({
 };
 
 const mapState = (state: RootState) => ({
-  medicalBillSummaries: state.medicalBillModel.medicalBillSummaries,
   selectedMedicalBillId: state.medicalBillModel.selectedMedicalBillId,
   allMedicalBillSummariesHasMore: state.medicalBillModel.allMedicalBillSummariesHasMore,
 });
