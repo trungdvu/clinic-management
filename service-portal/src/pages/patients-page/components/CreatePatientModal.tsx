@@ -38,6 +38,7 @@ function CreatePatientModalContainer({
 
       if (result) {
         notification.success({
+          placement: 'bottomLeft',
           message: 'Successfully',
           description: "You've created a patient.",
         });
@@ -46,7 +47,7 @@ function CreatePatientModalContainer({
           onCancel();
         }
       } else {
-        notification.error({ message: 'Ops! Something went wrong.' });
+        notification.error({ message: 'Ops! Something went wrong.', placement: 'bottomLeft' });
       }
     },
     [currentUser, doCreatePatient, form, onCancel],
@@ -92,7 +93,7 @@ function CreatePatientModalContainer({
           />
         </Item>
 
-        <div className="flex items-center justify-start gap-5 w-full">
+        <div className="flex items-center justify-start w-full gap-5">
           <Item
             requiredMark="optional"
             label="GENDER"
@@ -103,19 +104,19 @@ function CreatePatientModalContainer({
             <Select size="large" placeholder="No default" className="w-full text-sm">
               <Option value="Male">
                 <div className="flex items-center">
-                  <ManOutlined className="text-typo-tertiary text-lg pb-1 mr-1" />
+                  <ManOutlined className="pb-1 mr-1 text-lg text-typo-tertiary" />
                   <Text>Male</Text>
                 </div>
               </Option>
               <Option value="Female">
                 <div className="flex items-center">
-                  <WomanOutlined className="text-typo-tertiary text-lg pb-1 mr-1" />
+                  <WomanOutlined className="pb-1 mr-1 text-lg text-typo-tertiary" />
                   <Text>Female</Text>
                 </div>
               </Option>
               <Option value="Not to prefer">
                 <div className="flex items-center">
-                  <MehOutlined className="text-typo-tertiary text-lg pb-1 mr-1" />
+                  <MehOutlined className="pb-1 mr-1 text-lg text-typo-tertiary" />
                   <Text>Not to prefer</Text>
                 </div>
               </Option>
@@ -127,13 +128,13 @@ function CreatePatientModalContainer({
             label="DATE OF BIRTH"
             name="dayOfBirth"
             rules={[{ required: true }]}
-            className="w-1/2 text-typo-tertiary text-sm"
+            className="w-1/2 text-sm text-typo-tertiary"
           >
             <DatePicker
               placeholder="No default"
               format="DD MMM YYYY"
               disabledDate={(current: any) => current && current > moment().add(3, 'd').endOf('d')}
-              className="py-2 w-full font-normal"
+              className="w-full py-2 font-normal"
             />
           </Item>
         </div>
@@ -151,7 +152,7 @@ function CreatePatientModalContainer({
             maxLength={15}
             minLength={9}
             placeholder="0987674314"
-            className="text-sm w-full h-10"
+            className="w-full h-10 text-sm"
           />
         </Item>
 
@@ -159,7 +160,7 @@ function CreatePatientModalContainer({
           <TextArea rows={4} placeholder="Optional" className="w-full text-sm" />
         </Item>
 
-        <div className="flex items-center w-full mt-10 gap-4">
+        <div className="flex items-center w-full gap-4 mt-10">
           <Item>
             <PrimaryButton htmlType="submit" loading={loading.doCreatePatient}>
               Create

@@ -54,11 +54,13 @@ const MedicalBillSummariesContainer = ({
       notification.success({
         message: 'Deleted',
         description: 'The medical bill has been deleted.',
+        placement: 'bottomLeft',
       });
     } else {
       notification.error({
         message: 'Failed',
         description: 'Ops, Something went wrong.',
+        placement: 'bottomLeft',
       });
     }
   }, [doDeleteMedicalBill, selectedMedicalBillId]);

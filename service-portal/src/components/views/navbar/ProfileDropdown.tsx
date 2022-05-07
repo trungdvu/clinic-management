@@ -1,10 +1,13 @@
 import {
+  BellOutlined,
   CaretDownOutlined,
   CommentOutlined,
   LogoutOutlined,
+  MessageOutlined,
+  SearchOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import { Divider, Dropdown, Image, Menu } from 'antd';
+import { Divider, Dropdown, Image, Menu, Tooltip } from 'antd';
 import { PAGE_ROUTES } from 'consts';
 import { User } from 'interfaces';
 import { memo, useCallback, useState } from 'react';
@@ -70,27 +73,27 @@ export const ProfileDropdown = memo(({ currentUser, onSignOutClick }: Props) => 
           onCancel={onCancelLoadingSignOutModal}
         />
       )}
+      <div className="flex items-center">
+        <Tooltip title="Coming soon">
+          <SearchOutlined className="mr-5 text-xl text-typo-tertiary" />
+        </Tooltip>
+        <Tooltip title="Coming soon">
+          <MessageOutlined className="mr-5 text-xl text-typo-tertiary" />
+        </Tooltip>
 
-      <Dropdown
-        overlayStyle={{
-          marginTop: '32px',
-        }}
-        overlay={menu}
-        trigger={['click']}
-        placement="bottomRight"
-        className="rounded-md"
-      >
-        <div className="flex items-center gap-1">
-          <div className="w-10 h-10 rounded-md shadow-sm">
-            <Image
-              src={require('assets/images/default_profile.jpg')}
-              preview={false}
-              className="rounded-md"
-            />
+        <Dropdown overlay={menu} trigger={['click']} placement="bottomRight" className="rounded-md">
+          <div className="flex items-center gap-1">
+            <div className="w-10 h-10 rounded-md shadow-sm">
+              <Image
+                src={require('assets/images/default_profile.jpg')}
+                preview={false}
+                className="rounded-md"
+              />
+            </div>
+            <CaretDownOutlined className="text-typo-tertiary" />
           </div>
-          <CaretDownOutlined className="text-typo-tertiary" />
-        </div>
-      </Dropdown>
+        </Dropdown>
+      </div>
     </>
   );
 });

@@ -38,6 +38,7 @@ function PatientDetailPageContainer({
           ? notification.error({
               message: 'Failed',
               description: 'Not found patient details.',
+              placement: 'bottomLeft',
             })
           : setPatient(res);
       });
@@ -47,6 +48,7 @@ function PatientDetailPageContainer({
   const onClickEdit = useCallback(() => {
     notification.info({
       message: 'In coming feature',
+      placement: 'bottomLeft',
     });
   }, []);
 
@@ -61,12 +63,14 @@ function PatientDetailPageContainer({
         notification.success({
           message: 'Deleted',
           description: "You've successfully deleted a patient.",
+          placement: 'bottomLeft',
         });
         setTimeout(() => navigate(PAGE_ROUTES.PATIENTS.PATH), 200);
       } else {
         notification.error({
           message: 'Failed',
           description: "Ops! You can't delete this patient.",
+          placement: 'bottomLeft',
         });
       }
     },

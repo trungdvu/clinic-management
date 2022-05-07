@@ -37,7 +37,8 @@ function SignUpModalContainer({
       if (result instanceof ErrorModel) {
         notification.error({
           message: 'Failed',
-          description: result.data?.message || 'Ops! Something went worng.',
+          description: result.data?.message || 'Ops! Something went wrong.',
+          placement: 'bottomLeft',
         });
       }
     },
@@ -71,13 +72,13 @@ function SignUpModalContainer({
           <Item name="firstName" rules={[{ required: true }]} className="w-1/2 rounded-md">
             <Input
               placeholder="First name"
-              className="w-full py-2 text-sm font-medium rounded-md bg-line-secondary bg-opacity-50"
+              className="w-full py-2 text-sm font-medium bg-opacity-50 rounded-md bg-line-secondary"
             />
           </Item>
           <Item name="lastName" rules={[{ required: true }]} className="w-1/2 rounded-md">
             <Input
               placeholder="Surname"
-              className="w-full py-2 text-sm rounded-md font-medium bg-line-secondary bg-opacity-50"
+              className="w-full py-2 text-sm font-medium bg-opacity-50 rounded-md bg-line-secondary"
             />
           </Item>
         </div>
@@ -89,7 +90,7 @@ function SignUpModalContainer({
         >
           <Input
             placeholder="Email"
-            className="w-full py-2 text-sm font-medium rounded-md bg-line-secondary bg-opacity-50"
+            className="w-full py-2 text-sm font-medium bg-opacity-50 rounded-md bg-line-secondary"
           />
         </Item>
 
@@ -129,7 +130,7 @@ function SignUpModalContainer({
           <Input
             maxLength={15}
             placeholder="Phone number"
-            className="w-full py-2 text-sm font-medium rounded-md bg-line-secondary bg-opacity-50"
+            className="w-full py-2 text-sm font-medium bg-opacity-50 rounded-md bg-line-secondary"
           />
         </Item>
 

@@ -55,8 +55,16 @@ const MedicationsMedicalBillSectionContainer = ({
       };
       const result = await doAddMedication(payload);
       result
-        ? notification.success({ message: 'Added', description: 'A medication has been added' })
-        : notification.error({ message: 'Failed', description: 'Ops! Something went wrong' });
+        ? notification.success({
+            message: 'Added',
+            description: 'A medication has been added',
+            placement: 'bottomLeft',
+          })
+        : notification.error({
+            message: 'Failed',
+            description: 'Ops! Something went wrong',
+            placement: 'bottomLeft',
+          });
 
       form.resetFields();
       setIsAddingMedication(false);

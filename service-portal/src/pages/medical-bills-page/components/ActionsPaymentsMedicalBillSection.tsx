@@ -50,12 +50,14 @@ const ActionsPaymentsMedicalBillSectionContainer = ({
       notification.success({
         message: 'Deleted',
         description: "You've successfully deleted a medical bill",
+        placement: 'bottomLeft',
       });
       setTimeout(() => navigate(PAGE_ROUTES.MEDICAL_BILLS.PATH), 200);
     } else {
       notification.error({
         message: 'Failed',
         description: "Can't delete this medical bill",
+        placement: 'bottomLeft',
       });
     }
   }, [doDeleteMedicalBill, navigate, params.id]);
@@ -73,12 +75,14 @@ const ActionsPaymentsMedicalBillSectionContainer = ({
       notification.success({
         message: 'Started',
         description: 'The medical bill has been started',
+        placement: 'bottomLeft',
       });
       setSelectedMedicalBillDetail({ ...selectedMedicalBillDetail, status: 'active' });
     } else {
       notification.error({
         message: 'Failed',
         description: 'Ops! Something went wrong',
+        placement: 'bottomLeft',
       });
     }
 

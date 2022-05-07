@@ -58,6 +58,7 @@ function SignInPageContainer({ title, currentUser, loading, doSignIn }: Props) {
         notification.error({
           message: 'Failed',
           description: result.data?.message || 'Ops! Something went wrong.',
+          placement: 'bottomLeft',
         });
       }
     },

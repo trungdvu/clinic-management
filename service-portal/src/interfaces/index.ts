@@ -7,3 +7,4 @@ export * from './disease-interfaces';
 export * from './unit-interfaces';
 export * from './usage-interfaces';
 export * from './dashboard-interfaces';
+export * from './invoice-interfaces';

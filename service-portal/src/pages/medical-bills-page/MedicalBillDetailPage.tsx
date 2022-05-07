@@ -52,21 +52,34 @@ function MedicalBillDetailPageContainer({
       notification.error({
         message: 'Failed',
         description: 'Not founded the medical bill details.',
+        placement: 'bottomLeft',
       });
     } else {
       const diseaseTypes = await doGetDiseaseTypes();
       diseaseTypes === false
-        ? notification.error({ message: 'Failed', description: 'Not founded disease type' })
+        ? notification.error({
+            message: 'Failed',
+            description: 'Not founded disease type',
+            placement: 'bottomLeft',
+          })
         : setDiseaseTypes(diseaseTypes);
 
       const drugs = await doGetDrugs();
       drugs === false
-        ? notification.error({ message: 'Failed', description: 'Not founded drugs' })
+        ? notification.error({
+            message: 'Failed',
+            description: 'Not founded drugs',
+            placement: 'bottomLeft',
+          })
         : setDrugs(drugs);
 
       const usages = await doGetDrugUsages();
       usages === false
-        ? notification.error({ message: 'Failed', description: 'Not founded drug usages' })
+        ? notification.error({
+            message: 'Failed',
+            description: 'Not founded drug usages',
+            placement: 'bottomLeft',
+          })
         : setDrugUsages(usages);
     }
 

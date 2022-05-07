@@ -45,6 +45,7 @@ function NewMedicalBillModalContainer({
         notification.success({
           message: 'Created',
           description: "You've successfully created a medical bill",
+          placement: 'bottomLeft',
         });
         form.resetFields();
         if (onCancel) {
@@ -54,6 +55,7 @@ function NewMedicalBillModalContainer({
         notification.error({
           message: 'Failed',
           description: 'Ops! Something went wrong.',
+          placement: 'bottomLeft',
         });
       }
     },
@@ -83,11 +85,11 @@ function NewMedicalBillModalContainer({
         label: (
           <>
             <div className="flex items-center">
-              <UserOutlined className="text-typo-tertiary text-lg pb-1 mr-1" />
+              <UserOutlined className="pb-1 mr-1 text-lg text-typo-tertiary" />
               <Text>{patient.fullName}</Text>
             </div>
             <div className="flex items-center">
-              <PhoneOutlined className="text-typo-tertiary text-lg pb-1 mr-1" />
+              <PhoneOutlined className="pb-1 mr-1 text-lg text-typo-tertiary" />
               <Text className="font-light">{patient.phoneNumber}</Text>
             </div>
           </>
@@ -147,7 +149,7 @@ function NewMedicalBillModalContainer({
           <TextArea rows={6} placeholder="Optional" className="w-full text-sm" />
         </Item>
 
-        <div className="flex items-center w-full mt-10 gap-4">
+        <div className="flex items-center w-full gap-4 mt-10">
           <Item>
             <PrimaryButton htmlType="submit" loading={loading.doCreateMedicalBill}>
               Create

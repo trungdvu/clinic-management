@@ -4,7 +4,11 @@ import { InternalServerError } from "../shared";
 export class BillPaymentRepository {
   static async findMany(): Promise<BillPayment[]> {
     try {
-      const records: BillPayment[] = await BillPayment.findAll();
+      const records: BillPayment[] = await BillPayment.findAll({
+        include: {
+          model: Patient,
+        },
+      });
       return records;
     } catch (error) {
       throw new InternalServerError(error.message);
@@ -33,15 +37,21 @@ export class BillPaymentRepository {
     }
   }
 
-  static async updateStatus(id: string, status: BillPaymentStatus): Promise<void> {
+  static async updateStatus(
+    id: string,
+    status: BillPaymentStatus
+  ): Promise<void> {
     try {
-       await BillPayment.update({
-         status,
-       }, {
-         where: {
-           id
-         }
-       });
+      await BillPayment.update(
+        {
+          status,
+        },
+        {
+          where: {
+            id,
+          },
+        }
+      );
     } catch (error) {
       throw new InternalServerError(error.message);
     }
