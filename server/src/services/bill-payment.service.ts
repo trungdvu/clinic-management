@@ -1,6 +1,19 @@
-import { BillPaymentResponse, BillPaymentSummaryResponse, CreateBillPaymentDto, MedicalBillDetailResponse, PatientResponse } from "../dtos";
-import { BillPayment, MedicalBill, MedicalBillDetail, MedicalBillStatus, Patient } from "../models";
-import { TokenService } from './token.service';
+import {
+  BillPaymentResponse,
+  BillPaymentSummaryResponse,
+  CreateBillPaymentDto,
+  FindBillPaymentsQueryParams,
+  MedicalBillDetailResponse,
+  PatientResponse,
+} from "../dtos";
+import {
+  BillPayment,
+  MedicalBill,
+  MedicalBillDetail,
+  MedicalBillStatus,
+  Patient,
+} from "../models";
+import { TokenService } from "./token.service";
 import {
   BillPaymentRepository,
   DrugPriceRepository,
@@ -17,7 +30,7 @@ import {
 } from "../shared";
 import { MedicalBillDetailService } from "./medical-bill-detail.service";
 import _ from "lodash";
-import { BillPaymentStatus } from '../models/bill-payment.model';
+import { BillPaymentStatus } from "../models/bill-payment.model";
 
 export class BillPaymentService {
   static async findMany(): Promise<BillPaymentSummaryResponse[]> {
@@ -65,8 +78,9 @@ export class BillPaymentService {
       const drugDetailResponses: MedicalBillDetailResponse[] = await MedicalBillDetailService.findMany(
         record.medicalBillId
       );
+      
       const totalDrugCost: number = drugDetailResponses.reduce(
-        (totalMoney, drug) => totalMoney + drug.price,
+        (totalMoney: number, drug: MedicalBillDetailResponse) => totalMoney + drug.price,
         0
       );
 
@@ -179,17 +193,18 @@ export class BillPaymentService {
 
   static async markCompleted(id: string): Promise<void> {
     try {
-      const recordFounded: BillPayment = await BillPaymentRepository.findById(id);
-      if(!recordFounded) {
+      const recordFounded: BillPayment = await BillPaymentRepository.findById(
+        id
+      );
+      if (!recordFounded) {
         throw new NotFoundError(`Bill Payment Id: ${id} was not found`);
       }
-      
+
       await BillPaymentRepository.updateStatus(id, BillPaymentStatus.Completed);
 
       await MedicalBillRepository.update(recordFounded.medicalBillId, {
         status: MedicalBillStatus.Completed,
       });
-
     } catch (error) {
       ErrorHandler(error);
     }

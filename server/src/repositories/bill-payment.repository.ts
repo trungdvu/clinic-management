@@ -1,4 +1,4 @@
-import { CreateBillPaymentDto } from "../dtos";
+import { CreateBillPaymentDto, FindBillPaymentsQueryParams } from "../dtos";
 import { BillPayment, BillPaymentStatus, Patient } from "../models";
 import { InternalServerError } from "../shared";
 export class BillPaymentRepository {
@@ -33,15 +33,21 @@ export class BillPaymentRepository {
     }
   }
 
-  static async updateStatus(id: string, status: BillPaymentStatus): Promise<void> {
+  static async updateStatus(
+    id: string,
+    status: BillPaymentStatus
+  ): Promise<void> {
     try {
-       await BillPayment.update({
-         status,
-       }, {
-         where: {
-           id
-         }
-       });
+      await BillPayment.update(
+        {
+          status,
+        },
+        {
+          where: {
+            id,
+          },
+        }
+      );
     } catch (error) {
       throw new InternalServerError(error.message);
     }

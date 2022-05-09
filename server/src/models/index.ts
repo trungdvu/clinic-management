@@ -15,10 +15,11 @@ import { MedicalBillDiseaseType } from "./medical-bill-disease-type.model";
 import { BillPayment } from "./bill-payment.model";
 
 export const sequelize = new Sequelize({
-  dialect: developmentConfig.dialect as Dialect,
-  database: developmentConfig.database,
-  username: developmentConfig.username,
-  password: developmentConfig.password,
+  dialect: (developmentConfig.dialect as Dialect),
+  host: process.env.POSTGRES_HOST ?? developmentConfig.host,
+  database: process.env.POSTGRES_DATABASE ?? developmentConfig.database,
+  username: process.env.POSTGRES_USERNAME ?? developmentConfig.username,
+  password: process.env.POSTGRES_PASSWORD ?? developmentConfig.password,
   storage: ":memory",
   models: [
     Identity,
@@ -34,6 +35,16 @@ export const sequelize = new Sequelize({
     MedicalBillDiseaseType,
     BillPayment,
   ],
+  dialectOptions: {
+    dateStrings: true,
+    typeCast: true,
+    // ssl: {
+    //   require: true,
+    //   rejectUnauthorized: false,
+    // },
+    useUTC: false,
+  },
+  timezone: "+07:00",
 });
 
 export * from "./disease-type.model";

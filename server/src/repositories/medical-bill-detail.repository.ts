@@ -3,7 +3,7 @@ import {
   UpdateMedicalBillDetailDto,
   CreateMedicalBillDetailDto,
 } from "../dtos";
-import { MedicalBillDetail } from "../models";
+import { Drug, MedicalBillDetail, Unit } from "../models";
 import { InternalServerError } from "../shared";
 
 export class MedicalBillDetailRepository {
@@ -24,7 +24,16 @@ export class MedicalBillDetailRepository {
 
   static async findById(id: string): Promise<MedicalBillDetail> {
     try {
-      return await MedicalBillDetail.findByPk(id);
+      return await MedicalBillDetail.findByPk(id, {
+        include: [
+          {
+            model: Drug,
+          },
+          {
+            model: Unit,
+          },
+        ],
+      });
     } catch (error) {
       throw new InternalServerError(error);
     }

@@ -9,3 +9,4 @@ export * from "./disease-type.service";
 export * from "./drug.service";
 export * from "./unit.service";
 export * from "./usage.service";
+export * from './report.service'

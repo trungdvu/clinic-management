@@ -22,7 +22,7 @@ export class MedicalBillRepository {
     query: FindMedicalBillsQueryParams
   ): Promise<MedicalBill[]> {
     try {
-      const { patientId, page, limit } = query;
+      const { patientId, page, limit, month } = query;
       const defaultItemPerPage = 10;
       const defaultLimit: number | undefined = limit ? limit : undefined;
       const defaultOffset: number | undefined = page

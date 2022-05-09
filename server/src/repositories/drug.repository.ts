@@ -1,11 +1,15 @@
 import { CreateDrugDto, UpdateDrugDto } from "../dtos";
-import { Drug } from "../models";
+import { Drug, MedicalBillDetail } from "../models";
 import { InternalServerError } from "../shared";
 
 export class DrugRepository {
   static async findMany(): Promise<Drug[]> {
     try {
-      const records: Drug[] = await Drug.findAll();
+      const records: Drug[] = await Drug.findAll({
+        include: {
+          model: MedicalBillDetail
+        }
+      });
       return records;
     } catch (error) {
       throw new InternalServerError(error.message);

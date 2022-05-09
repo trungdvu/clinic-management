@@ -19,7 +19,9 @@ import {
   CheckerCollections,
   ErrorHandler,
   InternalServerError,
+  NotFoundError,
 } from "../shared";
+import { MedicalBillService } from "./medical-bill.service";
 
 export class MedicalBillDetailService {
   static async findMany(
@@ -93,11 +95,17 @@ export class MedicalBillDetailService {
     try {
       const { drugInformation, medicalBillId } = dto;
 
-      const medicalBillIdValidResult = Checker.isEmptyStringOrUndefined(
+      if (!medicalBillId) {
+        throw new BadRequestError(`Medical Bill Id was not provided`);
+      }
+
+      const foundedMedicalBill = await MedicalBillService.findById(
         medicalBillId
       );
-      if (!medicalBillIdValidResult.succeed) {
-        throw new BadRequestError(medicalBillIdValidResult.message as string);
+      if (!foundedMedicalBill) {
+        throw new NotFoundError(
+          `Medical Bill Id ${medicalBillId} was not existed`
+        );
       }
 
       const { drugId, unitId, usageId, quantity } = drugInformation;

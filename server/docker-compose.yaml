@@ -1,0 +1,31 @@
+version: '3.4'
+services:
+  clinic-management:
+    container_name: clinic-mangement
+    restart: always
+    command: npm run dev
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    ports:
+      - 8080:5000      
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=1234
+      - POSTGRES_DATABASE=clinic-management
+      - POSTGRES_HOST=db
+    links:
+      - db
+    volumes:
+      - ./:/usr/src/clinic-management
+
+  db:
+    image: postgres:latest
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=1234
+      - POSTGRES_DATABASE=clinic-management
+      - POSTGRES_HOST=db
+    ports:
+      - "5432"

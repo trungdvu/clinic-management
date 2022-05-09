@@ -1,3 +1,5 @@
 import { QueryParams } from "../../shared";
 
-export interface FindPatientsQuery extends QueryParams {}
+export interface FindPatientsQuery extends QueryParams {
+    month?: number;
+}

@@ -7,3 +7,4 @@ export * from "./disease-type.controller";
 export * from "./drug.controller";
 export * from "./unit.controller";
 export * from "./usage.controller";
+export * from "./report.controller";

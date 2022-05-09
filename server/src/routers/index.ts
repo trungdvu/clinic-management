@@ -9,6 +9,7 @@ import DiseaseTypeRouter from "./disease-type.router";
 import DrugRouter from "./drug.router";
 import UnitRouter from "./unit.router";
 import UsageRouter from "./usage.router";
+import ReportRouter from './report.router';
 
 const router = Router();
 
@@ -24,6 +25,7 @@ router.use("/bill-payments", verifyUserMiddleware, BillPaymentRouter);
 router.use("/drugs", verifyUserMiddleware, DrugRouter);
 router.use("/units", verifyUserMiddleware, UnitRouter);
 router.use("/disease-types", verifyUserMiddleware, DiseaseTypeRouter);
-router.use("/usages", UsageRouter);
+router.use("/usages", verifyUserMiddleware, UsageRouter);
+router.use("/report", verifyUserMiddleware, ReportRouter);
 
 export default router;

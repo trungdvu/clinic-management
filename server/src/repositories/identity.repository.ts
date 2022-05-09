@@ -1,6 +1,7 @@
 import { SignUpDto } from "../dtos";
-import { Identity } from "../models";
+import { Identity, Patient } from "../models";
 import { InternalServerError } from "../shared";
+import { BillPayment } from "../models/bill-payment.model";
 
 export class IdentityRepository {
   static async findMany(): Promise<Identity[]> {
@@ -13,7 +14,16 @@ export class IdentityRepository {
 
   static async findById(id: string): Promise<Identity> {
     try {
-      return await Identity.findByPk(id);
+      return await Identity.findByPk(id, {
+        include: [
+          {
+            model: Patient,
+          },
+          {
+            model: BillPayment,
+          },
+        ],
+      });
     } catch (error) {
       throw new InternalServerError(error.message);
     }

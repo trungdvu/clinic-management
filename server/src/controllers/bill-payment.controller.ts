@@ -1,5 +1,10 @@
 import { Request, Response } from "express";
-import { BillPaymentResponse, BillPaymentSummaryResponse, CreateBillPaymentDto } from "../dtos";
+import {
+  BillPaymentResponse,
+  BillPaymentSummaryResponse,
+  CreateBillPaymentDto,
+  FindBillPaymentsQueryParams,
+} from "../dtos";
 import { BillPaymentService } from "../services";
 import { BodyResponse, ErrorResponseHandler, HttpStatusCode } from "../shared";
 
@@ -23,6 +28,7 @@ export class BillPaymentController {
   static async findById(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
+      console.log("id ne: ", id);
       const response: BillPaymentResponse = await BillPaymentService.findById(
         id
       );
