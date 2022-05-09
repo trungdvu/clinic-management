@@ -118,6 +118,7 @@ const EditTableDrugRowContainer = ({
       notification.error({
         message: 'Failed to remove',
         description: 'Please reload the page',
+        placement: 'bottomLeft',
       });
   }, [currentIndex, doRemoveMedicalBillDetail, medicalBillDrug.id, onPreRemove]);
 

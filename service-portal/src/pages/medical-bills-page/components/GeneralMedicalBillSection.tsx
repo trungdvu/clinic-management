@@ -40,7 +40,8 @@ const GeneralMedicalBillSectionContainer = ({
       if (!result) {
         notification.error({
           message: 'Failed',
-          description: 'Ops! Updated the preidction failed',
+          description: 'Ops! Updated the prediction failed',
+          placement: 'bottomLeft',
         });
         // rollback old prediction
         setSelectedMedicalBillDetail({ ...selectedMedicalBillDetail!, prediction: oldPrediction });
@@ -65,6 +66,7 @@ const GeneralMedicalBillSectionContainer = ({
         notification.error({
           message: 'Failed',
           description: 'Ops! Something went wrong',
+          placement: 'bottomLeft',
         });
         setSelectedMedicalBillDetail({
           ...selectedMedicalBillDetail!,
@@ -98,6 +100,7 @@ const GeneralMedicalBillSectionContainer = ({
         notification.error({
           message: 'Failed',
           description: 'Ops! Something went wrong',
+          placement: 'bottomLeft',
         });
         setSelectedMedicalBillDetail({
           ...selectedMedicalBillDetail!,
@@ -116,7 +119,7 @@ const GeneralMedicalBillSectionContainer = ({
 
   return (
     <Row gutter={24} align="top" className="mt-8">
-      <Col span={4}>
+      <Col span={4} className="flex justify-end">
         <Image
           src={require('assets/images/default_profile_2.png')}
           className="max-w-[128px] rounded-md"

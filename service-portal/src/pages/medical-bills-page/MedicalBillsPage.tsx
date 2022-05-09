@@ -1,32 +1,67 @@
 import { DownOutlined, PlusOutlined, ReloadOutlined } from '@ant-design/icons';
-import { DatePicker, Input, Tabs, Tooltip } from 'antd';
+import { DatePicker, Input, Select, Tabs, Tooltip } from 'antd';
 import { Heading, IconButton, PrimaryButton, SkeletonListing } from 'components';
+import { MEDICAL_BILLS_STATUSES } from 'consts';
 import { motion } from 'framer-motion';
 import { useTitle } from 'hooks';
 import { useCallback, useEffect, useState } from 'react';
 import { connect } from 'react-redux';
-import { RootDispatch, RootState } from 'store';
+import { RootDispatch, RootState, select } from 'store';
 import { defaultLayoutVariants } from 'utils';
 import { MedicalBillSummaries } from './components/MedicalBillSummaries';
 import { NewMedicalBillModal } from './components/NewMedicalBillModal';
 
 const { Search } = Input;
 const { TabPane } = Tabs;
+const { Option } = Select;
 const { RangePicker } = DatePicker;
+
+const FILTER_OPTIONS = {
+  noFilter: 'No Filter',
+  ...MEDICAL_BILLS_STATUSES,
+};
+
+type Filter = keyof typeof FILTER_OPTIONS;
 
 interface Props extends PropsFromStore {
   title?: string;
 }
 
-const MedicalBillPageContainer = ({ title, setHasMore, doGetMoreMedicalBillSummaries }: Props) => {
+const MedicalBillPageContainer = ({
+  title,
+  allMedicalBillSummaries,
+  pendingMedicalBillSummaries,
+  activeMedicalBillSummaries,
+  completedMedicalBillSummaries,
+  setHasMore,
+  doGetMoreMedicalBillSummaries,
+}: Props) => {
   const [isCreateMedicalBillVisible, setIsCreateMedicalBillVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [medicalBillSummaries, setMedicalBillSummaries] = useState(allMedicalBillSummaries);
+  const [filter, setFilter] = useState<Filter>();
 
   useEffect(() => {
     setIsLoading(true);
     setHasMore({ key: 'allMedicalBillSummariesHasMore', value: true });
     doGetMoreMedicalBillSummaries({}).then(() => setIsLoading(false));
   }, [doGetMoreMedicalBillSummaries, setHasMore]);
+
+  useEffect(() => {
+    filter === 'active'
+      ? setMedicalBillSummaries(activeMedicalBillSummaries)
+      : filter === 'pending'
+      ? setMedicalBillSummaries(pendingMedicalBillSummaries)
+      : filter === 'completed'
+      ? setMedicalBillSummaries(completedMedicalBillSummaries)
+      : setMedicalBillSummaries(allMedicalBillSummaries);
+  }, [
+    filter,
+    activeMedicalBillSummaries,
+    allMedicalBillSummaries,
+    completedMedicalBillSummaries,
+    pendingMedicalBillSummaries,
+  ]);
 
   useTitle(title);
 
@@ -40,6 +75,10 @@ const MedicalBillPageContainer = ({ title, setHasMore, doGetMoreMedicalBillSumma
 
   const onClickReload = useCallback(() => {
     window.location.reload();
+  }, []);
+
+  const onChangeFilter = useCallback((value: Filter) => {
+    setFilter(value);
   }, []);
 
   return (
@@ -74,17 +113,33 @@ const MedicalBillPageContainer = ({ title, setHasMore, doGetMoreMedicalBillSumma
         >
           <TabPane key={1} tab="All medical bills">
             <div className="flex items-center gap-4 mb-5 ml-3">
-              <RangePicker
-                allowClear={false}
-                format={'d MMMM'}
-                suffixIcon={<DownOutlined className="text-typo-tertiary" />}
-              />
-              <Search placeholder="Patient name" className="w-80" />
+              <Select
+                value={filter}
+                onChange={onChangeFilter}
+                placeholder="Filter"
+                className="w-32"
+              >
+                {Object.keys(FILTER_OPTIONS).map((key) => (
+                  <Option key={key} value={key}>
+                    {FILTER_OPTIONS[key as Filter]}
+                  </Option>
+                ))}
+              </Select>
+              <Tooltip title="Coming soon" placement="bottom" className="text-xs">
+                <RangePicker
+                  allowClear={false}
+                  format={'d MMMM'}
+                  suffixIcon={<DownOutlined className="text-typo-tertiary" />}
+                />
+              </Tooltip>
+              <Tooltip title="Coming soon" placement="bottom" className="text-xs">
+                <Search placeholder="Patient name" className="w-80" />
+              </Tooltip>
             </div>
 
             <div className="h-px bg-line-secondary" />
 
-            <MedicalBillSummaries />
+            <MedicalBillSummaries medicalBillSummaries={medicalBillSummaries} />
           </TabPane>
         </Tabs>
       )}
@@ -92,7 +147,12 @@ const MedicalBillPageContainer = ({ title, setHasMore, doGetMoreMedicalBillSumma
   );
 };
 
-const mapState = (state: RootState) => ({});
+const mapState = (state: RootState) => ({
+  allMedicalBillSummaries: state.medicalBillModel.medicalBillSummaries,
+  pendingMedicalBillSummaries: select.medicalBillModel.pendingMedicalBillSummaries(state),
+  activeMedicalBillSummaries: select.medicalBillModel.activeMedicalBillSummaries(state),
+  completedMedicalBillSummaries: select.medicalBillModel.completedMedicalBillSummaries(state),
+});
 
 const mapDispatch = (dispatch: RootDispatch) => ({
   setHasMore: dispatch.medicalBillModel.setHasMore,

@@ -4,7 +4,11 @@ import { InternalServerError } from "../shared";
 export class BillPaymentRepository {
   static async findMany(): Promise<BillPayment[]> {
     try {
-      const records: BillPayment[] = await BillPayment.findAll();
+      const records: BillPayment[] = await BillPayment.findAll({
+        include: {
+          model: Patient,
+        },
+      });
       return records;
     } catch (error) {
       throw new InternalServerError(error.message);

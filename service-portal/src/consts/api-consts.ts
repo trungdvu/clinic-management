@@ -26,4 +26,5 @@ export const API = {
   USAGES: `/${VERSION}/usages`,
 
   BILL_PAYMENTS: `/${VERSION}/bill-payments`,
+  BILL_PAYMENTS_ID: (id: string) => `/${VERSION}/bill-payments/${id}`,
 };

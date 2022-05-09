@@ -9,7 +9,7 @@ import { RootModel } from '.';
 type Page = 'allPatientsPage';
 type HasMore = 'allPatientsHasMore';
 
-interface PatientModalState {
+interface PatientModelState {
   patients: Patient[];
   allPatientsPage: number;
   allPatientsHasMore: boolean;
@@ -20,7 +20,7 @@ export const patientModel = createModel<RootModel>()({
     patients: [],
     allPatientsPage: 0,
     allPatientsHasMore: true,
-  } as PatientModalState,
+  } as PatientModelState,
 
   reducers: {
     setPatients: (state, payload: Patient[]) => ({ ...state, patients: payload }),

@@ -1,9 +1,10 @@
 import { Models } from '@rematch/core';
-import { appModel } from './app-modal';
+import { appModel } from './app-model';
 import { authModel } from './auth-model';
 import { dashboardModel } from './dashboard-model';
 import { diseaseTypeModel } from './disease-type-model';
 import { drugModel } from './drug-model';
+import { invoiceModel } from './invoice-model';
 import { medicalBillModel } from './medical-bill-model';
 import { patientModel } from './patient-model';
 
@@ -15,6 +16,7 @@ export interface RootModel extends Models<RootModel> {
   diseaseTypeModel: typeof diseaseTypeModel;
   appModel: typeof appModel;
   dashboardModel: typeof dashboardModel;
+  invoiceModel: typeof invoiceModel;
 }
 
 export const models: RootModel = {
@@ -25,4 +27,5 @@ export const models: RootModel = {
   diseaseTypeModel,
   appModel,
   dashboardModel,
+  invoiceModel,
 };

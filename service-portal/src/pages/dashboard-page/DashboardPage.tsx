@@ -1,7 +1,7 @@
 import { Empty, Row, Skeleton } from 'antd';
 import classNames from 'classnames';
 import { BackToTop, Text } from 'components';
-import { PAGE_ROUTES } from 'consts/page-consts';
+import { PAGE_ROUTES } from 'consts';
 import { motion } from 'framer-motion';
 import { useTitle } from 'hooks';
 import { DashboardSummaryTodayResponse } from 'interfaces/dashboard-interfaces';
@@ -55,22 +55,22 @@ export const DashboardPage = ({ title }: Props): JSX.Element => {
               <div className="flex flex-col w-2/3">
                 <div className="flex flex-col justify-center w-full gap-1">
                   <Text className="text-sm font-medium text-typo-tertiary">SUMMARY FOR TODAY</Text>
-                  <div className="flex items-center justify-center gap-20 px-10 py-5 bg-white rounded-md shadow">
+                  <div className="flex items-center justify-around gap-20 px-10 py-5 bg-white rounded-md shadow">
                     <div className="flex flex-col items-center">
                       <Text className="text-center text-typo-tertiary whitespace-nowrap">
-                        PENDING MEDICAL BILLS
+                        PENDING
                       </Text>
                       <Text className="py-2 text-4xl font-bold">{summary.pendingCount}</Text>
                     </div>
                     <div className="flex flex-col items-center">
                       <Text className="text-center whitespace-nowrap text-typo-tertiary">
-                        ACTIVE MEDICAL BILLS
+                        ACTIVE
                       </Text>
                       <Text className="py-2 text-4xl font-bold ">{summary.activeCount}</Text>
                     </div>
                     <div className="flex flex-col items-center">
                       <Text className="text-center whitespace-nowrap text-typo-tertiary">
-                        COMPLETED MEDICAL BILLS
+                        COMPLETED
                       </Text>
                       <Text className="py-2 text-4xl font-bold">{summary.completedCount}</Text>
                     </div>

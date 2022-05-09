@@ -45,11 +45,13 @@ export const FinishMedicalBillModal = ({
       notification.success({
         message: 'Created',
         description: 'The medical bill has been finished',
+        placement: 'bottomLeft',
       });
     } else {
       notification.error({
         message: 'Failed',
         description: 'Ops! Something went wrong',
+        placement: 'bottomLeft',
       });
     }
 
@@ -86,7 +88,7 @@ export const FinishMedicalBillModal = ({
 
       <div className="flex items-center w-full gap-5 mt-10">
         <PrimaryButton loading={loading} onClick={onClickFinish}>
-          Finish
+          Finish And Create Invoice
         </PrimaryButton>
         <SecondaryButton disabled={loading} onClick={onClose}>
           Cancel
