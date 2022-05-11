@@ -7,6 +7,7 @@ import { drugModel } from './drug-model';
 import { invoiceModel } from './invoice-model';
 import { medicalBillModel } from './medical-bill-model';
 import { patientModel } from './patient-model';
+import { statisticModel } from './statistic-model';
 
 export interface RootModel extends Models<RootModel> {
   authModel: typeof authModel;
@@ -17,6 +18,7 @@ export interface RootModel extends Models<RootModel> {
   appModel: typeof appModel;
   dashboardModel: typeof dashboardModel;
   invoiceModel: typeof invoiceModel;
+  statisticModel: typeof statisticModel;
 }
 
 export const models: RootModel = {
@@ -28,4 +30,5 @@ export const models: RootModel = {
   appModel,
   dashboardModel,
   invoiceModel,
+  statisticModel,
 };

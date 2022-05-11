@@ -8,3 +8,4 @@ export * from './unit-interfaces';
 export * from './usage-interfaces';
 export * from './dashboard-interfaces';
 export * from './invoice-interfaces';
+export * from './statistic-interfaces';

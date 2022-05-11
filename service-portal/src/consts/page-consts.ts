@@ -66,6 +66,10 @@ export const PAGE_ROUTES = {
     PATH: '/statistics',
     TITLE: 'Statistics - ClinicX',
     TITLE_MENU: 'Statistics',
+    DRUGS_REPORTS: {
+      PATH: '/statistics/drugs-report',
+      TITLE: 'Drugs Report - ClinicX',
+    },
   },
 
   HELP_CENTER: {

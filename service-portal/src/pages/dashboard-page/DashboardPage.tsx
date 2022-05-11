@@ -54,7 +54,9 @@ export const DashboardPage = ({ title }: Props): JSX.Element => {
             <div className="flex flex-row gap-5">
               <div className="flex flex-col w-2/3">
                 <div className="flex flex-col justify-center w-full gap-1">
-                  <Text className="text-sm font-medium text-typo-tertiary">SUMMARY FOR TODAY</Text>
+                  <Text className="text-sm font-medium text-typo-tertiary mt-0.5">
+                    SUMMARY FOR TODAY
+                  </Text>
                   <div className="flex items-center justify-around gap-20 px-10 py-5 bg-white rounded-md shadow">
                     <div className="flex flex-col items-center">
                       <Text className="text-center text-typo-tertiary whitespace-nowrap">
@@ -77,11 +79,11 @@ export const DashboardPage = ({ title }: Props): JSX.Element => {
                   </div>
                 </div>
 
-                <div className="w-full gap-1 mt-10">
+                <div className="w-full mt-10">
                   <Text className="text-sm font-medium text-typo-tertiary">
                     SUMMARY MY PATIENTS
                   </Text>
-                  <div className="px-4 py-5 bg-white rounded-md shadow">
+                  <div className="px-4 py-1 mt-2 bg-white rounded-md shadow">
                     <Text className="text-typo-tertiary">All my patients today.</Text>
                     <div className="w-full h-px mt-4 bg-line-secondary" />
                     <div className="flex flex-col gap-2 mt-2">
@@ -94,6 +96,7 @@ export const DashboardPage = ({ title }: Props): JSX.Element => {
                       )}
                       {_.map(summary.myMedicalBills, (bill, index) => (
                         <Row
+                          key={bill.id}
                           className={classNames('flex items-center justify-between px-3 py-3', {
                             ' border-t border-line-secondary': index !== 0,
                           })}
@@ -121,9 +124,9 @@ export const DashboardPage = ({ title }: Props): JSX.Element => {
                 </div>
               </div>
 
-              <div className="w-1/2 gap-1">
+              <div className="w-1/2">
                 <Text className="w-full text-sm font-medium text-typo-tertiary">NOTIFICATIONS</Text>
-                <div className="w-full px-4 py-5 bg-white rounded-md shadow">
+                <div className="w-full px-4 py-5 mt-1 bg-white rounded-md shadow">
                   <Text className="text-typo-tertiary">
                     You could dismiss notification to remove from this view.
                   </Text>

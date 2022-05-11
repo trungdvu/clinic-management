@@ -28,7 +28,7 @@ export const defaultLayoutVariants: Variants = {
   animate: {
     x: 0,
     opacity: 1,
-    transition: { duration: 0.2, ease: defaultEase },
+    transition: { duration: 0.25, ease: defaultEase },
   },
 };
 

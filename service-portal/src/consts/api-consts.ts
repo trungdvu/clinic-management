@@ -27,4 +27,7 @@ export const API = {
 
   BILL_PAYMENTS: `/${VERSION}/bill-payments`,
   BILL_PAYMENTS_ID: (id: string) => `/${VERSION}/bill-payments/${id}`,
+
+  REPORT_MONTHLY: `/${VERSION}/report/monthly-revenue-report`,
+  REPORT_DRUG_USAGE: `/${VERSION}/report/drug-usage-report`,
 };

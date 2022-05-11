@@ -2,7 +2,6 @@ import { createModel } from '@rematch/core';
 import { API } from 'consts';
 import { InvoiceDetail, InvoiceSummary } from 'interfaces';
 import { HttpService } from 'services/api';
-import { sleep } from 'utils/async-utils';
 import { RootModel } from '.';
 
 interface InvoiceModelState {

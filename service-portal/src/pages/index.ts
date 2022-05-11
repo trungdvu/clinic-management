@@ -13,3 +13,4 @@ export * from './account-recover-page/AccountRecoverPage';
 export * from './patients-page/PatientDetailPage';
 export * from './medical-bills-page/MedicalBillDetailPage';
 export * from './invoices-page/InvoiceDetailPage';
+export * from './statistics-page/DrugsReportPage';

@@ -5,6 +5,7 @@ import {
   AccountPage,
   AccountRecoverPage,
   DashboardPage,
+  DrugsReportPage,
   HelpCenterPage,
   InvoiceDetailPage,
   InvoicesPage,
@@ -59,6 +60,10 @@ export const MainRoutes: React.FC = () => {
         <Route
           path={PAGE_ROUTES.STATISTICS.PATH}
           element={<StatisticsPage title={PAGE_ROUTES.STATISTICS.TITLE} />}
+        />
+        <Route
+          path={PAGE_ROUTES.STATISTICS.DRUGS_REPORTS.PATH}
+          element={<DrugsReportPage title={PAGE_ROUTES.STATISTICS.DRUGS_REPORTS.TITLE} />}
         />
         <Route
           path={PAGE_ROUTES.ACCOUNT.PATH}

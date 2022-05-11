@@ -1,5 +1,4 @@
 import {
-  BellOutlined,
   CaretDownOutlined,
   CommentOutlined,
   LogoutOutlined,

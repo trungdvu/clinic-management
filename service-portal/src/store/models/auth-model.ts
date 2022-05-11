@@ -28,10 +28,15 @@ export const authModel = createModel<RootModel>()({
 
         if (status === 200) {
           const { accessToken, profile } = data.data;
+
           authLocalStorage.setAccessToken(accessToken);
           authLocalStorage.setUser(profile);
           authLocalStorage.setPreviousEmail(payload.email);
+
           dispatch.authModel.setCurrentUser(profile);
+
+          await dispatch.statisticModel.doGetMonthlyRevenues();
+
           return true;
         }
         return new ErrorModel(data, errorCode, status);
