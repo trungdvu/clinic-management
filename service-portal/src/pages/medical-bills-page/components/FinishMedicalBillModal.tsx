@@ -62,33 +62,28 @@ export const FinishMedicalBillModal = ({
     <Modal
       visible={visible}
       footer={null}
-      title={
-        <ModalHeader
-          title="Create invoice"
-          subTitle="Finish and make a payment for this medical bill"
-        />
-      }
+      title={<ModalHeader title="Create invoice" subTitle="Make a payment for this medical bill" />}
       className={classNames('p-0 w-[640px]')}
       onCancel={onClose}
     >
       <div>
         <div className="flex items-center justify-between py-3">
           <Text className="text-right w-min">Medications:</Text>
-          <Text>{formatVND(totalDrugCost)}</Text>
+          <Text>{formatVND(totalDrugCost, 'currency')}</Text>
         </div>
         <div className="flex items-center justify-between py-3">
           <Text className="text-right w-min">Fee:</Text>
-          <Text>{formatVND(medicalExamCost)}</Text>
+          <Text>{formatVND(medicalExamCost, 'currency')}</Text>
         </div>
         <div className="flex items-center justify-between py-3">
           <Text className="text-right w-min">Total:</Text>
-          <Text>{formatVND(totalDrugCost + medicalExamCost)}</Text>
+          <Text>{formatVND(totalDrugCost + medicalExamCost, 'currency')}</Text>
         </div>
       </div>
 
       <div className="flex items-center w-full gap-5 mt-10">
         <PrimaryButton loading={loading} onClick={onClickFinish}>
-          Finish And Create Invoice
+          Create Invoice
         </PrimaryButton>
         <SecondaryButton disabled={loading} onClick={onClose}>
           Cancel

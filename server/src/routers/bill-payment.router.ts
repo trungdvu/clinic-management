@@ -6,7 +6,7 @@ const router = Router();
 router.get("/", BillPaymentController.findAll);
 router.get("/:id", BillPaymentController.findById);
 router.post("/", BillPaymentController.create);
-router.patch("/:id", BillPaymentController.markCompleted);
+router.put("/:id", BillPaymentController.markCompleted);
 router.delete("/:id", BillPaymentController.delete);
 
 export default router;

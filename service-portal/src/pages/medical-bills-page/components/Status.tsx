@@ -12,7 +12,6 @@ interface Props {
 export const Status = memo(({ status, className }: Props): JSX.Element => {
   return (
     <Text
-      type="success"
       className={classNames(
         'px-2.5 py-0.5 rounded-sm',
         {

@@ -1,4 +1,4 @@
-export function toParamsUrl(params: any) {
+export function toQueryParamsUrl(params: any) {
   let url = '?';
   let i = 0;
   for (const [key, value] of Object.entries(params)) {
@@ -14,8 +14,8 @@ export function uniqueBy<T>(arr: T[], attribute: keyof T) {
   }, new Set());
 }
 
-export function formatVND(amount: number) {
-  return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
+export function formatVND(amount: number, style?: string) {
+  return new Intl.NumberFormat('vi-VN', { style, currency: 'VND' }).format(amount);
 }
 
 export const regExpNumber = new RegExp(

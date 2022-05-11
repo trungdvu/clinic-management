@@ -1,6 +1,7 @@
 import { createModel } from '@rematch/core';
 import { API } from 'consts';
 import { SignInPayload, SignUpPayload, User } from 'interfaces';
+import moment from 'moment';
 import { HttpService } from 'services';
 import { authLocalStorage, ErrorModel } from 'shared';
 import { sleep } from 'utils/async-utils';
@@ -35,7 +36,11 @@ export const authModel = createModel<RootModel>()({
 
           dispatch.authModel.setCurrentUser(profile);
 
-          await dispatch.statisticModel.doGetMonthlyRevenues();
+          const now = moment().utc();
+          dispatch.statisticModel.doGetMonthlyRevenues({
+            month: now.month() + 1,
+            year: now.year(),
+          });
 
           return true;
         }

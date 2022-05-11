@@ -13,3 +13,13 @@ export interface DrugUsageReport {
   quantity: number;
   numberOfUse: number;
 }
+
+export interface MonthlyRevenuePayload {
+  month: number;
+  year: number;
+}
+
+export interface DrugUsageReportPayload {
+  month: number;
+  year: number;
+}

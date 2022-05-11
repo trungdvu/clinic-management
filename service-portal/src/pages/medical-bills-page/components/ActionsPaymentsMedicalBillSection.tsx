@@ -125,15 +125,15 @@ const ActionsPaymentsMedicalBillSectionContainer = ({
       <div className="px-5 mt-4 bg-gradient-to-r from-line-secondary via-gray-100 to-gray-50 w-80">
         <div className="flex items-center justify-between py-3">
           <Text className="text-right w-min">Medications:</Text>
-          <Text>{formatVND(medicationCost)}</Text>
+          <Text>{formatVND(medicationCost, 'currency')}</Text>
         </div>
         <div className="flex items-center justify-between py-3">
           <Text className="text-right w-min">Fee:</Text>
-          <Text>{formatVND(feeCost)}</Text>
+          <Text>{formatVND(feeCost, 'currency')}</Text>
         </div>
         <div className="flex items-center justify-between py-3">
           <Text className="text-right w-min">Total:</Text>
-          <Text>{formatVND(totalCost)}</Text>
+          <Text>{formatVND(totalCost, 'currency')}</Text>
         </div>
       </div>
 
@@ -144,7 +144,7 @@ const ActionsPaymentsMedicalBillSectionContainer = ({
           </PrimaryButton>
         ) : status === 'active' ? (
           <PrimaryButton className="px-10" onClick={onClickFinish}>
-            Finish
+            Create Invoice
           </PrimaryButton>
         ) : (
           <PrimaryButton disabled className="px-10">

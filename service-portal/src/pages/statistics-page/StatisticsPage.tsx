@@ -1,4 +1,4 @@
-import { RightOutlined } from '@ant-design/icons';
+import { ArrowDownOutlined, ArrowUpOutlined, MenuOutlined, RightOutlined } from '@ant-design/icons';
 import classNames from 'classnames';
 import { Heading, Text } from 'components/typography';
 import { PAGE_ROUTES } from 'consts';
@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 import { useTitle } from 'hooks';
 import _ from 'lodash';
 import moment from 'moment';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { RootDispatch, RootState } from 'store';
@@ -18,7 +18,9 @@ interface Props {
 }
 
 export const StatisticsPage = ({ title }: Props) => {
-  const currentDay = moment().date();
+  const now = useRef(moment().utc()).current;
+  const currentDay = now.date();
+
   const { monthlyRevenues } = useSelector((state: RootState) => state.statisticModel);
   const loading = useSelector((state: RootState) => state.loading.effects.statisticModel);
   const dispatch = useDispatch<RootDispatch>();
@@ -26,9 +28,9 @@ export const StatisticsPage = ({ title }: Props) => {
   useTitle(title);
 
   useEffect(() => {
-    dispatch.statisticModel.doGetMonthlyRevenues();
-    dispatch.statisticModel.doGetDrugUsageReports();
-  }, [dispatch.statisticModel]);
+    dispatch.statisticModel.doGetMonthlyRevenues({ month: now.month() + 1, year: now.year() });
+    dispatch.statisticModel.doGetDrugUsageReports({ month: now.month() + 1, year: now.year() });
+  }, [dispatch.statisticModel, now]);
 
   return (
     <div className="mb-10">
@@ -59,9 +61,11 @@ export const StatisticsPage = ({ title }: Props) => {
               <RightOutlined className="flex items-center text-base" />
             </Link>
           </motion.div>
+
           <div className="grid grid-cols-3 gap-4">
             {monthlyRevenues.map((monthlyRevenue, index) => (
               <motion.div
+                key={index}
                 initial={{
                   opacity: 0,
                   y: 60,
@@ -86,7 +90,7 @@ export const StatisticsPage = ({ title }: Props) => {
                     {monthlyRevenue.day}
                   </Text>
                 </div>
-                <div className="flex flex-col w-2/5">
+                <div className="flex flex-col items-end w-1/5">
                   <Text
                     className={classNames('text-base font-extralight', {
                       'text-white': monthlyRevenue.day === currentDay,
@@ -99,20 +103,44 @@ export const StatisticsPage = ({ title }: Props) => {
                     {monthlyRevenue.day > currentDay ? '--' : monthlyRevenue.numberOfPatient}
                   </Text>
                 </div>
-                <div className="flex flex-col w-2/5">
+
+                <div className="flex flex-col items-end w-3/5 mr-2">
                   <Text
                     className={classNames('text-base font-extralight', {
                       'text-white': monthlyRevenue.day === currentDay,
                       'text-typo-tertiary': monthlyRevenue.day !== currentDay,
                     })}
                   >
-                    Revenue
+                    Revenue (vnđ)
                   </Text>
-                  <Text className="mt-4 text-lg">
-                    {monthlyRevenue.day > currentDay
-                      ? '--'
-                      : formatVND(monthlyRevenue.numberOfPatient)}
-                  </Text>
+                  <div className="flex items-center justify-end w-full mt-4">
+                    {monthlyRevenue.revenue < monthlyRevenues[index - 1]?.revenue &&
+                    monthlyRevenue.day <= currentDay ? (
+                      <>
+                        <ArrowDownOutlined className="text-typo-error" />
+                        <Text className="ml-1 text-lg bg-typo-error">
+                          {formatVND(monthlyRevenue.revenue)}
+                        </Text>
+                      </>
+                    ) : monthlyRevenue.revenue === monthlyRevenues[index - 1]?.revenue &&
+                      monthlyRevenue.day <= currentDay ? (
+                      <>
+                        <MenuOutlined className="text-yellow-500" />
+                        <Text className="ml-1 text-lg text-yellow-500">
+                          {formatVND(monthlyRevenue.revenue)}
+                        </Text>
+                      </>
+                    ) : monthlyRevenue.day <= currentDay ? (
+                      <>
+                        <ArrowUpOutlined className="text-typo-success" />
+                        <Text className="ml-1 text-lg text-typo-success">
+                          {formatVND(monthlyRevenue.revenue)}
+                        </Text>
+                      </>
+                    ) : (
+                      <Text className="ml-1 text-lg">--</Text>
+                    )}
+                  </div>
                 </div>
               </motion.div>
             ))}

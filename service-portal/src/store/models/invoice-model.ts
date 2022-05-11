@@ -43,5 +43,17 @@ export const invoiceModel = createModel<RootModel>()({
         return false;
       }
     },
+
+    async doCompletedInvoice(payload: string): Promise<boolean> {
+      try {
+        const endpoint = API.BILL_PAYMENTS_ID(payload);
+        const { status } = await HttpService.put(endpoint);
+
+        return status === 200 ? true : false;
+      } catch (error) {
+        console.log('doCompletedInvoice', error);
+        return false;
+      }
+    },
   }),
 });

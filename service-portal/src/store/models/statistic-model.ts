@@ -1,6 +1,11 @@
 import { createModel } from '@rematch/core';
 import { API } from 'consts/api-consts';
-import { DrugUsageReport, MonthlyRevenue } from 'interfaces';
+import {
+  DrugUsageReport,
+  DrugUsageReportPayload,
+  MonthlyRevenue,
+  MonthlyRevenuePayload,
+} from 'interfaces';
 import { HttpService } from 'services';
 import { RootModel } from '.';
 
@@ -29,11 +34,13 @@ export const statisticModel = createModel<RootModel>()({
   },
 
   effects: (dispatch) => ({
-    async doGetMonthlyRevenues() {
+    async doGetMonthlyRevenues(payload: MonthlyRevenuePayload) {
       try {
-        const endpoint = API.REPORT_MONTHLY;
+        const endpoint = API.REPORT_MONTHLY_QUERY({
+          month: payload.month,
+          year: payload.year,
+        });
         const { status, data } = await HttpService.get(endpoint);
-        console.log('🚀 ~ data.data', data.data);
 
         if (status === 200) {
           dispatch.statisticModel.setMonthlyRevenues(data.data);
@@ -46,11 +53,14 @@ export const statisticModel = createModel<RootModel>()({
       }
     },
 
-    async doGetDrugUsageReports() {
+    async doGetDrugUsageReports(payload: DrugUsageReportPayload) {
       try {
-        const endpoint = API.REPORT_DRUG_USAGE;
+        const endpoint = API.REPORT_DRUG_USAGE_QUERY({
+          month: payload?.month,
+          year: payload?.year,
+        });
+
         const { status, data } = await HttpService.get(endpoint);
-        console.log('🚀 ~ drug usages', data.data);
 
         if (status === 200) {
           dispatch.statisticModel.setDrugUsageReports(data.data);

@@ -78,9 +78,10 @@ export class BillPaymentService {
       const drugDetailResponses: MedicalBillDetailResponse[] = await MedicalBillDetailService.findMany(
         record.medicalBillId
       );
-      
+
       const totalDrugCost: number = drugDetailResponses.reduce(
-        (totalMoney: number, drug: MedicalBillDetailResponse) => totalMoney + drug.price,
+        (totalMoney: number, drug: MedicalBillDetailResponse) =>
+          totalMoney + drug.price,
         0
       );
 
@@ -147,13 +148,7 @@ export class BillPaymentService {
         totalDrugCost: totalDrugCost ?? drugsCost,
       };
 
-      const result = await BillPaymentRepository.create(defaultDto);
-
-      if (result) {
-        await MedicalBillRepository.update(medicalBillId, {
-          status: MedicalBillStatus.Completed,
-        });
-      }
+      await BillPaymentRepository.create(defaultDto);
     } catch (error) {
       ErrorHandler(error);
     }

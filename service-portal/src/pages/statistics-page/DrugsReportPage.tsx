@@ -1,13 +1,11 @@
-import { ArrowRightOutlined, LeftOutlined } from '@ant-design/icons';
-import classNames from 'classnames';
-import { HyperLinkButton } from 'components/buttons';
-import { Heading, Text } from 'components/typography';
+import { LeftOutlined } from '@ant-design/icons';
+import { Text } from 'components/typography';
 import { PAGE_ROUTES } from 'consts/page-consts';
 import { motion } from 'framer-motion';
 import { useTitle } from 'hooks';
 import _ from 'lodash';
 import moment from 'moment';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { RootDispatch, RootState } from 'store';
@@ -18,7 +16,7 @@ interface Props {
 }
 
 export const DrugsReportPage = ({ title }: Props) => {
-  const currentDay = moment().date();
+  const now = useRef(moment().utc()).current;
   const { drugUsageReport } = useSelector((state: RootState) => state.statisticModel);
   const loading = useSelector((state: RootState) => state.loading.effects.statisticModel);
   const dispatch = useDispatch<RootDispatch>();
@@ -26,8 +24,8 @@ export const DrugsReportPage = ({ title }: Props) => {
   useTitle(title);
 
   useEffect(() => {
-    dispatch.statisticModel.doGetDrugUsageReports();
-  }, [dispatch.statisticModel]);
+    dispatch.statisticModel.doGetDrugUsageReports({ month: now.month() + 1, year: now.year() });
+  }, [dispatch.statisticModel, now]);
 
   return (
     <div className="mb-10">
@@ -67,6 +65,7 @@ export const DrugsReportPage = ({ title }: Props) => {
         <div className="flex flex-col gap-4">
           {drugUsageReport.map((drugReport, index) => (
             <motion.div
+              key={index}
               initial={{
                 opacity: 0,
                 y: 60,
@@ -76,22 +75,23 @@ export const DrugsReportPage = ({ title }: Props) => {
                 y: 0,
                 transition: { duration: 0.25, ease: defaultEase, delay: index * 0.05 },
               }}
-              className="flex items-center gap-5 px-4 py-8 bg-white rounded-md shadow"
+              className="flex items-center gap-5 px-4 py-6 bg-white rounded-md shadow"
             >
-              <div className="w-1/4">
-                <Text>{drugReport.drug.description}</Text>
+              <div className="flex flex-col w-1/4 gap-2">
+                <Text className="text-base font-extralight text-typo-tertiary">Drug</Text>
+                <Text className="text-lg">{drugReport.drug.description}</Text>
               </div>
-              <div className="flex flex-col w-1/4">
-                <Text>Unit</Text>
-                <Text>{drugReport.unit.description}</Text>
+              <div className="flex flex-col w-1/4 gap-2">
+                <Text className="text-base font-extralight text-typo-tertiary">Unit</Text>
+                <Text className="text-lg">{drugReport.unit.description}</Text>
               </div>
-              <div className="flex flex-col w-1/4">
-                <Text>Quantity</Text>
-                <Text>{drugReport.quantity}</Text>
+              <div className="flex flex-col w-1/4 gap-2">
+                <Text className="text-base font-extralight text-typo-tertiary">Sold Quantity</Text>
+                <Text className="text-lg">{drugReport.quantity}</Text>
               </div>
-              <div className="flex flex-col w-1/4">
-                <Text>Usage number</Text>
-                <Text>{drugReport.numberOfUse}</Text>
+              <div className="flex flex-col w-1/4 gap-2">
+                <Text className="text-base font-extralight text-typo-tertiary">Usage Number</Text>
+                <Text className="text-lg">{drugReport.numberOfUse}</Text>
               </div>
             </motion.div>
           ))}

@@ -105,7 +105,9 @@ export function InvoicesPage({ title }: Props) {
                       <Status status={invoice.status as any} />
                     </Col>
                     <Col span={3} className="text-right">
-                      <Text>{formatVND(invoice.medicalExamCost + invoice.totalDrugCost)}</Text>
+                      <Text>
+                        {formatVND(invoice.medicalExamCost + invoice.totalDrugCost, 'currency')}
+                      </Text>
                     </Col>
                   </Row>
                 ))}
