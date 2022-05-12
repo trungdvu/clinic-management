@@ -52,7 +52,9 @@ export const StatisticsPage = ({ title }: Props) => {
     currentDay === day && currentYear === selectedMonth[1] && currentMonth === selectedMonth[0];
 
   const isFuture = (day: number) =>
-    day > currentDay && selectedMonth[0] >= currentMonth && selectedMonth[1] >= currentYear;
+    selectedMonth[1] > currentYear ||
+    (selectedMonth[1] === currentYear && selectedMonth[0] > currentMonth) ||
+    (selectedMonth[0] === currentMonth && selectedMonth[0] === currentMonth && day > currentDay);
 
   const onSelectMonthVisibleChange = useCallback((visible: boolean) => {
     setSelectMonthPopoverVisible(visible);

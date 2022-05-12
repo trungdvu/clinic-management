@@ -63,7 +63,7 @@ export const DashboardPage = ({ title }: Props): JSX.Element => {
                       <Text className="text-center text-typo-tertiary whitespace-nowrap">
                         PENDING BILLS
                       </Text>
-                      <CountUp start={0} end={100} delay={0} duration={0.25}>
+                      <CountUp start={0} end={summary.pendingCount} delay={0} duration={0.25}>
                         {({ countUpRef }) => (
                           <span ref={countUpRef} className="py-2 mt-2 text-4xl font-bold" />
                         )}
@@ -73,7 +73,7 @@ export const DashboardPage = ({ title }: Props): JSX.Element => {
                       <Text className="text-center whitespace-nowrap text-typo-tertiary">
                         ACTIVE BILLS
                       </Text>
-                      <CountUp start={0} end={100} delay={0} duration={0.25}>
+                      <CountUp start={0} end={summary.activeCount} delay={0} duration={0.25}>
                         {({ countUpRef }) => (
                           <span ref={countUpRef} className="py-2 mt-2 text-4xl font-bold" />
                         )}
@@ -83,7 +83,7 @@ export const DashboardPage = ({ title }: Props): JSX.Element => {
                       <Text className="text-center whitespace-nowrap text-typo-tertiary">
                         COMPLETED BILLS
                       </Text>
-                      <CountUp start={0} end={100} delay={0} duration={0.25}>
+                      <CountUp start={0} end={summary.completedCount} delay={0} duration={0.25}>
                         {({ countUpRef }) => (
                           <span ref={countUpRef} className="py-2 mt-2 text-4xl font-bold" />
                         )}
