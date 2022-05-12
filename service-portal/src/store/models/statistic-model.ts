@@ -1,17 +1,20 @@
 import { createModel } from '@rematch/core';
 import { API } from 'consts/api-consts';
+import { MapMonth } from 'consts';
 import {
   DrugUsageReport,
   DrugUsageReportPayload,
   MonthlyRevenue,
   MonthlyRevenuePayload,
 } from 'interfaces';
+import moment from 'moment';
 import { HttpService } from 'services';
 import { RootModel } from '.';
 
 interface StatisticModelState {
   monthlyRevenues: MonthlyRevenue[];
   drugUsageReport: DrugUsageReport[];
+  selectedMonth: [MapMonth, number];
 }
 
 export const statisticModel = createModel<RootModel>()({
@@ -20,6 +23,7 @@ export const statisticModel = createModel<RootModel>()({
   state: {
     monthlyRevenues: [],
     drugUsageReport: [],
+    selectedMonth: [moment().month() + 1, moment().year()],
   } as StatisticModelState,
 
   reducers: {
@@ -30,6 +34,10 @@ export const statisticModel = createModel<RootModel>()({
     setDrugUsageReports: (state, payload: DrugUsageReport[]) => ({
       ...state,
       drugUsageReport: payload,
+    }),
+    setSelectedMonth: (state, payload: [MapMonth, number]) => ({
+      ...state,
+      selectedMonth: payload,
     }),
   },
 
