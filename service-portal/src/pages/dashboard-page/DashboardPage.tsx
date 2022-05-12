@@ -8,6 +8,7 @@ import { DashboardSummaryTodayResponse } from 'interfaces/dashboard-interfaces';
 import _ from 'lodash';
 import moment from 'moment';
 import { useCallback, useEffect, useState } from 'react';
+import CountUp from 'react-countup';
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { RootDispatch } from 'store';
@@ -58,23 +59,35 @@ export const DashboardPage = ({ title }: Props): JSX.Element => {
                     SUMMARY FOR TODAY
                   </Text>
                   <div className="flex items-center justify-around gap-20 px-10 py-5 bg-white rounded-md shadow">
-                    <div className="flex flex-col items-center">
+                    <div className="flex flex-col items-center w-1/3">
                       <Text className="text-center text-typo-tertiary whitespace-nowrap">
-                        PENDING
+                        PENDING BILLS
                       </Text>
-                      <Text className="py-2 text-4xl font-bold">{summary.pendingCount}</Text>
+                      <CountUp start={0} end={100} delay={0} duration={0.25}>
+                        {({ countUpRef }) => (
+                          <span ref={countUpRef} className="py-2 mt-2 text-4xl font-bold" />
+                        )}
+                      </CountUp>
                     </div>
-                    <div className="flex flex-col items-center">
+                    <div className="flex flex-col items-center w-1/3">
                       <Text className="text-center whitespace-nowrap text-typo-tertiary">
-                        ACTIVE
+                        ACTIVE BILLS
                       </Text>
-                      <Text className="py-2 text-4xl font-bold ">{summary.activeCount}</Text>
+                      <CountUp start={0} end={100} delay={0} duration={0.25}>
+                        {({ countUpRef }) => (
+                          <span ref={countUpRef} className="py-2 mt-2 text-4xl font-bold" />
+                        )}
+                      </CountUp>
                     </div>
-                    <div className="flex flex-col items-center">
+                    <div className="flex flex-col items-center 1/3">
                       <Text className="text-center whitespace-nowrap text-typo-tertiary">
-                        COMPLETED
+                        COMPLETED BILLS
                       </Text>
-                      <Text className="py-2 text-4xl font-bold">{summary.completedCount}</Text>
+                      <CountUp start={0} end={100} delay={0} duration={0.25}>
+                        {({ countUpRef }) => (
+                          <span ref={countUpRef} className="py-2 mt-2 text-4xl font-bold" />
+                        )}
+                      </CountUp>
                     </div>
                   </div>
                 </div>
