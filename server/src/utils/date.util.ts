@@ -14,11 +14,13 @@ export enum Month {
   December,
 }
 
-const isLeapYear = (year): boolean => {
-  return year % 400 === 0 || (year % 4 === 0 && year % 100 !== 0);
-};
+const isLeapYear = (year): boolean =>
+  year % 400 === 0 || (year % 4 === 0 && year % 100 !== 0);
 
 export const getNumberDayOfMonth = (month: number, year: number): number => {
+  console.log("month", month);
+  console.log("Month", Month);
+
   switch (month) {
     case Month.January:
     case Month.March:

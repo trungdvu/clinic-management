@@ -29,25 +29,24 @@ export class ReportService {
       const { userId } = await TokenService.decode(
         TokenService.getCurrentToken()
       );
-      const { month: queryMonth, year: queryYear } = query;
+      const parsedMonth = parseInt(query.month.toString());
+      const parsedYear = parseInt(query.year.toString());
 
       const responses: MonthlyRevenueReportResponse[] = [];
       const numberDateInMonth: number = getNumberDayOfMonth(
-        queryMonth,
-        queryYear
+        parsedMonth,
+        parsedYear
       );
 
       const foundedUser = await IdentityRepository.findById(userId);
 
-      for (let dayInMonth = 1; dayInMonth < numberDateInMonth; ++dayInMonth) {
+      for (let dayInMonth = 1; dayInMonth <= numberDateInMonth; ++dayInMonth) {
         const filteredPatients: Patient[] = foundedUser.patients.filter(
           (patient: Patient) => {
             const [day, month, year] = formatDate(patient.createdAt);
 
             return (
-              day === dayInMonth &&
-              month === parseInt(queryMonth.toString()) &&
-              year === parseInt(queryYear.toString())
+              day === dayInMonth && month === parsedMonth && year === parsedYear
             );
           }
         );
@@ -58,8 +57,8 @@ export class ReportService {
 
             if (
               day === dayInMonth &&
-              month === parseInt(queryMonth.toString()) &&
-              year === parseInt(queryYear.toString()) &&
+              month === parsedMonth &&
+              year === parsedYear &&
               currentBillPayment.status === BillPaymentStatus.Completed
             ) {
               return (
@@ -89,21 +88,26 @@ export class ReportService {
     }
   }
 
+  static isDifferentDrug = (current: Drug, iteration: Drug) => {
+    return current.id !== iteration.id;
+  };
+
   static async calculateDrugUsage(
     query: FindDrugUsageReportQueryParams
   ): Promise<DrugUsageReportResponse[]> {
     try {
-      const { month: queryMonth, year: queryYear } = query;
+      const parsedMonth = parseInt(query.month.toString());
+      const parsedYear = parseInt(query.year.toString());
 
       // TODO: Refactor code performance
       const drugRecords: Drug[] = await DrugRepository.findMany();
       let responses: DrugUsageReportResponse[] = [];
       let currentDrug: Drug = drugRecords[0];
-      let isNewDrug: boolean = true;
+      let isDifferentDrugType: boolean = true;
 
       for (const drug of drugRecords) {
-        if (currentDrug.id !== drug.id) {
-          isNewDrug = true;
+        if (this.isDifferentDrug(currentDrug, drug)) {
+          isDifferentDrugType = true;
           currentDrug = drug;
         }
 
@@ -111,13 +115,14 @@ export class ReportService {
           const [day, month, year] = formatDate(medicalBillDetail.createdAt);
 
           if (
-            month === parseInt(queryMonth.toString()) &&
-            year === parseInt(queryYear.toString()) &&
-            isNewDrug
+            month === parsedMonth &&
+            year === parsedYear &&
+            isDifferentDrugType
           ) {
             const foundedUnit = await UnitRepository.findById(
               medicalBillDetail.unitId
             );
+
             const quantity = drug.medicalBillDetails.reduce(
               (
                 totalQuantity: number,
@@ -140,7 +145,7 @@ export class ReportService {
             };
 
             responses.push(response);
-            isNewDrug = false;
+            isDifferentDrugType = false;
           }
         }
       }
