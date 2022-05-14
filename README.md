@@ -50,9 +50,7 @@ Env requires: [Node.js](https://nodejs.org/en/) LTS v16 installed
   npm run dev
 ```
 
-**Note**: Please continue follow our steps, I will fix it as soon as possible.
-
-4. Open new terminal tab and run seeder to seed static data:
+4. Open new terminal tab and run seeder to seed static data to Database:
 
 ```
   npm run db:seed
