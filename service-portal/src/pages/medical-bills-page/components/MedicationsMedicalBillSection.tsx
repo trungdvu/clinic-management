@@ -201,7 +201,7 @@ const MedicationsMedicalBillSectionContainer = ({
               {_.map(selectedMedicalBillDetail.drugDetails, (drug, index) => (
                 <EditableDrugRow
                   readOnly={selectedMedicalBillDetail.status === 'completed'}
-                  key={index}
+                  key={drug.id}
                   currentIndex={index}
                   availableUsages={drugUsages}
                   medicalBillDrug={drug}
