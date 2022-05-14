@@ -1,5 +1,9 @@
 # Clinic Management
 
+## Short Description:
+
+A project that helps Clinics - Hospitals manage more efficiently. It provides most of the needed features and processes that every clinic need.
+
 ## Quick Start
 
 Env requires: [Node.js](https://nodejs.org/en/) LTS v16 installed
