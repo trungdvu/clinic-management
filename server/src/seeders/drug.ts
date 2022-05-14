@@ -45,6 +45,72 @@ module.exports = {
           createdAt: new Date(),
           updatedAt: new Date(),
         },
+        {
+          id: "1be6uqcd-7704-4250-a089-49e172c04doo",
+          description: "Clorpheniramin",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          id: "1be6uqcd-7704-4250-a089-49e172c7381",
+          description: "Hadocolcen",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          id: "1be6uqcd-7704-4250-a089-49e1727ye3a",
+          description: "Cottuf",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          id: "1be6uqcd-7704-4250-a089-49e172kyggf",
+          description: "Nostravin", //thuốc nhỏ mũi, 1 – 2 giọt/ lần
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          id: "1be6uqcd-7704-4250-a089-49e17977721",
+          description: "Pseudoephedrine",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          id: "1be6uqcd-7704-4250-a089-49e17900000",
+          description: "Dextromethorphan",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          id: "1be6uqcd-7704-4250-a089-49e17900999",
+          description: "Eucalyptine",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          id: "1be6uqcd-7704-4250-a089-49e17911111",
+          description: "Pholcodine",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          id: "1be6uqcd-7704-4250-a089-49e17922222",
+          description: "Panadol Extra",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          id: "1be6uqcd-7704-4250-b089-49e17922xxq",
+          description: "Mephenesin",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+        {
+          id: "1be6uqcd-7704-4250-b089-49e17922kdy", 
+          description: "Cao dán Salonpas",
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
       ],
       {}
     );
