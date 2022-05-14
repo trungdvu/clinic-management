@@ -34,7 +34,7 @@ module.exports = {
           updatedAt: new Date(),
         },
         {
-          id: "33a01aa9-5730-44b9-a5ec-aaaad3e3ogq",
+          id: "ff760df2-d359-11ec-9d64-0242ac120002",
           description: "Miếng",
           createdAt: new Date(),
           updatedAt: new Date(),
