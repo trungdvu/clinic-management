@@ -125,7 +125,7 @@ const EditTableDrugRowContainer = ({
   return (
     <Row
       gutter={24}
-      className={classNames('relative py-3 text-typo-primary flex items-center', {
+      className={classNames('relative px-5 py-3 text-typo-primary flex items-center', {
         'border-t border-line-secondary': currentIndex !== 0,
       })}
     >

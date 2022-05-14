@@ -166,30 +166,8 @@ const MedicationsMedicalBillSectionContainer = ({
       </Form>
 
       <div className="relative mb-10">
-        <Row gutter={24} className="px-5 py-3 font-medium text-typo-tertiary">
-          <Col span={1}>
-            <Text className="whitespace-nowrap">NO</Text>
-          </Col>
-          <Col span={5} className="pl-6">
-            NAME
-          </Col>
-          <Col span={7} className="pl-9">
-            USAGE
-          </Col>
-          <Col span={3} className="pl-8">
-            UNIT
-          </Col>
-          <Col span={3} className="pl-8">
-            QUANTITY
-          </Col>
-          <Col span={3} className="pl-6 text-right">
-            AMOUNT
-          </Col>
-        </Row>
-        <div className="h-px bg-line-secondary" />
-
         <div
-          className={classNames('overflow-hidden min-h-[230px] py-6 px-5', {
+          className={classNames('overflow-hidden min-h-[248px] pt-4 py-8', {
             'h-auto pb-8': isMedicationsExpanded,
             'h-[230px]': !isMedicationsExpanded,
           })}
@@ -198,6 +176,27 @@ const MedicationsMedicalBillSectionContainer = ({
             <EmptyDrugs />
           ) : (
             <>
+              <Row gutter={24} className="px-5 pb-3 font-medium text-typo-tertiary">
+                <Col span={1}>
+                  <Text className="whitespace-nowrap">NO</Text>
+                </Col>
+                <Col span={5} className="pl-6">
+                  NAME
+                </Col>
+                <Col span={7} className="pl-9">
+                  USAGE
+                </Col>
+                <Col span={3} className="pl-8">
+                  UNIT
+                </Col>
+                <Col span={3} className="pl-8">
+                  QUANTITY
+                </Col>
+                <Col span={3} className="pl-6 text-right">
+                  AMOUNT
+                </Col>
+              </Row>
+              <div className="h-px bg-line-secondary" />
               {_.map(selectedMedicalBillDetail.drugDetails, (drug, index) => (
                 <EditableDrugRow
                   readOnly={selectedMedicalBillDetail.status === 'completed'}
