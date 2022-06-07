@@ -1,5 +1,9 @@
 # Clinic Management
 
+## Demo
+
+Youtube: [Local demo](https://www.youtube.com/watch?v=YD3z5ZE8G88)
+
 ## Short Description:
 
 A project that helps Clinics - Hospitals manage more efficiently. It provides most of the needed features and processes that every clinic need.
