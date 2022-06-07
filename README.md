@@ -2,7 +2,7 @@
 
 ## Demo
 
-Youtube: [Local demo](https://www.youtube.com/watch?v=YD3z5ZE8G88)
+Youtube: <a href="https://www.youtube.com/watch?v=YD3z5ZE8G88" target="_blank">Local demo</a>
 
 ## Short Description:
 
