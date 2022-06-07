@@ -52,7 +52,7 @@ Env requires: [Node.js](https://nodejs.org/en/) LTS v16 installed
   npm i
 ```
 
-3. Start server and sync database:
+3. Start server to sync database:
 
 ```
   npm run dev
@@ -62,6 +62,12 @@ Env requires: [Node.js](https://nodejs.org/en/) LTS v16 installed
 
 ```
   npm run db:seed
+```
+
+5. And then, start it again:
+
+```
+  npm run dev
 ```
 
 ## Tech Stack
